@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="clock.png">
+  <title>DTR</title>
+  <style>
+    body {
+      font-family: "Kdam Thmor Pro";
+    }
+
+    select {
+      text-transform: uppercase;
+    }
+
+    #mainx {
+      max-width:450px;
+      display: none;
+    }
+    #phoneFmt {
+      background-color: #F50029;
+      border-color: #F50029;
+      display: none;
+    }
+
+    #casualFmt {
+      background-color: #00C24A;
+      border-color: #04C227;
+    }
+
+    #landscapeFmt {
+      background-color: #286baa;
+      border-color: #286baa;
+    }
+
+    #landscape2Fmt {
+      background-color: #49577c;
+      border-color: #49577c;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container" id="mainx">
+    <article>
+      <select id="dtr_year">
+        <option>2024</option>
+        <option>2023</option>
+        <option>2022</option>
+      </select>
+      <select id="dtr_month">
+        <option value="1">january</option>
+        <option value="2">february</option>
+        <option value="3">march</option>
+        <option value="4">april</option>
+        <option value="5">may</option>
+        <option value="6">june</option>
+        <option value="7">july</option>
+        <option value="8">august</option>
+        <option value="9">september</option>
+        <option value="10">october</option>
+        <option value="11">november</option>
+        <option value="12">december</option>
+      </select>
+      <button class="secondary outline" onclick="view_dtr('casual.html');">CASUAL</button>
+      <button class="secondary outline" onclick="view_dtr('regular.html');">REGULAR</button>
+      <button class="secondary" onclick="location.assign('index.html');">MAIN MENU</button>
+    </article>
+  </main>
+  <script src="helper.js"></script>
+  <script>
+    const ID = get_param('ID'), YM = new Date();
+
+    if (!ID) location.assign('/');
+
+    if ( window.innerWidth < 800 ) {
+      location.assign(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
+    }
+		else {
+			if ( get_param('r') ) {			
+		    location.assign(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+			} else {
+		    location.assign(`casual.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
+			}
+		}
+
+    function get_month() {
+      return dtr_month.value;
+    }
+
+    function get_year() {
+      return dtr_year.value;
+    }
+
+    function view_dtr(fmtUrl) {
+      let u = new URL([location.origin, fmtUrl].join('/dtr/'));
+      u.searchParams.set('ID', ID);
+      u.searchParams.set('MM', get_month());
+      u.searchParams.set('YY', get_year());
+
+      location.assign(u.href);
+    }
+
+    function init() {
+      dtr_month.options.selectedIndex = YM.getMonth(); mainx.style.display = 'block';
+    }
+
+    //document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+
+</html>

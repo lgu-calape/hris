@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<title>Login</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="icon" href="assets/calape.svg">
+	<link href="css/signin.css" rel="stylesheet">
+	<style>
+	footer a {
+		padding: 4px;
+		color: rgb(104, 162, 217);
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+	footer a:hover {
+		color: rgb(14, 119, 217);
+	}
+	.text-muted {
+		color: #c8ced4 !important;
+	}
+	</style>
+</head>
+
+<body class="text-center">
+	<main class="form-signin w-100 m-auto">
+		<form>
+			<img class="mb-4" src="https://calape.ph/assets/calape.svg" alt="calape seal" width="72">
+			<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+			<div class="form-floating">
+				<input type="email" class="form-control" id="floatingInput" placeholder="####">
+				<label for="floatingInput">Employee ID</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+				<label for="floatingPassword">Password</label>
+			</div>
+
+			<div class="checkbox mb-3">
+				<label>
+					<input type="checkbox" value="remember-me" disabled> Remember me
+				</label>
+			</div>
+			<button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+		</form>
+
+		<hr>
+
+		<footer>
+			<a href="chat.html">assist</a>
+			&nbsp;
+			<a href="/dtr/index.html">dtr</a>
+		</footer>
+
+		<hr>
+
+		<p class="mt-5 mb-3 text-muted">ver.1705367699</p>
+	</main>
+	<script src="js/login.js"></script>
+</body>
+</html>

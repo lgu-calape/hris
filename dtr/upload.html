@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+  <link rel="icon" type="image/png" href="clock.png">
+  <title>Attendance Log Uploader</title>
+  <style>
+    main { max-width: 375px; }
+
+    .stat {
+      display: none;
+      font-size: 0.7em;
+      padding: 2px 10px;
+    }
+
+    .error  {
+      background: #c90e0b;
+      color: #fff;
+      display: block;
+    }
+    .success {
+      background: #048120;
+      color: #fff;
+      display: block;
+    }
+
+    .info {
+      background: #2091be;
+      color: #fff;
+      display: block;
+    }
+
+		input[type="password"] {
+			display: none;
+		}
+  </style>
+</head>
+<body>
+<main>
+  <article style="padding-bottom:0;">
+		<input type="password" id="pass" placeholder="password">
+    <label for="file">Upload ######_attlog.dat
+      <input accept=".dat,.txt" type="file" id="file">
+    </label>
+    <div class="stat"></div>
+    <hr/>
+    <p style="font-size:10px;text-align:justify;">Maximum file size is 1 megabyte. It is recommended to delete the attendance record once backed up to clear up some space on the device and reduce processing time of the log file.</p>
+  </article>
+</main>
+
+<script>
+const fi = document.getElementById('file'),
+			pw = document.getElementById('pass'),
+      st = document.querySelector('.stat');
+
+fi.addEventListener('change', upload);
+
+pw.addEventListener('keyup', e => {
+	if ( e.keyCode != 13 ) {
+		return;
+	}
+
+	upload();
+});
+
+function pwdshow() {
+	pw.style.display = 'block';
+	pw.animate({opacity: [0,1]}, 300);
+	pw.focus(); pw.value = '';
+}
+
+function pwdhide() {
+	pw.style.display = 'none';
+}
+
+function upload() {
+
+	if ( pw.value.length < 4 || pw.value.length > 32) {
+		pwdshow();
+		return;
+	}
+
+  const f = new FormData();
+
+  f.append("file", fi.files[0])
+	f.append("pass", pw.value);
+
+  const x = new XMLHttpRequest();
+
+  st.setAttribute('class','stat');
+
+	if ( fi.files[0].size < 41 ) {
+		st.textContent = "Invalid log file.";
+		st.classList.add('error');
+		return;
+	}
+
+  if ( fi.files[0].size > 1e6 ) {
+    st.textContent = "File size too large.";
+    st.classList.add('error');
+    return;
+  }
+
+  x.upload.addEventListener('error', e => {
+    st.textContent = "File upload error.";
+    st.classList.add('error');
+  });
+
+  x.upload.addEventListener('loadstart', e => {
+    st.textContent = "Uploading file...";
+    st.classList.add('info');
+		pwdhide();
+  });
+
+  x.upload.addEventListener('progress', e => {
+    st.textContent = `Uploading ${Math.floor(e.loaded / e.total * 100)}%`;
+  });
+
+  x.upload.addEventListener('loadend', e => {
+    st.textContent = "Confirming server response...";
+  });
+
+  x.addEventListener('readystatechange', e=> {
+
+   if ( x.readyState === 4 ) {
+     if (x.status === 401 ) {
+       st.textContent = "Invalid password.";
+       st.setAttribute('class','stat error');
+			 pwdshow();
+       return;
+     }
+
+     if (x.status === 406 ) {
+       st.textContent = "File not acceptable.";
+       st.setAttribute('class','stat error');  
+       return;
+     }
+
+     if (x.status === 409 ) {
+       st.textContent = "File already uploaded.";
+       st.setAttribute('class','stat error');  
+       return;
+     }
+
+     if (x.status === 413 ) {
+       st.textContent = "File larger than limits.";
+       st.setAttribute('class','stat error');  
+       return;
+     }
+
+     if (x.status === 415 ) {
+       st.textContent = "Unsupported file type.";
+       st.setAttribute('class','stat error');  
+       return;
+     }
+
+     if (x.status !== 200 ) {
+       st.textContent = "Server error. Try again.";
+       st.setAttribute('class','stat error');  
+       return;
+     }
+
+     st.textContent = "File successfully uploaded.";
+     st.setAttribute('class','stat success');  
+   }
+
+  });
+
+  x.open("POST", "https://dtr.calape.ph/upload/u.php");
+  x.send(f);
+}
+</script>
+</body>
+</html>

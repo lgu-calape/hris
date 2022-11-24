@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+	<link rel="icon" type="image/png" href="/assets/calape.svg">
+	<title>Daily Time Records</title>
+	<style>
+		article {
+			font-family: 'ADLaM Display', sans-serif;
+		}
+
+		input {
+			text-transform: uppercase;
+		}
+
+		#mainx {
+			max-width: 450px;
+		}
+
+		.version {
+			color: #eee;
+			font-size: 10px;
+			text-align: center;
+			margin-top: 3em;
+		}
+
+		footer {
+			text-align: center;
+		}
+
+		footer a {
+			font-size: 0.91em;
+			padding: 0 5px;
+		}
+
+		.ball-pulse {
+			padding: 0 1em;
+		}
+
+		.ball-pulse > div {
+			background-color: #ccc;
+			width: 10px;
+			height: 10px;
+		}
+
+		.hide {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+	<main class="container" id="mainx">
+		<article class="animate__animated animate__slideInDown">
+			<input type="text" id="employee_id" placeholder="employee id" autofocus>
+			<div class="ball-pulse hide wait">
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+		</article>
+		<hr>
+		<footer>
+			<a href="monitor.html">MONITOR</a>
+			<a href="adduser.html">REGISTER</a>
+			<a href="upload.html">UPLOAD</a>
+		</footer>
+		<hr>
+		<p class="version">rev.1705572093</p>
+	</main>
+	<script src="helper.js"></script>
+	<script>
+		const YM = new Date(), EID = document.getElementById('employee_id');
+
+		let sendOnce = false, wait = document.querySelector('.wait');
+
+		function verify(ID) {
+			if ( sendOnce ) {
+				return;
+			}
+
+			if (ID < 1001 || ID > 9999) {
+				EID.setAttribute('aria-invalid', true);
+
+				return;
+			}
+
+			sendOnce = true;
+
+			wait.classList.remove('hide');
+
+			let x = new XMLHttpRequest();
+
+			x.addEventListener('readystatechange', () => {
+				if (x.readyState === 4) {
+					sendOnce = false;
+
+					if (x.status !== 200) {
+						EID.setAttribute('aria-invalid', true);
+						EID.value = '';
+	
+						wait.classList.toggle('hide');
+
+						return;
+					}
+
+					if ( window.innerWidth < 800 ) {
+						redirect(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+						return;
+					}
+
+					var r = JSON.parse(x.responseText);
+
+					if ( r.status === 'casual' ) {
+						redirect(`casual.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+						return;
+					}
+
+					redirect(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+				}
+			});
+
+			x.open('GET', 'https://dtr.calape.ph/api/info.php?q=check&ID=' + ID);
+			x.send();
+		}
+
+		function redirect(l) {
+			window.location.replace(l);
+		}
+
+		EID.addEventListener('keyup', (e) => {
+			EID.removeAttribute('aria-invalid');
+
+			if ( e.target.value.length > 4 )
+				e.target.value = '';
+
+			if ( e.target.value.length !== 4 )
+				return;
+
+			verify(e.target.value);
+		});
+
+		document.addEventListener('DOMContentLoaded', () => {
+			if (new Date().getTimezoneOffset() != -480) {
+				alert_("YOUR COMPUTER HAS INCORRECT TIMEZONE",0,21e6);
+				mainx.remove();
+			}
+		});
+
+		localStorage.clear();
+	</script>
+</body>
+</html>

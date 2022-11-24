@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="clock.png">
+<title>EMPLOYEE REGISTRATION</title>
+<style>
+body{font-family: "Kdam Thmor Pro";}
+input{text-transform: uppercase;}
+</style>    
+</head>
+<body>
+<main class="container" style="max-width:465px;">
+  <article>
+    <small>NEW USER INFORMATION</small>
+    <hr>
+    <input type="text" id="firstname" placeholder="First Name">
+    <input type="text" id="lastname" placeholder="Last Name">
+    <button id="btn1">REGISTER</button>
+  </article>
+</main>
+<script src="helper.js"></script>
+<script>
+
+if ( !localStorage.pwd ) {
+ window.location.assign('login.html');
+}
+
+function register() {
+  let fn = firstname.value,
+      ln = lastname.value;
+
+  if ( fn.match(/\d/) || fn.length < 2 ) {
+    alert_('First Name Required');
+    firstname.ariaInvalid = true;
+    return;
+  }
+  firstname.ariaInvalid = false;
+
+  if ( ln.match(/\d/) || ln.length < 2 ) {
+    alert_('Last Name Required');
+    lastname.ariaInvalid = true;
+    return;
+  }
+
+  lastname.ariaInvalid = false;
+
+  let x = new XMLHttpRequest();
+
+  x.addEventListener('readystatechange',()=>{
+    if ( x.readyState === 1 ) {
+      btn1.disabled = true;
+      btn1.ariaBusy = true;
+    }
+
+    if ( x.readyState === 4 ) {
+      if ( x.status === 401 ) {
+        alert_('AUTHENTICATION REQUIRED');
+	btn1.ariaBusy = false;
+        btn1.disabled = false;
+	return;
+      }
+
+      if ( x.status === 403 ) {
+        alert_('forbidden');
+	btn1.ariaBusy = false;
+        btn1.disabled = false;
+	return;
+      }
+
+	if ( x.status !== 200 ) {
+		alert_('server error. try again later');
+		btn1.ariaBusy = false;
+		btn1.disabled = false;
+		return;
+	}
+
+	alert_('BIOMETRIC ID: ' + x.responseText,true,21e6);
+	btn1.innerText = '\u2713 OK';
+	firstname.disabled = true;
+	lastname.disabled = true;
+      	btn1.ariaBusy = false;
+    }
+
+  });
+
+  x.open('POST','https://dtr.calape.ph/api/adduser.php');
+  x.setRequestHeader('token', localStorage.pwd);
+  x.send(JSON.stringify([fn,ln]));
+}
+
+btn1.addEventListener('click',()=>register());
+</script>
+</body>
+</html>

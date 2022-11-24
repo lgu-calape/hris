@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+<link rel="icon" type="image/png" href="clock.png">
+<title>MONITOR</title>
+<style>
+@media only screen and (max-width: 575.98px) {
+  td { font-size:0.75em; white-space:nowrap;}
+}
+tbody tr:hover {
+  background: #ebeff1;
+  cursor: pointer;
+}
+</style>    
+</head>
+<body>
+<main class="container">
+  <figure>
+    <table>
+      <thead>
+        <tr><th>DATE, TIME</th><th>NAME</th></tr>
+      </thead>
+      <tbody id="timesheet">
+         <!--genarate data-->
+      </tbody>
+    </table>
+  </figure>
+  <p style="font-size:0.6em;text-align:center;color:#bbb;">If logged during connection timeout, records will synced later.</p>
+</main>
+<!--<script src="helper.js"></script>-->
+<script>
+const API_URL = "https://dtr.calape.ph/api/";
+
+function get_lastlog() {
+  let x = new XMLHttpRequest();
+
+  x.addEventListener('readystatechange',()=> {
+    if ( x.readyState === 4 ) {
+      if ( x.status === 200 ) {
+        let d = JSON.parse(x.responseText);
+
+        d.forEach(o=>{
+          if ( ![1103,1130].includes(o.id) )
+            tabularize(o)
+        });
+      }
+    }
+  });
+
+  x.open('GET', API_URL +'monitor.php');
+  x.send();
+}
+
+function get_date(ts) {
+  let i = new RegExp(/^\d{13}$/);
+
+  if ( !i.test(ts) )
+    return null;
+
+  let d = new Date(parseInt(ts));
+
+  return d.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+function tabularize(d) {
+  let tr = timesheet.insertRow(-1),
+      c0 = tr.insertCell(0),
+      c1 = tr.insertCell(1);
+
+  c0.innerText = get_date(d.timestamp);
+  c1.innerText = d.name;
+
+  tr.addEventListener('click', () => {
+		if ( window.innerWidth > 1039 ) {
+			location.assign('login.html');
+			return;
+		}
+		location.assign('view.html?ID='+d.id);
+	})
+}
+
+document.addEventListener('DOMContentLoaded',()=>get_lastlog());
+</script>
+</body>
+</html>
