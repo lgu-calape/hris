@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="clock.png">
+  <title>CSC FORM 48</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+      font-family: arial, san-serif;
+      background: url('https://calape.ph/icons/android-icon-192x192.png') no-repeat fixed center;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: auto;
+      width: 1024px;
+      border: 0;
+      border-color: #000;
+      user-select: none;
+    }
+
+    td,
+    th {
+      padding: 5px;
+      text-align: center;
+      text-transform: uppercase;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
+      overflow: hidden;
+    }
+
+    .alertt {
+      font-size: 2em;
+    }
+
+    .fullname {
+      text-transform: uppercase !important;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .label1 {
+      font-size: 16px;
+    }
+
+    .signed td {
+      padding: 5px;
+      text-transform: none;
+      line-height: 1.8;
+    }
+
+    .spacer {
+      border: 0px;
+      width: 50px;
+    }
+
+    .signed .fullname {
+      padding-bottom: 5px;
+    }
+
+    .work_date_range,
+    .work_hours_range {
+      font-weight: normal;
+    }
+
+    .supervisor {
+      text-decoration: overline;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .swal-content__input {
+      text-align: center;
+    }
+
+    .swal-footer {
+      text-align: center;
+    }
+
+    #filter {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.50);
+      padding: 10px;
+      box-shadow: 0 0 5px gray;
+      min-width: 998px;
+      display: none;
+    }
+
+    #filter input {
+      font-size: 2em;
+      border: 2px solid #ccc;
+      width: 175px;
+    }
+
+    #filter button {
+      font-size: 2em;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: green;
+      color: white;
+      border: 2px solid #00aa00;
+    }
+
+    #table_content {
+      margin-top: 60px;
+      margin-bottom: 30px;
+      display: none;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 5px;
+      background: red;
+      color: #fff;
+      text-align: center;
+    }
+
+    @media print {
+      #filter,
+      footer {
+        display: none;
+      }
+
+      #table_content {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main id="table_content">
+    <table border="0">
+      <tr>
+        <th>civil service form no. 48</th>
+        <td class="spacer">&nbsp;</td>
+        <th>civil service form no. 48</th>
+      </tr>
+      <tr>
+        <th class="label1">daily time record</th>
+        <td class="spacer">&nbsp;</td>
+        <th class="label1">daily time record</th>
+      </tr>
+      <tr>
+        <th>municipality of calape</th>
+        <td class="spacer">&nbsp;</td>
+        <th>municipality of calape</th>
+      </tr>
+      <tr>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+      <tr>
+        <th class="fullname">
+          <!--fullname-->
+        </th>
+        <td class="spacer">&nbsp;</td>
+        <th class="fullname">
+          <!--fullname-->
+        </th>
+      </tr>
+      <tr>
+        <th class="work_date_range">---</th>
+        <td class="spacer">&nbsp;</td>
+        <th class="work_date_range">---</th>
+      </tr>
+      <tr>
+        <th class="work_hours_range">---</th>
+        <td class="spacer">&nbsp;</td>
+        <th class="work_hours_range">---</th>
+      </tr>
+    </table>
+    <table border="1">
+      <thead>
+        <tr>
+          <th rowspan="2">days</th>
+          <th colspan="2">am</th>
+          <th colspan="2">pm</th>
+          <th>undertime</th>
+          <td class="spacer">&nbsp;</td>
+          <th rowspan="2">days</th>
+          <th colspan="2">am</th>
+          <th colspan="2">pm</th>
+          <th>undertime</th>
+        </tr>
+        <tr>
+          <th width="85">in</th>
+          <th width="85">out</th>
+          <th width="85">in</th>
+          <th width="85">out</th>
+          <th>hh:mm</th>
+          <td class="spacer">&nbsp;</td>
+          <th width="85">in</th>
+          <th width="85">out</th>
+          <th width="85">in</th>
+          <th width="85">out</th>
+          <th>hh:mm</th>
+        </tr>
+      </thead>
+      <tbody id="timesheet">
+        <!--timesheet generation-->
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="5" style="text-align:right;">total</th>
+          <th></th>
+          <td class="spacer">&nbsp;</td>
+          <th colspan="5" style="text-align:right;">total</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+    <br><br>
+    <table class="signed">
+      <tr>
+        <td>I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
+          of which was made<br>daily at the time of arrival and departure from office.</td>
+        <td class="spacer">&nbsp;</td>
+        <td>I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
+          of which was made<br>daily at the time of arrival and departure from office.</td>
+      </tr>
+      <tr>
+        <td colspan="3"><br></td>
+      </tr>
+      <tr>
+        <td class="fullname">
+          <!--fullname-->
+        </td>
+        <td>&nbsp;</td>
+        <td class="fullname">
+          <!--fullname-->
+        </td>
+      </tr>
+      <tr>
+        <td>Verified as to prescribed office hours</td>
+        <td>&nbsp;</td>
+        <td>Verified as to prescribed office hours</td>
+      </tr>
+      <tr>
+        <td colspan="3"><br></td>
+      </tr>
+      <tr onclick="supervisor_();">
+        <td class="supervisor">[ click to set name / department head ]</td>
+        <td>&nbsp;</td>
+        <td class="supervisor">[ click to set name / department head ]</td>
+      </tr>
+    </table>
+  </main>
+  <!-- ./ end main -->
+  <div id="filter">
+    <input type="text" placeholder="ID #" style="width:80px;" maxlength="4" id="filter_id_no">
+    <button id="filter_q">CHANGE</button>
+
+    <div style="float:right;">
+      <button onclick="supervisor_();">SUPERVISOR</button>
+      <button onclick="print();">PRINT</button>
+    </div>
+  </div>
+
+  <footer>
+    <small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+  <script src="helper.js?_=1668848567288"></script>
+  <script src="time_io.js?_=1668848567293"></script>
+  <script src="undertime_io.js?_=1668848567287"></script>
+  <script>
+    const employee_id = get_param('ID'),
+      this_month = get_param('MM'),
+      this_year = get_param('YY');
+
+    if (!(this_month > 0 && this_month < 13) || !(this_year > 2021 && this_year < 2102))
+      location.assign('index.html');
+
+    const WORKING_HOURS = [8, 12, 13, 17];
+
+    const from_this_date = new Date(this_year, this_month - 1, 1);
+    const to_this_date = new Date(this_year, this_month, 0);
+
+    let optsIdx = 0, optsField = ['absent','holiday','special non-working day','travel ob','sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
+
+    let nwdlist = ['absent','holiday','special non-working day','travel ob','leave'];
+    let levlist = ['sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
+
+    function dtr() {
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 1) {
+          // ...
+        }
+
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+            let d = JSON.parse(x.responseText);
+
+            var records = [];
+
+            d.forEach((o) => {
+              records[o.petsa] = time_io(o.oras, WORKING_HOURS);
+            });
+
+            loop_through_date(from_this_date, to_this_date, records);
+
+            table_content.style.display = 'block';
+          }
+
+          if (x.status === 403) {
+            location.assign('index.html');
+          }
+        }
+
+      });
+
+      let p = new URL('https://dtr.calape.ph/api/timerecord.php');
+      p.searchParams.set('ID', employee_id);
+      p.searchParams.set('MM', this_month);
+      p.searchParams.set('YY', this_year);
+
+      x.open('GET', p);
+      x.send();
+    }
+
+    function employee_basic_info() {
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+            let d = JSON.parse(x.responseText), employee_name = d.firstname + ' ' + d.lastname;
+            document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
+            document.title = employee_name;
+          }
+
+          if (x.status === 403) {
+            location.assign('index.html');
+          }
+        }
+
+      });
+
+      x.open('GET', 'https://dtr.calape.ph/api/employee_basic_info.php?ID=' + employee_id);
+      x.send();
+    }
+
+    function loop_through_date(a, b, c) {
+      for (a; a <= b; a.setDate(a.getDate() + 1)) {
+        let indexFmt = [a.getFullYear(), String(a.getMonth() + 1).padStart(2,0), String(a.getDate()).padStart(2, 0)].join('-');
+
+        let default_records = { 'date': indexFmt, time: Object.assign({}, [null, null, null, null]) };
+
+        if (c[indexFmt]) {
+          default_records = { 'date': indexFmt, 'time': c[indexFmt] }
+        }
+
+        timeshit(default_records);
+      }
+    }
+
+    function timeshit(d) {
+      let tr = timesheet.insertRow(-1),
+        c00 = tr.insertCell(0),
+        c01 = tr.insertCell(1),
+        c02 = tr.insertCell(2),
+        c03 = tr.insertCell(3),
+        c04 = tr.insertCell(4),
+        c05 = tr.insertCell(5),
+        brk = tr.insertCell(6),
+        c07 = tr.insertCell(7),
+        c08 = tr.insertCell(8),
+        c09 = tr.insertCell(9),
+        c10 = tr.insertCell(10),
+        c11 = tr.insertCell(11),
+        c12 = tr.insertCell(12);
+
+      let absent = false, araw = String(new Date(d.date).getDate()).padStart(2, 0), oras = d.time;
+     
+      if (!oras[0] && !oras[1] && !oras[2] && !oras[3]) {
+        absent = true;
+      }
+
+      tr.dataset.ts = d.date;
+
+      c00.innerText = c07.innerText = araw;
+      c01.innerText = c08.innerText = toLocalTime(oras[0]);
+      c02.innerText = c09.innerText = toLocalTime(oras[1]);
+      c03.innerText = c10.innerText = toLocalTime(oras[2]);
+      c04.innerText = c11.innerText = toLocalTime(oras[3]);
+      c05.innerText = c12.innerText = absent ? null : undertime_io(Object.values(oras), WORKING_HOURS);
+      brk.innerText = null;
+      brk.className = 'spacer';
+
+      let it_go = new Date(d.date).getDay(), is_happyday = localStorage.getItem(d.date);
+
+      if (is_happyday) {
+        it_go = is_happyday;
+      }
+
+      if (absent) {
+        if (it_go == 0) {
+          c01.innerText = c08.innerText = 'SUNDAY';
+          c01.colSpan = c08.colSpan = 4;
+          c01.style.fontWeight = 'bold';
+          c08.style.fontWeight = 'bold';
+          c02.remove(); c03.remove(); c04.remove();
+          c09.remove(); c10.remove(); c11.remove();
+          c05.innerText = c12.innerText = '--';
+        }
+
+        if (it_go == 6) {
+          c01.innerText = c08.innerText = 'SATURDAY';
+          c01.colSpan = c08.colSpan = 4;
+          c01.style.fontWeight = 'bold';
+          c08.style.fontWeight = 'bold';
+          c02.remove(); c03.remove(); c04.remove();
+          c09.remove(); c10.remove(); c11.remove();
+          c05.innerText = c12.innerText = '--';
+        }
+
+        if (it_go == 7) {
+          c01.innerText = c08.innerText = 'HOLIDAY';
+          c01.colSpan = c08.colSpan = 4;
+          c02.remove(); c03.remove(); c04.remove();
+          c09.remove(); c10.remove(); c11.remove();
+          c05.innerText = c12.innerText = '--';
+        }
+
+        if (it_go == 8) {
+          c01.innerText = c08.innerText = 'SPECIAL NON-WORKING DAY';
+          c01.colSpan = c08.colSpan = 4;
+          c02.remove(); c03.remove(); c04.remove();
+          c09.remove(); c10.remove(); c11.remove();
+          c05.innerText = c12.innerText = '--';
+        }
+
+      }      
+
+      tr.addEventListener('click1',() => {    
+        
+        if (new Date(d.date).getTime() > new Date().getTime()) {
+          return;
+        }
+        
+        if (oras[0] && oras[1] && (oras[2] || oras[3])) {
+          return;
+        }        
+
+        let optval = optsField[optsIdx];
+
+        if (absent) { 
+          if (it_go == 0 || it_go == 6) return;
+          c01.textContent = c08.textContent = optval;
+          c01.colSpan = c08.colSpan = 4;
+          c02.remove(); c03.remove(); c04.remove();
+          c09.remove(); c10.remove(); c11.remove();
+        }
+
+        if (!absent && oras[0] && !oras[1] && !oras[2]) {       
+          c02.textContent = c09.textContent = 'field';
+          c02.colSpan = c09.colSpan = 2;
+          c03.remove(); c10.remove();
+          return;
+        }
+
+        optsIdx++;
+
+        if (optsIdx == optsField.length) {
+          optsIdx = 0;
+        }
+
+        let this_row_id = tr.firstChild.textContent;
+
+        localStorage.removeItem(d.date);
+
+        if (optval == 'holiday') {
+          localStorage.setItem(d.date, 7);
+        }
+
+        if (optval == 'special non-working day') {
+          localStorage.setItem(d.date, 8);
+        }
+      });
+    }
+
+    function get_working_hours() {
+      return WORKING_HOURS.map(d => toLocalTime(new Date().setHours(d, 0, 0, 0))).join('-').replace(/ /g, '');
+    }
+
+    function init() {
+      document.querySelectorAll('.work_date_range').forEach(o => {
+        o.innerText = `For the month of ${get_month(this_month - 1)} ${this_year}`;
+      });
+
+      document.querySelectorAll('.work_hours_range').forEach(o => {
+        o.innerText = 'Working hours ' + get_working_hours();
+      });
+
+      employee_basic_info(); dtr(); filter_id_no.value = employee_id;
+
+      if (localStorage.getItem('supervisor')) {
+        set_supervisor(localStorage.getItem('supervisor'));
+      }
+
+      if (window.outerWidth > 1024) {
+        filter.style.display = 'block';
+      }
+    }
+
+    function set_supervisor(s) {
+      let [s1, s2] = s.split('/');
+
+      if (!s1) supervisor_();
+
+      if (!s2) s2 = 'Supervisor';
+
+      document.querySelectorAll('.supervisor').forEach(o => {
+        let e1 = document.createElement('p');
+        e1.innerText = s1;
+        e1.style.textDecoration = 'underline';
+
+        let e2 = document.createElement('p');
+        e2.innerText = s2;
+        e2.style.fontSize = '12px';
+        e2.style.fontWeight = 'normal';
+
+        let e3 = document.createElement('div');
+        e3.append(e1); e3.append(e2);
+
+        o.innerHTML = ''; o.append(e3);
+        o.style.textDecoration = 'none';
+        o.style.textTransform = 'uppercase';
+        o.style.fontSize = '16px';
+        o.style.fontWeight = 'bold';
+        o.style.letterSpacing = 0;
+        o.style.lineHeight = 0;
+      });
+
+      localStorage.setItem('supervisor',s);
+    }
+
+    function supervisor_() {
+      swal({
+        title: "DEPARTMENT HEAD",
+        content: {
+          element: "input",
+          attributes: {
+            placeholder: "NAME / POSITION",
+            type: "text",
+          },
+        },
+      }).then(v => set_supervisor(v));
+    }
+
+    filter_q.addEventListener('click', () => {
+      let _ID = filter_id_no.value;
+
+
+      if (!_ID) {
+        return;
+      }
+
+      let src = new URL(location);
+      src.searchParams.set('ID', _ID);
+      src.searchParams.set('YY', this_year);
+      src.searchParams.set('MM', this_month);
+
+      location.assign(src);
+
+    });
+
+    document.addEventListener('DOMContentLoaded', () => init());
+    window.addEventListener('beforeprint', (e) => { filter.style.display = 'none'; });
+    window.addEventListener('afterprint', (e) => { filter.style.display = 'block'; });
+
+    timesheet.addEventListener('click', e => {
+      let td = e.target;
+
+      if (td.nodeName == 'TDx') {
+        let tr = td.parentNode;
+
+        if (tr) {
+          let b = 0, c = tr.cells;
+
+          console.log(c.length);
+
+          if (c.length == 13) {
+            for (let i = 1; i<5; i++) {
+              if (c[i].textContent) {
+                b++;
+              }
+            }
+
+            if (b == 3) {
+              let t = td.textContent;
+
+              if (!t) {
+                let i = td.cellIndex;
+
+                if (i > 0 && i < 5) {
+                  td.textContent = ['8:00 AM','12:00 PM','1:00 PM','5:00 PM'][--i];
+                  c[8+i].textContent = td.textContent;
+                }
+              }
+            }
+          }   
+        }
+      }
+   
+      if (td.nodeName == 'TD') {
+        let tr = td.parentNode;
+
+        if (tr) {
+          if (new Date(tr.dataset.ts).getTime() > new Date().getTime()) {
+            return;
+          }
+
+          let b = [], c = tr.cells;
+         
+          if (c.length == 7) {     
+            if (e.shiftKey) {
+              if(td.textContent.indexOf('leave') != -1) {
+                let x = levlist[0], y = levlist.indexOf(td.textContent);               
+
+                if (y < 4) {
+                  x = levlist[y + 1]
+                }
+                
+                tr.cells[1].textContent = x;
+                tr.cells[5].textContent = x;
+                return;
+              }
+
+              if(td.textContent.indexOf('travel') != -1) {
+                var input = prompt('Travel Remarks:');
+
+                if (input) {
+                  input = 'travel: ' + input;
+                  tr.cells[1].textContent = input;
+                  tr.cells[5].textContent = input;
+                  return;
+                }
+              }
+            }
+
+            if (nwdlist.includes(td.textContent.toLowerCase())) {
+
+              let x = nwdlist.indexOf(td.textContent) + 1;
+
+              if (nwdlist.length <= x) {
+                x = 0;
+              }
+
+              tr.cells[1].textContent = nwdlist[x];
+              tr.cells[5].textContent = nwdlist[x];
+
+              var utm = x == 0 ? '08:00' : '--';
+              tr.cells[2].textContent = utm;
+              tr.cells[6].textContent = utm;              
+            }
+
+            localStorage.removeItem(tr.dataset.ts);
+
+            if (td.textContent == 'holiday') {
+              localStorage.setItem(tr.dataset.ts, 7);
+            }
+
+            if (td.textContent == 'special non-working day') {
+              localStorage.setItem(tr.dataset.ts, 8);
+            }
+          }
+
+          if (c.length == 11) {
+            if (e.ctrlKey) {
+              if (td.textContent.indexOf('field') != -1) {
+                let input = prompt('Field remarks');
+
+                if (input) {
+                  input = 'field: ' + input;
+                  td.textContent = input;
+                  tr.cells[td.cellIndex+6].textContent = input;                
+                }
+              }
+
+              if (td.textContent.indexOf('trave') != -1) {
+                let input = prompt('Travel remarks');
+
+                if (input) {
+                  input = 'travel: ' + input;
+                  td.textContent = input;
+                  tr.cells[td.cellIndex+6].textContent = input;
+                }
+              }    
+              
+              if (td.cellIndex != 2) {
+                return;
+              }
+              
+              tr.cells[4].textContent = '00:00';
+              tr.cells[10].textContent = '00:00';
+              return;
+            }
+
+            if (td.textContent.indexOf('absent') != -1) {
+              var ft = 'field';
+              td.textContent = ft;
+              tr.cells[td.cellIndex+6].textContent = ft;
+              return;
+            }
+
+            if (td.textContent.indexOf('field') != -1) {
+              var ft = 'leave';
+              td.textContent = ft;
+              tr.cells[td.cellIndex+6].textContent = ft;
+              return;
+            }
+
+            if (td.textContent.indexOf('leave') != -1) {
+              var ft = 'travel ob';
+              td.textContent = ft;
+              tr.cells[td.cellIndex+6].textContent = ft;
+              return;
+            }
+
+            if (td.textContent.indexOf('trave') != -1) {
+              var ft = 'field';
+
+              if (td.cellIndex != 2) {
+                ft = 'absent';
+              }
+
+              td.textContent = ft;
+              tr.cells[td.cellIndex+6].textContent = ft;
+              return;
+            }
+          }
+
+          if (c.length == 13) {
+            Object.values(c).forEach((e, i) => {
+              if (i == 0 || i > 4) return;
+
+              if (e.textContent) {
+                b.push(i);
+              }
+            });
+
+            if (b.length == 0) {
+              tr.cells[1].textContent = nwdlist[0];                        
+              tr.cells[8].textContent = nwdlist[0];
+              tr.cells[8].colSpan = 4;
+              tr.cells[9].remove();                  
+              tr.cells[9].remove();                  
+              tr.cells[9].remove();
+              tr.cells[1].colSpan = 4;
+              tr.cells[2].remove();                  
+              tr.cells[2].remove();                  
+              tr.cells[2].remove();
+              tr.cells[2].textContent = '08:00';
+              tr.cells[6].textContent = '08:00';
+            }
+
+            if (b.length == 1) {
+              if (e.shiftKey) {
+                if (b[0] == 1) {
+                  tr.cells[2].colSpan = 2;
+                  tr.cells[2].textContent = 'field';
+                  tr.cells[3].remove();
+                  tr.cells[3].textContent = '5:00 PM';
+                  /* col 2 */                  
+                  tr.cells[8].colSpan = 2;
+                  tr.cells[8].textContent = 'field';
+                  tr.cells[9].remove();
+                  tr.cells[9].textContent = '5:00 PM';
+                  
+                  return;
+                }
+              }
+
+              if (b[0] == 1) {
+                tr.cells[2].textContent = tr.cells[1].textContent;
+                tr.cells[9].textContent = tr.cells[1].textContent;
+                tr.cells[1].textContent = '';
+                tr.cells[8].textContent = '';
+              }
+
+              if (b[0] == 2) {
+                tr.cells[1].textContent = tr.cells[2].textContent;
+                tr.cells[8].textContent = tr.cells[2].textContent;
+                tr.cells[2].textContent = '';
+                tr.cells[9].textContent = '';
+              }
+
+              if (b[0] == 3) {
+                tr.cells[4].textContent = tr.cells[3].textContent;
+                tr.cells[11].textContent = tr.cells[3].textContent;
+                tr.cells[3].textContent = '';
+                tr.cells[10].textContent = '';
+              }
+
+              if (b[0] == 4) {
+                tr.cells[3].textContent = tr.cells[4].textContent;
+                tr.cells[10].textContent = tr.cells[4].textContent;
+                tr.cells[4].textContent = '';
+                tr.cells[11].textContent = '';
+              }
+            }
+
+            if (b.length == 2) {
+              if (e.shiftKey) {
+                if (b[0] == 1 && b[1] == 4) {
+                  tr.cells[2].colSpan = 2;
+                  tr.cells[2].textContent = 'field';
+                  tr.cells[3].remove();
+                  /* col2 */
+                  tr.cells[8].colSpan = 2;
+                  tr.cells[8].textContent = 'field';
+                  tr.cells[9].remove();
+                }
+
+                if (b[0] == 2 && b[1] == 3) {
+                  tr.cells[1].textContent = '8:00 AM';
+                  tr.cells[4].textContent = '5:00 PM';
+                  /* col2 */
+                  tr.cells[8].textContent = '8:00 AM';
+                  tr.cells[11].textContent = '5:00 PM';
+                }
+
+                return;
+              }
+
+              if (b[0] == 1 && b[1] == 2) {
+                tr.cells[3].textContent = 'absent';
+                tr.cells[10].textContent = 'absent';
+                tr.cells[3].colSpan = 2;
+                tr.cells[10].colSpan = 2;
+                tr.cells[4].remove();
+                tr.cells[11].remove();                
+              }
+
+              if (b[0] == 3 && b[1] == 4) {
+                tr.cells[1].textContent = 'absent';
+                tr.cells[8].textContent = 'absent';
+                tr.cells[1].colSpan = 2;
+                tr.cells[8].colSpan = 2;
+                tr.cells[2].remove();
+                tr.cells[8].remove();
+              }
+
+              if (b[0] == 1 && b[1] == 4) {
+                tr.cells[2].textContent = tr.cells[1].textContent;
+                tr.cells[3].textContent = tr.cells[4].textContent;
+                tr.cells[9].textContent = tr.cells[1].textContent;
+                tr.cells[10].textContent = tr.cells[4].textContent;
+                tr.cells[1].textContent = null;
+                tr.cells[4].textContent = null;
+                tr.cells[8].textContent = null;
+                tr.cells[11].textContent = null;
+              }
+
+              if (b[0] == 2 && b[1] == 3) {
+                tr.cells[1].textContent = tr.cells[2].textContent;
+                tr.cells[4].textContent = tr.cells[3].textContent;
+                tr.cells[8].textContent = tr.cells[2].textContent;
+                tr.cells[11].textContent = tr.cells[3].textContent;
+                tr.cells[2].textContent = null;
+                tr.cells[3].textContent = null;                
+                tr.cells[9].textContent = null;
+                tr.cells[10].textContent = null;
+              }
+
+
+            }
+
+            if (b.length == 3) {
+              let t = td.textContent;
+              let h = ['8:00 AM', '12:00 PM', '1:00 PM', '5:00 PM'];
+
+              if (!t) {
+                let i = td.cellIndex;
+
+                if (i > 0 && i < 5) {
+                  --i;
+                  tr.cells[i+1].textContent = h[i];                                   
+                  tr.cells[i+8].textContent = h[i];
+                }
+
+                if (i > 7 && i < 12) {
+                  tr.cells[ i ].textContent = h[i-8];                                   
+                  tr.cells[i-7].textContent = h[i-8];
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="clock.png">
+  <title>Daily Time Records</title>
+  <style>
+    article {
+      font-family: "Kdam Thmor Pro";
+    }
+
+    input {
+      text-transform: uppercase;
+    }
+
+    #mainx {
+      max-width: 450px;
+    }
+
+    .version {
+      color: #ddd;
+      font-size: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container" id="mainx">
+    <article>
+      <input type="text" id="employee_id" placeholder="employee id">
+      <button id="btn0">VIEW DTR</button>
+      <button id="btn4" style="background-color:red;border-color:red;display:none;">NEW DTR SELECTION</button>
+      <button id="btn3" class="outline">MONITOR</button>
+      <hr>
+      <button id="btn1" class="secondary outline">REGISTER</button>
+      <button id="btn2" class="secondary outline">REG.CODE</button>
+      <button id="btn5" class="secondary outline">ATTLOG UPLOAD</button>
+    </article>
+    <p class="version">alpha version 07.14.2022</p>
+  </main>
+  <script src="helper.js"></script>
+  <script>
+    const YM = new Date();
+
+    function verify_id(btn_clicked) {
+      let ID = employee_id.value;
+
+      if (btoa(ID) === 'MTEwM3BkZg==') {
+        return;/* eval(atob('bG9jYXRpb24uYXNzaWduKCcvMTEwMy8yMDIzMDMxNjMxLnBkZicp'));*/
+      }
+
+      if (ID < 1001 || ID > 9999) {
+        employee_id.ariaInvalid = true;
+        alert_('INVALID ID');
+        return;
+      }
+
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+
+            if ( window.innerWidth < 821 ) {
+              return location.replace(`dtr4.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
+            }
+
+            if (btn_clicked == 0) {
+              location.assign('view.html?ID=' + ID);
+            }
+
+            if (btn_clicked == 1)
+              location.assign('dtr_range2.html?ID=' + ID);
+
+            return;
+          }
+
+          employee_id.ariaInvalid = true;
+          alert_('INVALID ID');
+        }
+      });
+
+      x.open('GET', 'https://dtr.calape.ph/api/employee_basic_info.php?ID=' + ID);
+      x.send();
+    }
+
+    function redirect(l) {
+      location.assign(l);
+    }
+
+    employee_id.addEventListener('keyup', (e) => {
+      if (e.keyCode === 13)
+        verify_id();
+    });
+
+    btn4.addEventListener('click', () => verify_id(1));
+    btn0.addEventListener('click', () => verify_id(0));
+    btn1.addEventListener('click', () => redirect('reg.html'));
+    btn2.addEventListener('click', () => redirect('code.html'));
+    btn3.addEventListener('click', () => redirect('monitor.html'));
+    btn5.addEventListener('click', () => redirect('upload/attlog.php'));
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (new Date().getTimezoneOffset() != -480) {
+        alert_("YOUR COMPUTER HAS INCORRECT TIMEZONE",0,21e6);
+        mainx.remove();
+      }
+    });
+  </script>
+</body>
+</html>
