@@ -34,6 +34,7 @@
   <main class="container" id="mainx">
     <article>
       <input type="text" id="employee_id" placeholder="employee id">
+			<div style="display:none;">
       <button id="btn0">VIEW DTR</button>
       <button id="btn4" style="background-color:red;border-color:red;display:none;">NEW DTR SELECTION</button>
       <button id="btn3" class="outline">MONITOR</button>
@@ -41,23 +42,17 @@
       <button id="btn1" class="secondary outline">REGISTER</button>
       <button id="btn2" class="secondary outline">REG.CODE</button>
       <button id="btn5" class="secondary outline">ATTLOG UPLOAD</button>
+			</div>
     </article>
     <p class="version">alpha version 07.14.2022</p>
   </main>
   <script src="helper.js"></script>
   <script>
-    const YM = new Date();
+    const YM = new Date(), EID = document.getElementById('employee_id');
 
-    function verify_id(btn_clicked) {
-      let ID = employee_id.value;
-
-      if (btoa(ID) === 'MTEwM3BkZg==') {
-        return;/* eval(atob('bG9jYXRpb24uYXNzaWduKCcvMTEwMy8yMDIzMDMxNjMxLnBkZicp'));*/
-      }
-
+    function verify(ID) {
       if (ID < 1001 || ID > 9999) {
-        employee_id.ariaInvalid = true;
-        alert_('INVALID ID');
+        EID.ariaInvalid = true;
         return;
       }
 
@@ -65,24 +60,17 @@
 
       x.addEventListener('readystatechange', () => {
         if (x.readyState === 4) {
-          if (x.status === 200) {
+          if (x.status !== 200) {
+	          EID.ariaInvalid = true;
+						return;
+					}
 
-            if ( window.innerWidth < 821 ) {
-              return location.replace(`dtr4.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
-            }
+					if ( window.innerWidth < 821 ) {
+						location.replace(`dtr4.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+						return;
+					}
 
-            if (btn_clicked == 0) {
-              location.assign('view.html?ID=' + ID);
-            }
-
-            if (btn_clicked == 1)
-              location.assign('dtr_range2.html?ID=' + ID);
-
-            return;
-          }
-
-          employee_id.ariaInvalid = true;
-          alert_('INVALID ID');
+					location.assign('view.html?ID=' + ID);
         }
       });
 
@@ -94,17 +82,14 @@
       location.assign(l);
     }
 
-    employee_id.addEventListener('keyup', (e) => {
-      if (e.keyCode === 13)
-        verify_id();
-    });
+    EID.addEventListener('keyup', (e) => {
+			EID.removeAttribute('aria-invalid');
 
-    btn4.addEventListener('click', () => verify_id(1));
-    btn0.addEventListener('click', () => verify_id(0));
-    btn1.addEventListener('click', () => redirect('reg.html'));
-    btn2.addEventListener('click', () => redirect('code.html'));
-    btn3.addEventListener('click', () => redirect('monitor.html'));
-    btn5.addEventListener('click', () => redirect('upload/attlog.php'));
+			if (e.target.value.length !== 4)
+				return;
+
+      verify(e.target.value);
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
       if (new Date().getTimezoneOffset() != -480) {

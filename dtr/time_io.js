@@ -170,4 +170,4 @@ function time_io(logged_hours, working_hours = [8, 12, 13, 17]) {
 	return { ...records };
 }
 
-console.log(time_io("1668472200686;1668484800686;1668488400686;1668502800686"));
+//console.log(time_io("1668472200686;1668484800686;1668488400686;1668502800686"));

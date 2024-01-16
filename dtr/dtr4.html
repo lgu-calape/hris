@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- @google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Glitch&display=swap" rel="stylesheet">
+  <!-- /google fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="clock.png">
+  <title>@</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+      font-family: arial, san-serif, FontAwesome;
+      background: url('https://calape.ph/icons/android-icon-192x192.png') no-repeat fixed center;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: auto;
+      width: 100%;
+      border: 0;
+    }
+
+    td,
+    th {
+      padding: 5px;
+      text-align: center;
+      text-transform: uppercase;
+
+    }
+
+    #fullname {
+      font-size: 1.8em;
+      padding: 15px 0;
+    }
+
+    #formonth {
+      font-size: 1.3em;
+    }
+
+    #table_content {
+      display: none;
+      min-width: 320px;
+      max-width: 768px;
+      margin: 48px auto;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      display: none;
+    }
+
+    header>button {
+      background-color: #24333e;
+      border: 0px;
+      color: #fff;
+      cursor: pointer;
+      font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 34px;
+      font-weight: bold;
+      padding: 10px 0 5px 0;
+      text-transform: uppercase;
+      display: block;
+      width: 100%;
+      box-shadow: -1px 3px 5px -2px rgba(0,0,0,0.75);
+      margin:0;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: none;
+    }
+
+    footer>button {
+      background-color: #76808C;
+      border: 0px;
+      color: #fff;
+      cursor: pointer;
+      font-family: 'Rubik Glitch', cursive;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 10px 0 5px 0;
+      text-transform: uppercase;
+      display: block;
+      width: 100%;
+      box-shadow: -2px -4px 5px -2px rgba(0,0,0,0.75);
+      margin:0;
+    }
+  </style>
+</head>
+
+<body>
+  <header id="header_nav">
+    <button id="menuBtn">- home -</button>
+  </header>
+  <main id="table_content">
+    <table border="1" id="tstable">
+      <thead id="tshead">
+        <tr>
+          <th colspan="5" id="fullname">&nbsp;</th>
+        </tr>
+        <tr>
+          <th colspan="5" id="formonth">&nbsp;</th>
+        </tr>
+        <tr>
+          <th rowspan="2" width="45">days</th>
+          <th colspan="2">am</th>
+          <th colspan="2">pm</th>
+        </tr>
+        <tr>
+          <th width="85">in</th>
+          <th width="85">out</th>
+          <th width="85">in</th>
+          <th width="85">out</th>
+        </tr>
+      </thead>
+      <tbody id="timesheet">
+        <!--timesheet generation-->
+      </tbody>
+    </table>
+  </main>
+
+  <footer id="footer">
+    <button id="prevMonth">PREVIOUS MONTH</button>
+  </footer>
+
+  <script src="helper.js"></script>
+  <script src="time_io.js"></script>
+  <script>
+		const API_URL = 'https://dtr.calape.ph/api/';
+
+    let employee_id = get_param('ID'),
+      this_month = get_param('MM'),
+      this_year = get_param('YY');
+
+    if (!(this_month > 0 && this_month < 13) || !(this_year > 2021 && this_year < 2102))
+      location.assign('/');
+
+    const WORKING_HOURS = [8, 12, 13, 17];
+
+    const from_this_date = new Date(this_year, this_month - 1, 1);
+    const to_this_date = new Date(this_year, this_month, 0);
+
+    function dtr() {
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 1) {
+          // ...
+        }
+
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+            let d = JSON.parse(x.responseText);
+
+            var records = [];
+
+            d.forEach((o) => {
+              records[o.petsa] = time_io(o.oras, WORKING_HOURS);
+            });
+
+            loop_through_date(from_this_date, to_this_date, records);
+
+            header_nav.style.display = 'block';
+            table_content.style.display = 'block';
+            footer.style.display = 'block';
+          }
+
+          if (x.status === 403) {
+            location.assign('/');
+          }
+        }
+
+      });
+
+      let p = new URL(API_URL + 'timerecord.php');
+      p.searchParams.set('ID', employee_id);
+      p.searchParams.set('MM', this_month);
+      p.searchParams.set('YY', this_year);
+
+      x.open('GET', p);
+      x.send();
+    }
+
+    function employee_basic_info() {
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+            let d = JSON.parse(x.responseText);
+            document.title = fullname.innerHTML = d.firstname + ' ' + d.lastname;
+          }
+
+          if (x.status === 403) {
+            location.assign('/');
+          }
+        }
+
+      });
+
+      x.open('GET', API_URL + 'employee_basic_info.php?ID=' + employee_id);
+      x.send();
+    }
+
+    function loop_through_date(a, b, c) {
+      for (a; a <= b; a.setDate(a.getDate() + 1)) {
+        let indexFmt = [a.getFullYear(), String(a.getMonth() + 1).padStart(2, 0), String(a.getDate()).padStart(2, 0)].join('-');
+
+        let default_records = { 'date': indexFmt, time: Object.assign({}, [null, null, null, null]) };
+
+        if (c[indexFmt]) {
+          default_records = { 'date': indexFmt, 'time': c[indexFmt] }
+        }
+
+        timeshit(default_records);
+      }
+    }
+
+    function timeshit(d) {
+      let tr = timesheet.insertRow(-1),
+        c00 = tr.insertCell(0),
+        c01 = tr.insertCell(1),
+        c02 = tr.insertCell(2),
+        c03 = tr.insertCell(3),
+        c04 = tr.insertCell(4);
+
+      let absent = false, oras = d.time;
+
+      if (!oras[0] && !oras[1] && !oras[2] && !oras[3]) {
+        absent = true;
+      }
+
+      c00.innerText = String(new Date(d.date).getDate()).padStart(2, 0);
+      c01.innerText = toLocalTime(oras[0]);
+      c02.innerText = toLocalTime(oras[1]);
+      c03.innerText = toLocalTime(oras[2]);
+      c04.innerText = toLocalTime(oras[3]);
+
+      let it_go = new Date(d.date).getDay();
+
+      if (absent) {
+        if (it_go === 0) {
+          c01.innerText = 'SUNDAY';
+          c01.colSpan = 4;
+          c01.style.fontWeight = 'bold';
+          c02.remove(); c03.remove(); c04.remove();
+        }
+
+        if (it_go === 6) {
+          c01.innerText = 'SATURDAY';
+          c01.colSpan = 4;
+          c01.style.fontWeight = 'bold';
+          c02.remove(); c03.remove(); c04.remove();
+        }
+      }
+    }
+
+    function init() {
+      employee_basic_info(); dtr(); formonth.innerText = `${get_month(this_month - 1)} ${this_year}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => init());
+
+    menuBtn.addEventListener('click', () => {
+      window.location.assign('index.html');
+      menuBtn.style.backgroundColor = '#FAEE17';
+      setTimeout(() => {
+        menuBtn.style.backgroundColor = '#24333e';
+      }, 300);
+    });
+
+    prevMonth.addEventListener('click', () => {
+      let prev_date = new Date(this_year, this_month - 1 , 0);
+      window.location.search = new URLSearchParams({ ID: employee_id, YY: prev_date.getFullYear(), MM: prev_date.getMonth() + 1 });
+    });
+  </script>
+</body>
+
+</html>
