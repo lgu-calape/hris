@@ -40,7 +40,7 @@
 <main>
   <article style="padding-bottom:0;">
     <label for="file">Upload ######_attlog.dat
-      <input accept=".pdf,.dat" type="file" id="file">
+      <input accept=".dat,.txt" type="file" id="file">
     </label>
     <div class="stat"></div>
     <hr/>
@@ -125,7 +125,7 @@ fi.addEventListener('change', (e) => {
 
   });
 
-  x.open("POST", "https://dtr.calape.ph/upload/f.php");
+  x.open("POST", "https://dtr.calape.ph/upload/u.php");
   x.send(f);
 });
 

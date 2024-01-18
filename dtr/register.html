@@ -17,11 +17,11 @@ input{text-transform: uppercase;}
 <body>
 <main class="container" style="max-width:465px;">
   <article>
-    <small>REGISTER TO GENERATE YOUR EMPLOYEE ID</small>
+    <small>BIOMETRIC REGISTRATION FORM</small>
     <hr>
     <input type="text" id="firstname" placeholder="First Name">
     <input type="text" id="lastname" placeholder="Last Name">
-    <input type="text" id="regcode" placeholder="Registration Code">
+    <input type="text" id="regcode" placeholder="HR Code">
     <button id="btn1">REGISTER</button>
   </article>
 </main>
@@ -64,30 +64,40 @@ function register() {
     }
 
     if ( x.readyState === 4 ) {
-      if ( x.status === 200 ) {
-        alert_('Success! Please remember your ID: ' + x.responseText,true,21e6);
-        btn1.innerText = '\u2713 REGISTERED';
-        firstname.disabled = true;
-        lastname.disabled = true;
-        regcode.disabled = true;
-      }
-
       if ( x.status === 401 ) {
-        alert_('INVALID REGISTRATION CODE');
+        alert_('INVALID CODE');
         regcode.ariaInvalid = true;
+				regcode.value = '';
+				btn1.ariaBusy = false;
         btn1.disabled = false;
+				return;
       }
 
       if ( x.status === 403 ) {
         alert_('forbidden');
+				btn1.ariaBusy = false;
         btn1.disabled = false;
+				return;
       }
+
+			if ( x.status !== 200 ) {
+				alert_('server error. try again later');
+				btn1.ariaBusy = false;
+				btn1.disabled = false;
+				return;
+			}
+
+			alert_('BIOMETRIC ID: ' + x.responseText,true,21e6);
+			btn1.innerText = '\u2713 OK';
+			firstname.disabled = true;
+			lastname.disabled = true;
+			regcode.disabled = true;
       btn1.ariaBusy = false;
     }
 
   });
 
-  x.open('POST','api/reg.php');
+  x.open('POST','https://dtr.calape.ph/api/register.php');
   x.send(JSON.stringify([fn,ln,rc]));
 }
 
