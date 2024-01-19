@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <link rel="icon" type="image/png" href="clock.png">
   <title>Daily Time Record</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style type="text/css">
     body {
       margin: 0;
       padding: 0;
       font-size: 12px;
       font-family: arial, san-serif;
-      background: url('https://calape.ph/icons/android-icon-192x192.png') no-repeat fixed center;
+      background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
     }
 
     table {
@@ -47,7 +48,6 @@
     .fullname {
       text-transform: uppercase !important;
       font-weight: bold;
-      /*font-size: 16px;*/
     }
 
     .signed td {
@@ -93,32 +93,41 @@
       text-align: center;
     }
 
-    #filter {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.50);
-      padding: 10px;
-      box-shadow: 0 0 5px gray;
-      min-width: 998px;
-      display: none;
-    }
+		#inputwrap {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: rgba(8,8,8,0.5);
+			padding: 1em 0 0.6em 1.6em;
+		}
 
-    #filter input {
-      font-size: 2em;
-      border: 2px solid #ccc;
-      width: 175px;
-    }
+		#inputwrap button {
+			border-radius: 4px;
+			padding: 5px 10px;
+			font-size: 2em;
+			border: 2px solid #506453;
+			background: #576e5b;
+			color: white;
+			cursor:pointer;
+		}
 
-    #filter button {
-      font-size: 2em;
-      cursor: pointer;
-      font-weight: bold;
-      background-color: green;
-      color: white;
-      border: 2px solid #00aa00;
-    }
+		#inputwrap button:hover {
+			background: #0a9e0a;
+		}
+
+		#inputwrap input {
+			width: 80px;
+			line-height:40px;
+			font-size: 2em;
+			border: 1px solid #1e231c; 
+			border-radius: 4px;
+			padding: 0 5px;
+		}
+
+		#datepick {
+			width: 300px !important;
+		}
 
     #table_content {
       margin-top: 60px;
@@ -139,7 +148,7 @@
     }
 
     @media print {
-      #filter,
+      #inputwrap,
       footer {
         display: none;
       }
@@ -252,27 +261,61 @@
     </table>
   </main>
   <!-- ./ end main -->
-  <div id="filter">
-    <input type="text" placeholder="ID #" style="width:80px;" maxlength="4" id="filter_id_no">
-    <input type="date" id="filter_from_date">
-    <input type="date" id="filter_to_date">
-    <button id="filter_q">CHANGE</button>
-
-    <div style="float:right;">
-      <button onclick="supervisor_();">SUPERVISOR</button>
-      <button onclick="print();">PRINT</button>
-    </div>
-  </div>
+	<div id="inputwrap">
+		<button onclick="print();">PRINT</button>
+		<input type="text" id="employid">
+		<input type="text" id="datepick">
+	</div>
 
   <footer>
     <small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="helper.js?_=1668848567288"></script>
   <script src="time_io.js?_=1668848567293"></script>
   <script src="undertime_io.js?_=1668848567287"></script>
   <script>
-    const employee_id = get_param("ID"),
+		const datep = flatpickr("#datepick", {
+			mode: "range",
+			onChange: e => {
+				if ( e.length !== 2 )
+					return;
+
+				console.log(e.map(d=>+d));		
+				const nURL = new URL(location.href.split('?').shift());
+
+				nURL.searchParams.set('ID', get_param('ID'));
+				nURL.searchParams.set('FROM', qdate(e[0]));
+				nURL.searchParams.set('TO', qdate(e[1]));
+
+				location.assign(nURL);				
+			},
+		 weekNumbers: true
+		});
+
+		document.getElementById('employid').addEventListener('keyup', e=> {
+			var n = e.target.value;
+
+			if ( !+n ) {
+				return;
+			}
+
+			if ( n < 1000 || n > 9999 ) {
+				return;
+			}
+
+			const nURL = new URL(location);
+
+			nURL.searchParams.set('ID', n);
+
+			location.assign(nURL);
+		});
+
+		datep.setDate([get_param('FROM'), get_param('TO')]);
+		document.getElementById('employid').value = get_param('ID');
+
+    let employee_id = get_param("ID"),
       FROM_DATE = get_param("FROM"),
       TO_DATE = get_param("TO"),
       MM = get_param("MM"), YY = get_param("YY");
@@ -282,12 +325,7 @@
 
 
     let table_content = document.getElementById("table_content"),
-      timesheet = document.getElementById("timesheet"),
-      filter = document.getElementById("filter"),
-      filter_q = document.getElementById("filter_q"),
-      filter_id_no = document.getElementById("filter_id_no"),
-      filter_from_date = document.getElementById("filter_from_date"),
-      filter_to_date = document.getElementById("filter_to_date");
+      timesheet = document.getElementById("timesheet");
 
     if ((MM > 0 && MM < 13) && (YY > 2021 && YY < 2100)) {
       from_this_date = new Date(YY, MM - 1, 1);
@@ -512,10 +550,7 @@
         e.textContent = employee_id;
       })
 
-      employee_basic_info(); dtr(); filter_id_no.value = employee_id;
-
-      filter_from_date.value = fmt_from_date;
-      filter_to_date.value = fmt_to_date;
+      employee_basic_info(); dtr(); 
 
       if (localStorage.getItem('supervisor')) {
         set_supervisor(localStorage.getItem('supervisor'));
@@ -534,10 +569,6 @@
         document.querySelectorAll('.work').forEach(e => {
           e.textContent = 'function : ' + localStorage.getItem('work');
         })
-      }
-
-      if (window.outerWidth > 1024) {
-        filter.style.display = 'block';
       }
     }
 
@@ -590,32 +621,11 @@
       }).then(v => set_supervisor(v));
     }
 
-    filter_q.addEventListener("click", () => {
-      let [yy1, mm1, dd1] = String(filter_from_date.value).split("-");
-      let [yy2, mm2, dd2] = String(filter_to_date.value).split("-");
+		var inputwrap = document.getElementById('inputwrap');
 
-      let _ID = filter_id_no.value;
-      let _DATE1 = filter_from_date.value;
-      let _DATE2 = filter_to_date.value;
-
-      console.log(_ID, filter_from_date.value, filter_to_date.value);
-
-      if (!_ID || !yy1 || !yy2 || !mm1 || !mm2 || !dd1 || !dd2) {
-        return;
-      }
-
-      let src = new URL(location.origin + location.pathname);
-      src.searchParams.set("ID", _ID);
-      src.searchParams.set("FROM", _DATE1);
-      src.searchParams.set("TO", _DATE2);
-
-      location.assign(src);
-
-    });
-    
     document.addEventListener('DOMContentLoaded', () => init());
-    window.addEventListener('beforeprint', (e) => { filter.style.display = 'none'; });
-    window.addEventListener('afterprint', (e) => { filter.style.display = 'block'; });
+    window.addEventListener('beforeprint', (e) => { inputwrap.style.display = 'none'; });
+    window.addEventListener('afterprint', (e) => { inputwrap.style.display = 'block'; });
 
     timesheet.addEventListener('click', e => {
       let td = e.target;
@@ -947,6 +957,12 @@
 
       localStorage.setItem('work', ss);
     })
+
+		function qdate(n) {
+			let d = new Date(+n);
+
+			return [d.getFullYear(), String(d.getMonth() + 1).padStart(2,0), String(d.getDate()).padStart(2, 0)].join('-');
+		}
   </script>
 </body>
 </html>

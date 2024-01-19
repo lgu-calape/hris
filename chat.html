@@ -166,7 +166,7 @@ msg.addEventListener('keyup', (e) => {
 	}
 
 	if ( txt.match(new RegExp(/^\/screen$/)) ) {
-		l.innerHTML = `* screen width info ${screen.width}px`;
+		l.innerHTML = `* screen width info ${innerWidth}px`;
 		l.style.color = 'red';
 		appendLog(l);
 		return;		
@@ -252,7 +252,7 @@ wss.onmessage = (e) => {
 wss.onopen = (e) => {
 	let div = document.createElement('div');
 
-	div.innerHTML = `* You are now chatting as <b>${uid}</b>. To change name type <i>/nick juan</i>`;
+	div.innerHTML = `* You are now chatting as <b>${uid}</b>. To change name, type <i>/nick juan</i>`;
 	div.className = 'box';
   appendLog(div);
 }
