@@ -4,11 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- @google fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Glitch&display=swap" rel="stylesheet">
-  <!-- /google fonts -->
+	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="icon" type="image/png" href="clock.png">
   <title>@</title>
@@ -16,9 +12,9 @@
     body {
       margin: 0;
       padding: 0;
-      font-size: 12px;
-      font-family: arial, san-serif, FontAwesome;
-      background: url('https://calape.ph/icons/android-icon-192x192.png') no-repeat fixed center;
+      font-size: 0.6em;
+      font-family: 'ADLaM Display', sans-serif;
+      background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
     }
 
     table {
@@ -64,20 +60,22 @@
     }
 
     header>button {
-      background-color: #24333e;
+      background-color: #04842e;
       border: 0px;
       color: #fff;
       cursor: pointer;
-      font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-size: 34px;
       font-weight: bold;
-      padding: 10px 0 5px 0;
+      padding: 8px 0 5px 0;
       text-transform: uppercase;
       display: block;
       width: 100%;
-      box-shadow: -1px 3px 5px -2px rgba(0,0,0,0.75);
       margin:0;
     }
+
+		header>button:hover {
+			background: #079234;
+		}
 
     footer {
       position: fixed;
@@ -88,20 +86,22 @@
     }
 
     footer>button {
-      background-color: #76808C;
+      background-color: #3479cc;
       border: 0px;
       color: #fff;
       cursor: pointer;
-      font-family: 'Rubik Glitch', cursive;
       font-size: 24px;
       font-weight: bold;
       padding: 10px 0 5px 0;
       text-transform: uppercase;
       display: block;
       width: 100%;
-      box-shadow: -2px -4px 5px -2px rgba(0,0,0,0.75);
       margin:0;
     }
+
+		footer>button:hover {
+			background: #4991e7;
+		}
   </style>
 </head>
 
@@ -280,10 +280,6 @@
 
     menuBtn.addEventListener('click', () => {
       window.location.assign('index.html');
-      menuBtn.style.backgroundColor = '#FAEE17';
-      setTimeout(() => {
-        menuBtn.style.backgroundColor = '#24333e';
-      }, 300);
     });
 
     prevMonth.addEventListener('click', () => {

@@ -165,6 +165,11 @@ msg.addEventListener('keyup', (e) => {
 		return;
 	}
 
+	if ( txt.match(new RegExp(/^\/exit$/)) ) {
+		history.back();
+    return;
+  }
+
 	if ( txt.match(new RegExp(/^\/screen$/)) ) {
 		l.innerHTML = `* screen width info ${innerWidth}px`;
 		l.style.color = 'red';

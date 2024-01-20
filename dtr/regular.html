@@ -283,9 +283,20 @@
   <script src="time_io.js?_=1668848567293"></script>
   <script src="undertime_io.js?_=1668848567287"></script>
   <script>
+		if ( get_param('ID') && get_param('FROM') ) {
+			var dd = new Date(get_param('FROM'));
+
+			var nurl = new URL(location.href.split('?').shift());
+
+      nurl.searchParams.set('ID', get_param('ID'));
+      nurl.searchParams.set('YY', dd.getFullYear());
+			nurl.searchParams.set('MM', dd.getMonth()+1);
+
+			location.assign(nurl);
+		}
+
 		const datep = flatpickr("#datepick", {
 			onClose: e => {
-				console.log(e)
 				if ( e.length !== 1 )
 					return;
 
@@ -333,17 +344,16 @@
 		}
 
 		if ( get_param('YY') && get_param('MM') ) {
+			if ( get_param('YY') < 2021 || get_param('YY') > 2100 || get_param('MM') < 1 || get_param('MM') > 12 ) {
+				location.assign('index.html');
+			}
+
 			datep.setDate([new Date(get_param('YY'), get_param('MM')-1)]);
 		}
 
 		document.getElementById('employid').value = get_param('ID');
 
-    const employee_id = get_param('ID'),
-      this_month = get_param('MM'),
-      this_year = get_param('YY');
-
-    if (!(this_month > 0 && this_month < 13) || !(this_year > 2021 && this_year < 2102))
-      location.assign('index.html');
+    const employee_id = get_param('ID'), this_month = get_param('MM'), this_year = get_param('YY');
 
     const WORKING_HOURS = [8, 12, 13, 17];
 

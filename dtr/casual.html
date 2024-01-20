@@ -277,6 +277,10 @@
   <script src="time_io.js?_=1668848567293"></script>
   <script src="undertime_io.js?_=1668848567287"></script>
   <script>
+		if ( !get_param('ID') ) {
+			location.assign('/');
+		}
+
 		const datep = flatpickr("#datepick", {
 			mode: "range",
 			onChange: e => {
@@ -313,7 +317,14 @@
 			location.assign(nURL);
 		});
 
-		datep.setDate([get_param('FROM'), get_param('TO')]);
+		if ( get_param('FROM') && get_param('TO') ) {
+			datep.setDate([get_param('FROM'), get_param('TO')]);
+		}
+
+		if ( get_param('MM') && get_param('YY') ) {
+			datep.setDate([new Date(get_param('YY'),get_param('MM')-1,1),new Date(get_param('YY'),get_param('MM'),0)]);
+		}
+		
 		document.getElementById('employid').value = get_param('ID');
 
     let employee_id = get_param("ID"),
