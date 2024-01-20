@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <link rel="icon" type="image/png" href="clock.png">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <title>CSC FORM 48</title>
   <style type="text/css">
     body {
@@ -10,7 +11,7 @@
       padding: 0;
       font-size: 12px;
       font-family: arial, san-serif;
-      background: url('https://calape.ph/icons/android-icon-192x192.png') no-repeat fixed center;
+      background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
     }
 
     table {
@@ -81,32 +82,41 @@
       text-align: center;
     }
 
-    #filter {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.50);
-      padding: 10px;
-      box-shadow: 0 0 5px gray;
-      min-width: 998px;
-      display: none;
-    }
+		#inputwrap {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: rgba(8,8,8,0.5);
+			padding: 1em 0 0.6em 1.6em;
+		}
 
-    #filter input {
-      font-size: 2em;
-      border: 2px solid #ccc;
-      width: 175px;
-    }
+		#inputwrap button {
+			border-radius: 4px;
+			padding: 5px 10px;
+			font-size: 2em;
+			border: 2px solid #506453;
+			background: #576e5b;
+			color: white;
+			cursor:pointer;
+		}
 
-    #filter button {
-      font-size: 2em;
-      cursor: pointer;
-      font-weight: bold;
-      background-color: green;
-      color: white;
-      border: 2px solid #00aa00;
-    }
+		#inputwrap button:hover {
+			background: #0a9e0a;
+		}
+
+		#inputwrap input {
+			width: 80px;
+			line-height:40px;
+			font-size: 2em;
+			border: 1px solid #1e231c; 
+			border-radius: 4px;
+			padding: 0 5px;
+		}
+
+		#datepick {
+			width: 110px !important;
+		}
 
     #table_content {
       margin-top: 60px;
@@ -121,13 +131,13 @@
       left: 0;
       right: 0;
       padding: 5px;
-      background: red;
+      background: rgba(8,8,8,0.5);
       color: #fff;
       text-align: center;
     }
 
     @media print {
-      #filter,
+      #inputwrap,
       footer {
         display: none;
       }
@@ -257,24 +267,77 @@
     </table>
   </main>
   <!-- ./ end main -->
-  <div id="filter">
-    <input type="text" placeholder="ID #" style="width:80px;" maxlength="4" id="filter_id_no">
-    <button id="filter_q">CHANGE</button>
-
-    <div style="float:right;">
-      <button onclick="supervisor_();">SUPERVISOR</button>
-      <button onclick="print();">PRINT</button>
-    </div>
-  </div>
+	<div id="inputwrap">
+		<button onclick="print();">PRINT</button>
+		<input type="text" id="employid">
+		<input type="text" id="datepick">
+		<button onclick="location.assign(location.href.replace('regular.html','casual.html'));" style="float:right;margin-right:0.8em;">SWITCH TO CASUAL LAYOUT</button>
+	</div>
 
   <footer>
     <small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="helper.js?_=1668848567288"></script>
   <script src="time_io.js?_=1668848567293"></script>
   <script src="undertime_io.js?_=1668848567287"></script>
   <script>
+		const datep = flatpickr("#datepick", {
+			onClose: e => {
+				console.log(e)
+				if ( e.length !== 1 )
+					return;
+
+				const nURL = new URL(location.href.split('?').shift()), d = e[0];
+
+				nURL.searchParams.set('ID', get_param('ID'));
+				nURL.searchParams.set('YY', d.getFullYear());
+				nURL.searchParams.set('MM', d.getMonth()+1);
+
+				location.assign(nURL);				
+			},
+			onMonthChange: (a,b,c) => {
+				c.setDate([new Date(c.currentYear,c.currentMonth)]);
+				
+			},
+			onYearChange: (a,b,c) => {
+				c.setDate([new Date(c.currentYear,c.currentMonth)])
+			},
+			onOpen: (a,b,c) => {
+				c.rContainer.style.display = 'none';				
+			},
+			dateFormat: 'Y-m'
+		});
+
+		document.getElementById('employid').addEventListener('keyup', e=> {
+			var n = e.target.value;
+
+			if ( !+n ) {
+				return;
+			}
+
+			if ( n < 1000 || n > 9999 ) {
+				return;
+			}
+
+			const nURL = new URL(location);
+
+			nURL.searchParams.set('ID', n);
+
+			location.assign(nURL);
+		});
+
+		if ( !get_param('ID') ) {
+			location.assign('/');
+		}
+
+		if ( get_param('YY') && get_param('MM') ) {
+			datep.setDate([new Date(get_param('YY'), get_param('MM')-1)]);
+		}
+
+		document.getElementById('employid').value = get_param('ID');
+
     const employee_id = get_param('ID'),
       this_month = get_param('MM'),
       this_year = get_param('YY');
@@ -505,14 +568,14 @@
         o.innerText = 'Working hours ' + get_working_hours();
       });
 
-      employee_basic_info(); dtr(); filter_id_no.value = employee_id;
+      employee_basic_info(); dtr(); 
 
       if (localStorage.getItem('supervisor')) {
         set_supervisor(localStorage.getItem('supervisor'));
       }
 
       if (window.outerWidth > 1024) {
-        filter.style.display = 'block';
+        inputwrap.style.display = 'block';
       }
     }
 
@@ -561,26 +624,9 @@
       }).then(v => set_supervisor(v));
     }
 
-    filter_q.addEventListener('click', () => {
-      let _ID = filter_id_no.value;
-
-
-      if (!_ID) {
-        return;
-      }
-
-      let src = new URL(location);
-      src.searchParams.set('ID', _ID);
-      src.searchParams.set('YY', this_year);
-      src.searchParams.set('MM', this_month);
-
-      location.assign(src);
-
-    });
-
     document.addEventListener('DOMContentLoaded', () => init());
-    window.addEventListener('beforeprint', (e) => { filter.style.display = 'none'; });
-    window.addEventListener('afterprint', (e) => { filter.style.display = 'block'; });
+    window.addEventListener('beforeprint', (e) => { inputwrap.style.display = 'none'; });
+    window.addEventListener('afterprint', (e) => { inputwrap.style.display = 'block'; });
 
     timesheet.addEventListener('click', e => {
       let td = e.target;

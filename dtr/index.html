@@ -70,12 +70,15 @@
         return;
       }
 
+			EID.ariaBusy = true;
+
       let x = new XMLHttpRequest();
 
       x.addEventListener('readystatechange', () => {
         if (x.readyState === 4) {
           if (x.status !== 200) {
 	          EID.ariaInvalid = true;
+						EID.removeAttribute('aria-busy');
 						return;
 					}
 
@@ -84,7 +87,7 @@
 						return;
 					}
 
-					location.assign('view.html?ID=' + ID);
+					location.replace(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
         }
       });
 
