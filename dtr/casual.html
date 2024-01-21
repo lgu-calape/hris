@@ -975,6 +975,12 @@
 
 			return [d.getFullYear(), String(d.getMonth() + 1).padStart(2,0), String(d.getDate()).padStart(2, 0)].join('-');
 		}
+
+		window.onresize = (e) => {
+			if ( window.innerWidth < 1230 && !get_param('v') ) {
+				window.location.assign(`view.html?ID=${get_param('ID')}`);
+			}
+		}
   </script>
 </body>
 </html>

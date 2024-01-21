@@ -41,7 +41,7 @@
 <body>
   <main class="container" id="mainx">
     <article>
-      <input type="text" id="employee_id" placeholder="employee id">
+      <input type="text" id="employee_id" placeholder="employee id" autofocus>
 			<div style="display:none;">
       <button id="btn0">VIEW DTR</button>
       <button id="btn4" style="background-color:red;border-color:red;display:none;">NEW DTR SELECTION</button>
@@ -102,7 +102,10 @@
     EID.addEventListener('keyup', (e) => {
 			EID.removeAttribute('aria-invalid');
 
-			if (e.target.value.length !== 4)
+			if ( e.target.value.length > 4 )
+				e.target.value = '';
+
+			if ( e.target.value.length !== 4 )
 				return;
 
       verify(e.target.value);

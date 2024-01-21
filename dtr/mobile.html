@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,58 +56,48 @@
       margin: 0;
       padding: 0;
       display: none;
+			min-width: 320px;
+      background: #04842e;
     }
 
-    header>button {
-      background-color: #04842e;
-      border: 0px;
-      color: #fff;
+    header a {
+			color: #fff;
       cursor: pointer;
-      font-size: 34px;
-      font-weight: bold;
-      padding: 8px 0 5px 0;
+			display: block;
+			float: left;
+      font-size: 3em;
+      padding: 10px;
+			text-decoration: none;
       text-transform: uppercase;
-      display: block;
-      width: 100%;
-      margin:0;
     }
 
-		header>button:hover {
-			background: #079234;
+		header a:hover {
+      background: #0aa23c;
 		}
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: none;
-    }
+		header div {
+			float: right;
+		}
 
-    footer>button {
-      background-color: #3479cc;
-      border: 0px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 24px;
-      font-weight: bold;
-      padding: 10px 0 5px 0;
-      text-transform: uppercase;
-      display: block;
-      width: 100%;
-      margin:0;
-    }
+		footer {
+			text-align: center;
+		}
 
-		footer>button:hover {
-			background: #4991e7;
+		footer p {
+			color: #ddd;
 		}
   </style>
 </head>
 
 <body>
   <header id="header_nav">
-    <button id="menuBtn">- home -</button>
+    <a href="index.html">⇧</a>
+		<div>
+    <a href="#" id="prevbtn">︎⇠</a>
+    <a href="#" id="nextbtn">⇢</a>
+		</div>
   </header>
+
   <main id="table_content">
     <table border="1" id="tstable">
       <thead id="tshead">
@@ -119,7 +108,7 @@
           <th colspan="5" id="formonth">&nbsp;</th>
         </tr>
         <tr>
-          <th rowspan="2" width="45">days</th>
+          <th rowspan="2" width="45">date</th>
           <th colspan="2">am</th>
           <th colspan="2">pm</th>
         </tr>
@@ -134,12 +123,8 @@
         <!--timesheet generation-->
       </tbody>
     </table>
+		<footer><p>rev.1705815749</p></footer>
   </main>
-
-  <footer id="footer">
-    <button id="prevMonth">PREVIOUS MONTH</button>
-  </footer>
-
   <script src="helper.js"></script>
   <script src="time_io.js"></script>
   <script>
@@ -179,7 +164,6 @@
 
             header_nav.style.display = 'block';
             table_content.style.display = 'block';
-            footer.style.display = 'block';
           }
 
           if (x.status === 403) {
@@ -278,14 +262,23 @@
 
     document.addEventListener('DOMContentLoaded', () => init());
 
-    menuBtn.addEventListener('click', () => {
-      window.location.assign('index.html');
+    prevbtn.addEventListener('click', () => {
+      let d = new Date(this_year, this_month - 1);
+			d.setMonth(d.getMonth()-1);
+      window.location.search = new URLSearchParams({ ID: employee_id, YY: d.getFullYear(), MM: d.getMonth() + 1 });
     });
 
-    prevMonth.addEventListener('click', () => {
-      let prev_date = new Date(this_year, this_month - 1 , 0);
-      window.location.search = new URLSearchParams({ ID: employee_id, YY: prev_date.getFullYear(), MM: prev_date.getMonth() + 1 });
+    nextbtn.addEventListener('click', () => {
+      let d = new Date(this_year, this_month - 1);
+			d.setMonth(d.getMonth()+1);
+      window.location.search = new URLSearchParams({ ID: employee_id, YY: d.getFullYear(), MM: d.getMonth() + 1});
     });
+
+		window.onresize = (e) => {
+			if ( window.innerWidth > 1039 ) {
+				window.location.assign(`view.html?ID=${get_param('ID')}`);
+			}
+		}
   </script>
 </body>
 
