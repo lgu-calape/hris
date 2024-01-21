@@ -300,6 +300,10 @@
 				if ( e.length !== 1 )
 					return;
 
+				if ( get_param('YY') == e[0].getFullYear() && get_param('MM') == e[0].getMonth()+1 ) {
+					return;
+				}
+
 				const nURL = new URL(location.href.split('?').shift()), d = e[0];
 
 				nURL.searchParams.set('ID', get_param('ID'));
