@@ -65,6 +65,10 @@
     const YM = new Date(), EID = document.getElementById('employee_id');
 
     function verify(ID) {
+			if ( EID.ariaBusy ) {
+				return;
+			}
+
       if (ID < 1001 || ID > 9999) {
         EID.ariaInvalid = true;
         return;
@@ -77,6 +81,7 @@
       x.addEventListener('readystatechange', () => {
         if (x.readyState === 4) {
           if (x.status !== 200) {
+						EID.value = '';
 	          EID.ariaInvalid = true;
 						EID.removeAttribute('aria-busy');
 						return;
