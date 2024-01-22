@@ -63,9 +63,10 @@
   <script src="helper.js"></script>
   <script>
     const YM = new Date(), EID = document.getElementById('employee_id');
+	  let sendOnce = false;
 
     function verify(ID) {
-			if ( EID.ariaBusy ) {
+			if ( sendOnce ) {
 				return;
 			}
 
@@ -74,16 +75,18 @@
         return;
       }
 
-			EID.ariaBusy = true;
+			EID.ariaBusy = true; sendOnce = true;
 
       let x = new XMLHttpRequest();
 
       x.addEventListener('readystatechange', () => {
         if (x.readyState === 4) {
+					sendOnce = false;
+
           if (x.status !== 200) {
 						EID.value = '';
+						EID.ariaBusy = false;
 	          EID.ariaInvalid = true;
-						EID.removeAttribute('aria-busy');
 						return;
 					}
 
