@@ -177,6 +177,7 @@
       p.searchParams.set('ID', employee_id);
       p.searchParams.set('MM', this_month);
       p.searchParams.set('YY', this_year);
+			p.searchParams.set('ref','mobile');
 
       x.open('GET', p);
       x.send();

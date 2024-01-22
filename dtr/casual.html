@@ -410,6 +410,10 @@
   	         document.title = employee_name;
 
 						fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>r.json()).then(d=>{
+							if ( !d ) {
+								return;
+							}
+
 							document.querySelectorAll('.department').forEach(e=> {
 								e.textContent = `department : ${d.department}`
 							});
@@ -621,6 +625,7 @@
         let e1 = document.createElement('p');
         e1.innerText = s1;
         e1.style.textDecoration = 'underline';
+				e1.style.paddingBottom = '5px';
 
         let e2 = document.createElement('p');
         e2.innerText = s2;
