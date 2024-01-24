@@ -220,7 +220,7 @@ msg.addEventListener('keyup', (e) => {
 
 	x.send(JSON.stringify({
 		'topic':'jmctg9a5nrbds0x98lwcki36h9ny87x3',
-		'message': hash || txt.substr(0,60),
+		'message': hash || txt.substr(0,255),
 		'title': uid
 	}));
 });
