@@ -130,7 +130,7 @@ function time_io(logged_hours, working_hours = [8, 12, 13, 17]) {
 					if (n == 2) {
 						msdiff = hours[2] - hours[1];
 
-						if (msdiff > 144e5) {
+						if (msdiff > 1368e4) {
 							hours[3] = hours[2];
 							continue;
 						}
