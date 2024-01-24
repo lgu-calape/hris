@@ -164,6 +164,13 @@ msg.addEventListener('keyup', (e) => {
 	var hash; msg.value = '';
 	var l = document.createElement('div');
 
+	if ( txt.length > 1024 ) {
+		l.innerHTML = '* message too long.';
+		l.style.color = 'red';
+		appendLog(l);
+		return;
+	}
+
 	if ( txt.match(new RegExp(/^\/code$/)) ) {
 		l.innerHTML = atob('KiBjb2RlOiAxMzM3');
 		l.style.color = 'red';
@@ -220,7 +227,7 @@ msg.addEventListener('keyup', (e) => {
 
 	x.send(JSON.stringify({
 		'topic':'jmctg9a5nrbds0x98lwcki36h9ny87x3',
-		'message': hash || txt.substr(0,255),
+		'message': hash || txt,
 		'title': uid
 	}));
 });
