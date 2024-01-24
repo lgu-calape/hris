@@ -110,7 +110,7 @@ function time_io(logged_hours, working_hours = [8, 12, 13, 17]) {
 
 					if (n == 0) {
 						if (pTime.getHours() > 11) {
-							if (msdiff < 33e5) {
+							if (msdiff < 354e4) {
 								hours[3] = hours[2];
 								hours[2] = hours[1];
 								hours[1] = hours[0];
