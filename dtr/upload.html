@@ -53,9 +53,24 @@ const fi = document.getElementById('file'),
       st = document.querySelector('.stat');
 
 fi.addEventListener('change', (e) => {
+	const p = prompt("Enter password: ");
+
+	console.log(p);
+
+	if ( !p ) {
+		fi.value = '';
+		return;
+	}
+
+	if ( p.length < 4 || p.length > 32) {
+		fi.value = '';
+		return;
+	}
+
   const f = new FormData();
 
   f.append("file", fi.files[0])
+	f.append("pass", p);
 
   const x = new XMLHttpRequest();
 

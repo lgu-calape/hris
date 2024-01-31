@@ -314,6 +314,10 @@
 				return;
 			}
 
+			if ( n === get_param('ID') ) {
+				return;
+			}
+
 			const nURL = new URL(location);
 
 			nURL.searchParams.set('ID', n);
