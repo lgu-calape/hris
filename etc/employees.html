@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="https://calape.ph/assets/calape.svg">
+<title>✎</title>
+<style type="text/css">
+body{
+	margin:0;
+	padding:0;
+	font-family:arial,san-serif;
+}
+
+table{
+	margin:auto;
+	border:1px solid #eee;
+	border-collapse:collapse;
+	font-size:1.6em;
+	width:100%;
+}
+
+tr:hover{
+	cursor:pointer;
+	color:#444;
+}
+td {
+	white-space: nowrap;
+	padding: 5px 10px;
+}
+
+th {
+	text-align: left;
+	padding: 5px 10px;
+}
+
+tr:hover{
+	background:yellow;
+}
+
+tr > td:nth-child(4) {
+	text-transform: uppercase;
+	font-size: 0.7em;
+}
+
+@media only screen and (max-width: 768px) {
+  #tbl1 {
+		font-size:0.75em; white-space:nowrap;
+	}
+}
+
+@media print {
+  #tbl1 {
+		font-size: 12px;
+		border: 1px solid #888;
+	}
+
+  td {
+		padding: 5px;
+	}
+
+  th {
+		padding: 5px;
+	}
+}
+</style>    
+</head>
+<body>
+  <main style="max-width:1024px;margin:auto;">
+    <table border="1" id="tbl1">
+      <thead>
+        <tr><th onclick="sort_by_id();" title="sort by id">ID</th><th onclick="sort_by_fname();" title="sort by name">First Name</th><th onclick="sort_by_lname();" title="sort by name">Last Name</th><th>Department</th></tr>
+      </thead>
+      <tbody id="employeestbl">
+      </tbody>
+    </table>
+  </main>
+  <script src="/dtr/helper.js"></script>
+  <script>
+  var sort = get_param('sort') || 'name';
+
+	async function assignment(n) {
+		let x = await fetch(`https://dtr.calape.ph/api/assignments.php?id=${n}`);
+
+		if ( x.status !== 200 ) {
+			return '';
+		}
+
+		x = await x.json();
+
+		return x.department;
+	}
+
+  function employees() {
+    let x = new XMLHttpRequest();
+
+    x.addEventListener('readystatechange',()=>{
+      if ( x.readyState === 4 ) {
+        if ( x.status === 200 ) {
+          let o = JSON.parse(x.responseText);
+
+          o.forEach(i=>displayTable(i));
+
+          tbl1.style.display = 'table';
+        }
+
+        if ( x.status === 403 ) {
+          alert_('forbidden');
+          btn1.disabled = false;
+        }
+      }
+
+    });
+
+    x.open('GET','https://dtr.calape.ph/api/get_employees.php?limit=1000&sort='+sort);
+    x.send();
+  }
+
+  function dtr(o) {
+    location.assign('/dtr/view.html?ID='+o.id);
+  }
+
+  async function displayTable(o) {
+    let tr = employeestbl.insertRow(-1),
+        c0 = tr.insertCell(0),
+        c1 = tr.insertCell(1),
+        c2 = tr.insertCell(2),
+        c3 = tr.insertCell(3);
+
+    c0.innerText = o.id;
+    c2.innerText = o.lastname;
+    c1.innerText = o.firstname;
+		c3.innerText = await assignment(o.id);
+
+    tr.addEventListener('click',()=>dtr(o));
+  }
+
+  function sort_by_id() {
+    location.search = '?sort=id';
+  }
+
+  function sort_by_fname() {
+    location.search = '?sort=fname';
+  }
+
+  function sort_by_lname() {
+    location.search = '?sort=lname';
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>employees());
+  </script>
+</body>
+</html>

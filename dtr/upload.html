@@ -55,8 +55,6 @@ const fi = document.getElementById('file'),
 fi.addEventListener('change', (e) => {
 	const p = prompt("Enter password: ");
 
-	console.log(p);
-
 	if ( !p ) {
 		fi.value = '';
 		return;
