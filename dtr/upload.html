@@ -103,7 +103,14 @@ fi.addEventListener('change', (e) => {
   x.addEventListener('readystatechange', e=> {
 
    if ( x.readyState === 4 ) {
-     
+		 fi.value = '';
+
+     if (x.status === 401 ) {
+       st.textContent = "Invalid password.";
+       st.setAttribute('class','stat error');  
+       return;
+     }
+
      if (x.status === 406 ) {
        st.textContent = "File not acceptable.";
        st.setAttribute('class','stat error');  
