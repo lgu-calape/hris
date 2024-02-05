@@ -116,8 +116,13 @@ tr > td:nth-child(4) {
     x.send();
   }
 
-  function dtr(o) {
-    location.assign('/dtr/view.html?ID='+o.id);
+  function dtr(o,p) {
+		if ( p.toLowerCase() != 'regular' ) {
+	    window.open('/dtr/view.html?ID='+o.id,'_blank');
+			return;
+		}
+
+    window.open('/dtr/view.html?r=1&ID='+o.id,'_blank');
   }
 
   async function displayTable(o) {
@@ -132,7 +137,7 @@ tr > td:nth-child(4) {
     c1.innerText = o.firstname;
 		c3.innerText = await assignment(o.id);
 
-    tr.addEventListener('click',()=>dtr(o));
+    tr.addEventListener('click',()=>dtr(o,c3.innerText));
   }
 
   function sort_by_id() {

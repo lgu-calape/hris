@@ -83,7 +83,11 @@
       location.assign(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
     }
 		else {
-	    location.assign(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
+			if ( get_param('r') ) {			
+		    location.assign(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+			} else {
+		    location.assign(`casual.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
+			}
 		}
 
     function get_month() {

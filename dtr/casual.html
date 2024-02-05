@@ -413,7 +413,11 @@
     	       document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
   	         document.title = employee_name;
 
-						fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>r.json()).then(d=>{
+						fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>{
+							if ( r.status === 200 ) {
+								return r.json()
+							}
+						}).then(d=>{
 							if ( !d ) {
 								return;
 							}

@@ -432,29 +432,23 @@
             document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
             document.title = employee_name;
 
-						fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>r.json()).then(d=>{
+						fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>{
+							if ( r.status === 200 ) {	
+								return r.json();
+							}
+						}).then(d=>{
 
 							if ( !d ) {
 								return;
 							}
 
-							document.querySelectorAll('.department').forEach(e=> {
-								e.textContent = `department : ${d.department}`
-							});
-
-							document.querySelectorAll('.work').forEach(e=> {
-								e.textContent = `function : ${d.position}`
-							});
-
 							if ( d.supervisor ) {
 								set_supervisor(d.supervisor);
+								localStorage.setItem('supervisor', d.supervisor);
 							}
 
 							sha256 = CryptoJS.SHA256([employee_id,d.department,d.position,d.supervisor].toString()).toString();
 
-							localStorage.setItem('department', d.department);
-							localStorage.setItem('work', d.position);
-							localStorage.setItem('supervisor', d.supervisor);
 						});
           }
 
@@ -681,23 +675,15 @@
 
 		window.addEventListener('beforeprint', (e) => {
 	 		inputwrap.style.display = 'none';
-			var a = localStorage.getItem('department'),
-					b = localStorage.getItem('work'),
-					c = localStorage.getItem('supervisor');
+			var	sv = localStorage.getItem('supervisor');
 
-			if ( !a ) {
-				a = 'regular';
-			}
+			if ( sv ) {
+				var dep = pos = 'regular';
 
-			if ( !b ) {
-				b = 'regular';
-			}
-
-			if ( a && b && c ) {
-				var hash = CryptoJS.SHA256([employee_id,a,b,c].toString()).toString();
+				var hash = CryptoJS.SHA256([employee_id,dep,pos,sv].toString()).toString();
 
 				if ( hash !== sha256 ) {
-					urecord(employee_id,a,b,c); sha256 = hash;
+					urecord(employee_id,dep,pos,sv); sha256 = hash;
 				}
 			}
 		});
