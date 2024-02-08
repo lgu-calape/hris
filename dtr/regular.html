@@ -918,11 +918,15 @@
 					li.add('hide');
 				}
 
+				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'move' ) {
+					li.add('hide');
+				}
+
 				if ( times === 2 && (arr[0] && arr[3] || arr[1] && arr[2]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
 					li.add('hide');
 				}
 
-				if ( times === 3 && ['fillas','leave'].includes(ss) ) {
+				if ( times === 3 && ['fillas','leave','move'].includes(ss) ) {
 					li.add('hide');
 				}
 
@@ -1048,6 +1052,24 @@
 				ctxtarg.deleteCell(10);
 				ctxtarg.deleteCell(3);
 				ctxtarg.deleteCell(3);
+			}
+
+			if ( arrlen === 2 && arr[0] && arr[1] ) {
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(3);
+				ctxtarg.cells[9].colSpan = 2;
+				ctxtarg.cells[9].textContent = s;
+				ctxtarg.cells[3].colSpan = 2;
+				ctxtarg.cells[3].textContent = s;
+			}
+
+			if ( arrlen === 2 && arr[2] && arr[3] ) {
+				ctxtarg.deleteCell(8);
+				ctxtarg.deleteCell(2);
+				ctxtarg.cells[7].colSpan = 2;
+				ctxtarg.cells[1].colSpan = 2;
+				ctxtarg.cells[7].textContent = s;
+				ctxtarg.cells[1].textContent = s;
 			}
 
 			if ( arrlen === 2 && arr[0] && arr[3] ) {

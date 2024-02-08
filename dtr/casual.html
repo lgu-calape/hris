@@ -162,10 +162,136 @@
     .recordhead {
       font-size: 12px;
     }
+		.tblctx {
+			margin-top: -15px;
+		}
+
+		.tblctx ul {
+			background: #ddd;
+			border-radius: 6px;
+			list-style: none;
+			margin: 0;
+			padding: 5px;
+		}
+
+		.tblctx li a {
+			padding: 10px 28px;
+			border: 1px solid #cfcfcf;
+			color: #000;
+			display: block;
+			text-wrap: nowrap;
+			text-decoration: none;
+		}
+
+		.tblctx li a:hover {
+			background: #ccc;
+		}
+
+		.tblctx li > ul {
+			display: none;
+			position: absolute;
+			margin-top: -41px;
+			margin-left: 99px;
+		}
+
+		.tblctx li:hover > ul {
+			display: block;
+		}
+
+		.show {
+			display: block;
+		}
+
+		.hide {
+			display: none;
+		}
+
+		.clockbox {
+			margin: auto;
+			width: 420px;
+		}
+
+		.clockbox > div {
+			position: fixed;
+			top: 200px;
+			background: #ccc;
+			width: 380px;
+			padding: 20px;
+			text-align: center;
+			border: 4px solid #bbb;
+			border-radius: 10px;
+		}
+
+		.clockbox button {
+			background: #576e5b;
+			border: 1px solid #506453;
+			border-radius: 4px;
+			color: #fff;
+			cursor: pointer;
+			font-size: 1.6em;
+			padding: 0 5px;
+			position: absolute;
+			margin-top: -32px;
+			margin-left: 93px;
+		}
+		.clockbox button:hover {
+			background: #0a9e0a;
+		}
+
+		.clockbox input {
+			line-height: 40px;
+			font-size: 2em;
+			width: 200px;
+			text-align: center;
+			border: 1px solid #555;
+			border-radius: 4px;
+		}
   </style>
 </head>
 
-<body oncontextmenu="return false;">
+<body>
+	<nav class="tblctx hide">
+		<ul>
+			<li>
+				<a href="#">FILL AS</a>
+				<ul>
+					<li><a href="#">ABSENT</a></li>
+					<li><a href="#">DAY OFF</a></li>
+					<li><a href="#">FIELD</a></li>
+					<li><a href="#">HOLIDAY</a></li>
+					<li><a href="#">SPECIAL NON-WORKING DAY</a></li>
+					<li><a href="#">TRAVEL O.B.</a></li>					
+				</ul>
+			</li>
+			<li>
+				<a href="#">LEAVE</a>
+				<ul>
+					<li><a href="#">MATERNITY</a></li>
+					<li><a href="#">PATERNITY</a></li>
+					<li><a href="#">SICK</a></li>
+					<li><a href="#">SPECIAL PRIVILEGE</a></li>
+					<li><a href="#">VACATION</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">MOVE</a>
+				<ul>
+					<li><a href="#">TIME IN/OUT</a></li>
+					<li><a href="#">DAY IN/OUT</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#"> EDIT &nbsp;&nbsp;&nbsp;</a>
+				<ul>
+					<li><a href="#">AM IN</a></li>
+					<li><a href="#">AM OUT</a></li>
+					<li><a href="#">PM IN</a></li>
+					<li><a href="#">PM OUT</a></li>
+					<li><a href="#">CLEAR</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
   <main id="table_content">    
     <table border="0" class="recordhead">
       <tr>
@@ -272,6 +398,14 @@
   <footer>
     <small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
   </footer>
+
+	<div class="clockbox hide">
+		<div>
+			<input type="text" id="timex">
+			<button>&times;</button>
+		</div>
+	</div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -534,54 +668,8 @@
           c12.remove(); c10.remove(); c11.remove();
         }
 
-      }      
-
-      tr.addEventListener('click1',() => {    
-        
-        if (new Date(d.date).getTime() > new Date().getTime()) {
-          return;
-        }
-        
-        if (oras[0] && oras[1] && (oras[2] || oras[3])) {
-          return;
-        }        
-
-        let optval = optsField[optsIdx];
-
-        if (absent) { 
-          if (it_go == 0 || it_go == 6) return;
-          c01.textContent = c08.textContent = optval;
-          c01.colSpan = c08.colSpan = 4;
-          c02.remove(); c03.remove(); c04.remove();
-          c09.remove(); c10.remove(); c11.remove();
-        }
-
-        if (!absent && oras[0] && !oras[1] && !oras[2]) {       
-          c02.textContent = c09.textContent = 'field';
-          c02.colSpan = c09.colSpan = 2;
-          c03.remove(); c10.remove();
-          return;
-        }
-
-        optsIdx++;
-
-        if (optsIdx == optsField.length) {
-          optsIdx = 0;
-        }
-
-        let this_row_id = tr.firstChild.textContent;
-
-        localStorage.removeItem(d.date);
-
-        if (optval == 'holiday') {
-          localStorage.setItem(d.date, 7);
-        }
-
-        if (optval == 'special non-working day') {
-          localStorage.setItem(d.date, 8);
-        }
-      });
-    }
+      }
+		}
 
     function get_working_hours() {
       return WORKING_HOURS.map(d => toLocalTime(new Date().setHours(d, 0, 0, 0))).join('-').replace(/ /g, '');
@@ -688,316 +776,6 @@
 
     window.addEventListener('afterprint', (e) => { inputwrap.style.display = 'block'; });
 
-    timesheet.addEventListener('click', e => {
-      let td = e.target;
-
-      if (td.nodeName == 'TDx') {
-        let tr = td.parentNode;
-
-        if (tr) {
-          let b = 0, c = tr.cells;
-
-          console.log(c.length);
-
-          if (c.length == 13) {
-            for (let i = 1; i<5; i++) {
-              if (c[i].textContent) {
-                b++;
-              }
-            }
-
-            if (b == 3) {
-              let t = td.textContent;
-
-              if (!t) {
-                let i = td.cellIndex;
-
-                if (i > 0 && i < 5) {
-                  td.textContent = ['8:00 AM','12:00 PM','1:00 PM','5:00 PM'][--i];
-                  c[8+i].textContent = td.textContent;
-                }
-              }
-            }
-          }   
-        }
-      }
-   
-      if (td.nodeName == 'TD') {
-        let tr = td.parentNode;
-
-        if (tr) {
-          if (new Date(tr.dataset.ts).getTime() > new Date().getTime()) {
-            return;
-          }
-
-          let b = [], c = tr.cells;
-         
-          if (c.length == 7) {     
-            if (e.shiftKey) {
-              if(td.textContent.indexOf('leave') != -1) {
-                let x = levlist[0], y = levlist.indexOf(td.textContent);               
-
-                if (y < 4) {
-                  x = levlist[y + 1]
-                }
-                
-                tr.cells[1].textContent = x;
-                tr.cells[5].textContent = x;
-                return;
-              }
-
-              if(td.textContent.indexOf('travel') != -1) {
-                var input = prompt('Travel Remarks:');
-
-                if (input) {
-                  input = 'travel: ' + input;
-                  tr.cells[1].textContent = input;
-                  tr.cells[5].textContent = input;
-                  return;
-                }
-              }
-            }
-
-            if (nwdlist.includes(td.textContent.toLowerCase())) {
-
-              let x = nwdlist.indexOf(td.textContent) + 1;
-
-              if (nwdlist.length <= x) {
-                x = 0;
-              }
-
-              tr.cells[1].textContent = nwdlist[x];
-              tr.cells[5].textContent = nwdlist[x];    
-            }
-
-            localStorage.removeItem(tr.dataset.ts);
-
-            if (td.textContent == 'holiday') {
-              localStorage.setItem(tr.dataset.ts, 7);
-            }
-
-            if (td.textContent == 'special non-working day') {
-              localStorage.setItem(tr.dataset.ts, 8);
-            }
-          }
-
-          if (c.length == 11) {
-            if (e.ctrlKey) {
-              if (td.textContent.indexOf('field') != -1) {
-                let input = prompt('Field remarks');
-
-                if (input) {
-                  input = 'field: ' + input;
-                  td.textContent = input;
-                  tr.cells[td.cellIndex+6].textContent = input;                
-                }
-              }
-
-              if (td.textContent.indexOf('trave') != -1) {
-                let input = prompt('Travel remarks');
-
-                if (input) {
-                  input = 'travel: ' + input;
-                  td.textContent = input;
-                  tr.cells[td.cellIndex+6].textContent = input;
-                }
-              }    
-
-              return;
-            }
-
-            if (td.textContent.indexOf('absent') != -1) {
-              var ft = 'field';
-              td.textContent = ft;
-              tr.cells[td.cellIndex+6].textContent = ft;
-              return;
-            }
-
-            if (td.textContent.indexOf('field') != -1) {
-              var ft = 'travel ob';
-              td.textContent = ft;
-              tr.cells[td.cellIndex+6].textContent = ft;
-              return;
-            }
-
-            if (td.textContent.indexOf('trave') != -1) {
-              var ft = 'field';
-
-              if (td.cellIndex != 2) {
-                ft = 'absent';
-              }
-
-              td.textContent = ft;
-              tr.cells[td.cellIndex+6].textContent = ft;
-              return;
-            }
-          }
-
-          if (c.length == 13) {
-            Object.values(c).forEach((e, i) => {
-              if (i == 0 || i > 4) return;
-
-              if (e.textContent) {
-                b.push(i);
-              }
-            });
-
-						if (b.length != 0) {
-							if ( e.target.textContent && e.ctrlKey && e.altKey && e.shiftKey) {
-								e.target.textContent = '';
-								return;
-							}
-						}
-
-            if (b.length == 0) {
-              tr.cells[1].textContent = nwdlist[0];                        
-              tr.cells[8].textContent = nwdlist[0];
-              tr.cells[8].colSpan = 4;
-              tr.cells[9].remove();                  
-              tr.cells[9].remove();                  
-              tr.cells[9].remove();
-              tr.cells[1].colSpan = 4;
-              tr.cells[2].remove();                  
-              tr.cells[2].remove();                  
-              tr.cells[2].remove();
-            }
-
-            if (b.length == 1) {
-              if (e.shiftKey) {
-                if (b[0] == 1) {
-                  tr.cells[2].colSpan = 2;
-                  tr.cells[2].textContent = 'field';
-                  tr.cells[3].remove();
-                  tr.cells[3].textContent = '5:00 PM';
-                  /* col 2 */                  
-                  tr.cells[8].colSpan = 2;
-                  tr.cells[8].textContent = 'field';
-                  tr.cells[9].remove();
-                  tr.cells[9].textContent = '5:00 PM';
-                  
-                  return;
-                }
-              }
-
-              if (b[0] == 1) {
-                tr.cells[2].textContent = tr.cells[1].textContent;
-                tr.cells[9].textContent = tr.cells[1].textContent;
-                tr.cells[1].textContent = '';
-                tr.cells[8].textContent = '';
-              }
-
-              if (b[0] == 2) {
-                tr.cells[1].textContent = tr.cells[2].textContent;
-                tr.cells[8].textContent = tr.cells[2].textContent;
-                tr.cells[2].textContent = '';
-                tr.cells[9].textContent = '';
-              }
-
-              if (b[0] == 3) {
-                tr.cells[4].textContent = tr.cells[3].textContent;
-                tr.cells[11].textContent = tr.cells[3].textContent;
-                tr.cells[3].textContent = '';
-                tr.cells[10].textContent = '';
-              }
-
-              if (b[0] == 4) {
-                tr.cells[3].textContent = tr.cells[4].textContent;
-                tr.cells[10].textContent = tr.cells[4].textContent;
-                tr.cells[4].textContent = '';
-                tr.cells[11].textContent = '';
-              }
-            }
-
-            if (b.length == 2) {
-              if (e.shiftKey) {
-                if (b[0] == 1 && b[1] == 4) {
-                  tr.cells[2].colSpan = 2;
-                  tr.cells[2].textContent = 'field';
-                  tr.cells[3].remove();
-                  /* col2 */
-                  tr.cells[8].colSpan = 2;
-                  tr.cells[8].textContent = 'field';
-                  tr.cells[9].remove();
-                }
-
-                if (b[0] == 2 && b[1] == 3) {
-                  tr.cells[1].textContent = '8:00 AM';
-                  tr.cells[4].textContent = '5:00 PM';
-                  /* col2 */
-                  tr.cells[8].textContent = '8:00 AM';
-                  tr.cells[11].textContent = '5:00 PM';
-                }
-
-                return;
-              }
-
-              if (b[0] == 1 && b[1] == 2) {
-                tr.cells[3].textContent = 'absent';
-                tr.cells[10].textContent = 'absent';
-                tr.cells[3].colSpan = 2;
-                tr.cells[10].colSpan = 2;
-                tr.cells[4].remove();
-                tr.cells[11].remove();                
-              }
-
-              if (b[0] == 3 && b[1] == 4) {
-                tr.cells[1].textContent = 'absent';
-                tr.cells[8].textContent = 'absent';
-                tr.cells[1].colSpan = 2;
-                tr.cells[8].colSpan = 2;
-                tr.cells[2].remove();
-                tr.cells[8].remove();
-              }
-
-              if (b[0] == 1 && b[1] == 4) {
-                tr.cells[2].textContent = tr.cells[1].textContent;
-                tr.cells[3].textContent = tr.cells[4].textContent;
-                tr.cells[9].textContent = tr.cells[1].textContent;
-                tr.cells[10].textContent = tr.cells[4].textContent;
-                tr.cells[1].textContent = null;
-                tr.cells[4].textContent = null;
-                tr.cells[8].textContent = null;
-                tr.cells[11].textContent = null;
-              }
-
-              if (b[0] == 2 && b[1] == 3) {
-                tr.cells[1].textContent = tr.cells[2].textContent;
-                tr.cells[4].textContent = tr.cells[3].textContent;
-                tr.cells[8].textContent = tr.cells[2].textContent;
-                tr.cells[11].textContent = tr.cells[3].textContent;
-                tr.cells[2].textContent = null;
-                tr.cells[3].textContent = null;                
-                tr.cells[9].textContent = null;
-                tr.cells[10].textContent = null;
-              }
-
-
-            }
-
-            if (b.length == 3) {
-              let t = td.textContent;
-              let h = ['8:00 AM', '12:00 PM', '1:00 PM', '5:00 PM'];
-
-              if (!t) {
-                let i = td.cellIndex;
-
-                if (i > 0 && i < 5) {
-                  --i;
-                  tr.cells[i+1].textContent = h[i];                                   
-                  tr.cells[i+8].textContent = h[i];
-                }
-
-                if (i > 7 && i < 12) {
-                  tr.cells[ i ].textContent = h[i-8];                                   
-                  tr.cells[i-7].textContent = h[i-8];
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-    
     document.querySelector('.department').addEventListener('click', ()=> {
       var ss= prompt('DEPARTMENT :')
 
@@ -1050,6 +828,392 @@
 			x.open('PUT', 'https://dtr.calape.ph/api/record.php');
 			x.send(JSON.stringify([id, department, position, supervisor]));
 		}
+
+		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','move','edit'];
+
+		document.body.oncontextmenu = e => {
+			e.preventDefault();
+
+			if ( ctx.classList.contains('show') ) {
+				ctx.classList.add('hide');
+				ctx.classList.remove('show');
+				ctxtarg.removeAttribute('bgcolor');
+			}
+
+			if ( e.target.nodeName !== 'TD' ) {
+				return;
+			}
+
+			if ( e.target.parentNode.childElementCount !== 13 ) {
+				return;
+			}
+
+			if ( [0,5,6,7,12].includes(e.target.cellIndex) ) {
+				return;
+			}
+
+			var times = 0;
+
+			Array.from(e.target.parentNode.cells).forEach((e,i) => {
+				if ( i < 1 || i > 4 ) {
+					return;
+				}
+
+				if ( !e.textContent ) {
+					return;
+				}
+
+				times++;
+			})
+
+			ctxtarg && ctxtarg.hasAttribute('bgcolor') && ctxtarg.removeAttribute('bgcolor');
+
+			ctxtarg = e.target.parentNode;
+
+			var arr = [];
+
+			for (var i = 1; i < 5; i++) {
+				arr.push(!!ctxtarg.cells[i].textContent);
+			}
+
+			ctx.querySelectorAll('nav>ul>li a').forEach((e,i) => {
+				var li = e.parentNode.classList,
+						ss = e.textContent.replace(/\W/g,'').toLowerCase();
+				
+				li.contains('hide') && li.remove('hide');
+
+				if ( times === 0 && ['edit','move'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 1 && ss === 'leave' ) {
+					li.add('hide');
+				}
+
+				if ( times === 1 && (arr[0] || arr[1] || arr[2] || arr[3]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 1 && (arr[1] || arr[2] || arr[3]) && ss === 'fillas' ) {
+					li.add('hide');
+				}
+
+				if ( times === 2 && ss === 'leave') {
+					li.add('hide');
+				}
+
+				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'move' ) {
+					li.add('hide');
+				}
+
+				if ( times === 2 && (arr[0] && arr[3] || arr[1] && arr[2]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 3 && ['fillas','leave','move'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'timeinout' ) {
+					li.add('hide');
+				}
+
+				if ( times === 4 && ['fillas','leave','move'].includes(ss) ) {
+					li.add('hide');
+				}
+			})
+
+			ctxtarg.bgColor = '#eee';
+
+			ctx.style.top = `${e.pageY}px`;
+			ctx.style.left = `${e.pageX}px`;
+			ctx.style.position = 'absolute';
+
+			ctx.classList.remove('hide');
+			ctx.classList.add('show');
+		}
+
+		ctx.querySelectorAll('a').forEach( e => {
+			e.onclick = e => {
+				var btn = e.target.textContent;
+						btn = btn.replace(/\W/g,'').toLowerCase();
+
+				if ( ctxmenu.includes(btn) ) {
+					return false;
+				}
+	
+				if ( btn === 'absent' ) {
+					fillas('absent')
+				}
+
+				if ( btn === 'dayoff' ) {
+					fillas('day off');
+				}
+
+				if ( btn === 'field' ) {
+					fillas('field');
+				}
+
+				if ( btn === 'holiday' ) {
+					fillas('holiday');
+				}
+
+				if ( btn === 'specialnonworkingday' ) {
+					fillas('special non-working day');
+				}
+
+				if ( btn === 'travelob') {
+					fillas('travel o.b.');
+				}
+
+				if ( btn === 'paternity' ) {
+					fillas('paternity leave');
+				}
+
+				if ( btn === 'maternity' ) {
+					fillas('maternity leave');
+				}
+
+				if ( btn === 'sick' ) {
+					fillas('sick leave');
+				}
+
+				if ( btn === 'specialprivilege' ) {
+					fillas('special privilege leave');
+				}
+
+				if ( btn === 'vacation' ) {
+					fillas('vacation leave');
+				}
+
+				if ( btn === 'timeinout' ) {
+					shift_tio();
+				}
+
+				if ( btn === 'dayinout' ) {
+					shift_dio();
+				}
+
+				if ( btn === 'clear' ) {
+					edit_clear();
+				}
+
+				if ( btn === 'amin' ) {
+					edit_amin();
+				}
+
+				if ( btn === 'amout' ) {
+					edit_amout();
+				}
+
+				if ( btn === 'pmin' ) {
+					edit_pmin();
+				}
+
+				if ( btn === 'pmout' ) {
+					edit_pmout();
+				}
+
+				return false;
+			}
+		})
+
+		function fillas(s) {
+			var arr = [];
+
+			for (var i = 1 ; i < 5; i++) {
+				arr.push(!!ctxtarg.cells[i].textContent);
+			}
+
+			var arrlen = arr.filter(Boolean).length;
+
+			if ( arrlen === 1 && arr[0] ) {
+				ctxtarg.cells[2].textContent = s;
+				ctxtarg.cells[9].textContent = s;
+				ctxtarg.cells[2].colSpan = 3;
+				ctxtarg.cells[9].colSpan = 3;
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(3);
+				ctxtarg.deleteCell(3);
+			}
+
+			if ( arrlen === 2 && arr[0] && arr[1] ) {
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(3);
+				ctxtarg.cells[9].colSpan = 2;
+				ctxtarg.cells[9].textContent = s;
+				ctxtarg.cells[3].colSpan = 2;
+				ctxtarg.cells[3].textContent = s;
+			}
+
+			if ( arrlen === 2 && arr[2] && arr[3] ) {
+				ctxtarg.deleteCell(8);
+				ctxtarg.deleteCell(2);
+				ctxtarg.cells[7].colSpan = 2;
+				ctxtarg.cells[1].colSpan = 2;
+				ctxtarg.cells[7].textContent = s;
+				ctxtarg.cells[1].textContent = s;
+			}
+
+			if ( arrlen === 2 && arr[0] && arr[3] ) {
+				ctxtarg.deleteCell(9);
+				ctxtarg.deleteCell(3);
+				ctxtarg.cells[2].colSpan = 2;
+				ctxtarg.cells[8].colSpan = 2;
+				ctxtarg.cells[2].textContent = s;
+				ctxtarg.cells[8].textContent = s;
+			}
+
+			if ( arrlen ) {
+				return;
+			}
+
+			for (var i = 4; i > 1; i--) {
+				ctxtarg.deleteCell(2);
+				ctxtarg.deleteCell(7);
+			}
+
+			ctxtarg.cells.item(1).innerText = s;
+			ctxtarg.cells.item(5).innerText = s;
+			ctxtarg.cells.item(1).colSpan = 4;
+			ctxtarg.cells.item(5).colSpan = 4;
+
+		}
+
+		function fillasb(s) {
+			for (var i = 2; i < 4; i++) {
+				console.log(i);
+			}
+		}
+
+		function shift_tio() {
+			var cell = ctxtarg.cells, c = 0, t;
+
+			for (var i=1;i<5;i++) {
+				if ( cell[i].textContent) {
+					c++;
+				}
+			}
+
+			if ( c === 1 ) {
+				if ( cell[1].textContent ) {
+					cell[2].textContent = cell[1].textContent;
+					cell[1].textContent = ''; t = 1;
+				}
+
+				if ( cell[2].textContent && !t ) {
+					cell[1].textContent = cell[2].textContent;
+					cell[2].textContent = '';
+				}
+
+				if ( cell[3].textContent ) {
+					cell[4].textContent = cell[3].textContent;
+					cell[3].textContent = ''; t = 1;
+				}
+
+				if ( cell[4].textContent && !t ) {
+					cell[3].textContent = cell[4].textContent;
+					cell[4].textContent = '';
+				}
+			}
+			
+			if ( c === 2 ) {
+				if ( cell[1].textContent && cell[4].textContent ) {
+					cell[2].textContent = cell[1].textContent;
+					cell[3].textContent = cell[4].textContent;
+					cell[9].textContent = cell[1].textContent;
+					cell[10].textContent = cell[4].textContent;
+					cell[1].textContent = cell[4].textContent = '';
+					cell[8].textContent = cell[11].textContent = '';
+					t = 1;
+				}
+
+				if ( cell[2].textContent && cell[3].textContent && !t) {
+					cell[1].textContent = cell[2].textContent;
+					cell[4].textContent = cell[3].textContent;
+					cell[8].textContent = cell[2].textContent;
+					cell[11].textContent = cell[3].textContent;
+					cell[2].textContent = cell[3].textContent = '';
+					cell[9].textContent = cell[10].textContent = '';
+				}
+			}
+		}
+
+		function shift_dio() {
+			console.log('shifting d io');
+		}
+
+		const clockbox = document.querySelector('.clockbox');
+
+		function edit_amin() {
+			clockdialog(ctxtarg.cells[1].textContent || '8:00 AM', 1);
+		}
+
+		function edit_amout() {
+			clockdialog(ctxtarg.cells[2].textContent || '12:00 PM', 2);
+		}
+
+		function edit_pmin() {
+			clockdialog(ctxtarg.cells[3].textContent || '1:00 PM', 3);
+		}
+
+		function edit_pmout() {
+			clockdialog(ctxtarg.cells[4].textContent || '5:00 PM', 4);
+		}
+
+		function edit_clear() {
+			var cell = ctxtarg.cells;
+
+			for ( var i=1;i<6;i++ ) {
+				cell[i].textContent = '';
+				cell[i+7].textContent = '';
+			}
+		}
+
+		document.body.onclick = e => {
+			if ( e.target.classList.contains('tblctx') ) {
+				return;
+			}
+
+			var btn = e.target.textContent;
+					btn = btn.replace(/\W/g,'').toLowerCase();
+
+			if ( ctxmenu.includes(btn) ) {
+				return;
+			}
+
+			if ( ctx.classList.contains('show') ) {
+				ctx.classList.add('hide');
+				ctx.classList.remove('show');
+				ctxtarg.removeAttribute('bgcolor');
+			}
+		}
+
+		function clockdialog(t, i) {
+			if ( !t ) return;
+
+			if ( i < 1 && i > 4 ) {
+				return;
+			}
+
+			var timep = flatpickr("#timex", {
+				enableTime: true,
+				noCalendar: true,
+				dateFormat: "h:i K",
+				defaultDate: t,
+				onClose: (a,b,c) => {
+					ctxtarg.cells[i].textContent = ctxtarg.cells[i+7].textContent = b;
+				}
+			});
+
+			if ( clockbox.classList.contains('hide') ) {
+				clockbox.classList.remove('hide');
+				clockbox.classList.add('show');
+			}
+		}
+
+		clockbox.querySelector('div>button').onclick =()=> clockbox.classList.add('hide');
   </script>
 </body>
 </html>
