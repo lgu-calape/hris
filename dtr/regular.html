@@ -249,6 +249,7 @@
 				<ul>
 					<li><a href="#">ABSENT</a></li>
 					<li><a href="#">DAY OFF</a></li>
+					<li><a href="#">FIELD</a></li>
 					<li><a href="#">HOLIDAY</a></li>
 					<li><a href="#">SPECIAL NON-WORKING DAY</a></li>
 					<li><a href="#">TRAVEL O.B.</a></li>					
@@ -265,7 +266,7 @@
 				</ul>
 			</li>
 			<li>
-				<a href="#">SHIFT</a>
+				<a href="#">MOVE</a>
 				<ul>
 					<li><a href="#">TIME IN/OUT</a></li>
 					<li><a href="#">DAY IN/OUT</a></li>
@@ -844,7 +845,7 @@
 			x.send(JSON.stringify([id, department, position, supervisor]));
 		}
 
-		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','shift','edit'];
+		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','move','edit'];
 
 		document.body.oncontextmenu = e => {
 			e.preventDefault();
@@ -881,33 +882,58 @@
 				times++;
 			})
 
+			ctxtarg && ctxtarg.hasAttribute('bgcolor') && ctxtarg.removeAttribute('bgcolor');
 
-			ctx.querySelectorAll('nav>ul>li>a').forEach((e,i) => {
+			ctxtarg = e.target.parentNode;
+
+			var arr = [];
+
+			for (var i = 1; i < 5; i++) {
+				arr.push(!!ctxtarg.cells[i].textContent);
+			}
+
+			ctx.querySelectorAll('nav>ul>li a').forEach((e,i) => {
 				var li = e.parentNode.classList,
 						ss = e.textContent.replace(/\W/g,'').toLowerCase();
 				
 				li.contains('hide') && li.remove('hide');
 
-				if ( times !== 0 && ['fillas','leave'].includes(ss) ) {
+				if ( times === 0 && ['edit','move'].includes(ss) ) {
 					li.add('hide');
 				}
 
-				if ( times === 0 && ['edit','shift'].includes(ss) ) {
+				if ( times === 1 && ss === 'leave' ) {
 					li.add('hide');
 				}
 
-				if ( times === 3 && ['shift'].includes(ss) ) {
+				if ( times === 1 && (arr[0] || arr[1] || arr[2] || arr[3]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
 					li.add('hide');
 				}
 
-				if ( times === 4 && ['fillas','leave','shift'].includes(ss) ) {
+				if ( times === 1 && (arr[1] || arr[2] || arr[3]) && ss === 'fillas' ) {
+					li.add('hide');
+				}
+
+				if ( times === 2 && ss === 'leave') {
+					li.add('hide');
+				}
+
+				if ( times === 2 && (arr[0] && arr[3] || arr[1] && arr[2]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 3 && ['fillas','leave'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'timeinout' ) {
+					li.add('hide');
+				}
+
+				if ( times === 4 && ['fillas','leave','move'].includes(ss) ) {
 					li.add('hide');
 				}
 			})
-
-			ctxtarg && ctxtarg.hasAttribute('bgcolor') && ctxtarg.removeAttribute('bgcolor');
-
-			ctxtarg = e.target.parentNode;
 
 			ctxtarg.bgColor = '#eee';
 
@@ -934,6 +960,10 @@
 
 				if ( btn === 'dayoff' ) {
 					fillas('day off');
+				}
+
+				if ( btn === 'field' ) {
+					fillas('field');
 				}
 
 				if ( btn === 'holiday' ) {
@@ -1001,16 +1031,54 @@
 		})
 
 		function fillas(s) {
-			Array(3).fill(0).forEach(()=>{
+			var arr = [];
+
+			for (var i = 1 ; i < 5; i++) {
+				arr.push(!!ctxtarg.cells[i].textContent);
+			}
+
+			var arrlen = arr.filter(Boolean).length;
+
+			if ( arrlen === 1 && arr[0] ) {
+				ctxtarg.cells[2].textContent = s;
+				ctxtarg.cells[9].textContent = s;
+				ctxtarg.cells[2].colSpan = 3;
+				ctxtarg.cells[9].colSpan = 3;
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(3);
+				ctxtarg.deleteCell(3);
+			}
+
+			if ( arrlen === 2 && arr[0] && arr[3] ) {
+				ctxtarg.deleteCell(9);
+				ctxtarg.deleteCell(3);
+				ctxtarg.cells[2].colSpan = 2;
+				ctxtarg.cells[8].colSpan = 2;
+				ctxtarg.cells[2].textContent = s;
+				ctxtarg.cells[8].textContent = s;
+			}
+
+			if ( arrlen ) {
+				return;
+			}
+
+			for (var i = 4; i > 1; i--) {
 				ctxtarg.deleteCell(2);
 				ctxtarg.deleteCell(7);
-			});
+			}
 
 			ctxtarg.cells.item(1).innerText = s;
 			ctxtarg.cells.item(5).innerText = s;
 			ctxtarg.cells.item(1).colSpan = 4;
 			ctxtarg.cells.item(5).colSpan = 4;
 
+		}
+
+		function fillasb(s) {
+			for (var i = 2; i < 4; i++) {
+				console.log(i);
+			}
 		}
 
 		function shift_tio() {
@@ -1116,7 +1184,9 @@
 			}
 		}
 
-		function clockdialog(t = "8:00", i) {
+		function clockdialog(t, i) {
+			if ( !t ) return;
+
 			if ( i < 1 && i > 4 ) {
 				return;
 			}
