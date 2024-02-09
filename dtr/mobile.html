@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="icon" type="image/png" href="clock.png">
   <title>⏳</title>
   <style type="text/css">
@@ -72,7 +73,7 @@
     }
 
 		header a:hover {
-      background: #0aa23c;
+      background: #066626;
 		}
 
 		header div {
@@ -90,11 +91,11 @@
 </head>
 
 <body>
-  <header id="header_nav">
-    <a href="index.html">⇧</a>
+  <header id="header_nav" class="animate__animated animate__slideInDown">
+    <a href="index.html"><span class="fa-sharp fa-solid fa-home"></span></a>
 		<div>
-    <a href="#" id="prevbtn">︎⇠</a>
-    <a href="#" id="nextbtn">⇢</a>
+    <a href="#" id="prevbtn">︎<span class="fa-solid fa-square-caret-left"></span></a>
+    <a href="#" id="nextbtn"><span class="fa-solid fa-square-caret-right"></span></a>
 		</div>
   </header>
 
@@ -119,7 +120,7 @@
           <th width="85">out</th>
         </tr>
       </thead>
-      <tbody id="timesheet">
+      <tbody id="timesheet" class="animate__animated animated__">
         <!--timesheet generation-->
       </tbody>
     </table>
