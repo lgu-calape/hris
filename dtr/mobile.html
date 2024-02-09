@@ -94,8 +94,8 @@
   <header id="header_nav" class="animate__animated animate__slideInDown">
     <a href="index.html"><span class="fa-sharp fa-solid fa-home"></span></a>
 		<div>
-    <a href="#" id="prevbtn">︎<span class="fa-solid fa-square-caret-left"></span></a>
-    <a href="#" id="nextbtn"><span class="fa-solid fa-square-caret-right"></span></a>
+			<a href="#" id="prevbtn"><span class="fa-solid fa-square-caret-left"></span></a>
+	    <a href="#" id="nextbtn"><span class="fa-solid fa-square-caret-right"></span></a>
 		</div>
   </header>
 
@@ -281,7 +281,9 @@
 				window.location.assign(`view.html?ID=${get_param('ID')}`);
 			}
 		}
+
+		document.onselectstart = () =>{ return false;}
+		document.addEventListener('touchstart',() =>{ return false;});
   </script>
 </body>
-
 </html>

@@ -475,8 +475,8 @@
     let to_this_date = new Date(TO_DATE);
 
 
-    let table_content = document.getElementById("table_content"),
-      timesheet = document.getElementById("timesheet");
+		let table_content = document.getElementById("table_content"),
+				timesheet = document.getElementById("timesheet");
 
     if ((MM > 0 && MM < 13) && (YY > 2021 && YY < 2100)) {
       from_this_date = new Date(YY, MM - 1, 1);
@@ -1287,6 +1287,7 @@
 		}
 
 		clockbox.querySelector('div>button').onclick =()=> clockbox.classList.add('hide');
+		document.onselectstart = () => { return false; }
   </script>
 </body>
 </html>
