@@ -410,7 +410,7 @@
   <script src="time_io.js?_=1668848567293"></script>
   <script src="undertime_io.js?_=1668848567287"></script>
   <script>
-		var sha256;
+		var sha256, estatus = 'casual';
 
 		if ( !get_param('ID') ) {
 			location.assign('/');
@@ -422,7 +422,6 @@
 				if ( e.length !== 2 )
 					return;
 
-				console.log(e.map(d=>+d));		
 				const nURL = new URL(location.href.split('?').shift());
 
 				nURL.searchParams.set('ID', get_param('ID'));
@@ -553,17 +552,23 @@
 								return;
 							}
 
-							document.querySelectorAll('.department').forEach(e=> {
-								e.textContent = `department : ${d.department}`
-							});
+							if ( d.department ) {
+								document.querySelectorAll('.department').forEach(e=> {
+									e.textContent = `department : ${d.department}`
+								});
+							}
 
-							document.querySelectorAll('.work').forEach(e=> {
-								e.textContent = `function : ${d.position}`
-							});
+							if ( d.position ) {
+								document.querySelectorAll('.work').forEach(e=> {
+									e.textContent = `function : ${d.position}`
+								});
+							}
 
-							set_supervisor(d.supervisor);
+							if ( d.supervisor ) {
+								set_supervisor(d.supervisor);
+							}
 
-							sha256 = CryptoJS.SHA256([employee_id,d.department,d.position,d.supervisor].toString()).toString();
+							sha256 = CryptoJS.SHA256([employee_id,estatus,d.department,d.position,d.supervisor].toString()).toString();
 
 							localStorage.setItem('department', d.department);
 							localStorage.setItem('work', d.position);
@@ -763,7 +768,9 @@
 					c = localStorage.getItem('supervisor');
 
 			if ( a && b && c ) {
-				var hash = CryptoJS.SHA256([employee_id,a,b,c].toString()).toString();
+				var hash = CryptoJS.SHA256([employee_id,estatus,a,b,c].toString()).toString();
+
+				console.log(sha256,hash)
 
 				if ( hash !== sha256 ) {
 					urecord(employee_id,a,b,c); sha256 = hash;
@@ -823,7 +830,8 @@
 			}
 
 			x.open('PUT', 'https://dtr.calape.ph/api/record.php');
-			x.send(JSON.stringify([id, department, position, supervisor]));
+			x.send(JSON.stringify([id, estatus, department, position, supervisor]));
+			console.log('updating record');
 		}
 
 		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','edit'];
