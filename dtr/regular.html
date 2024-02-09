@@ -266,13 +266,8 @@
 					<li><a href="#">VACATION</a></li>
 				</ul>
 			</li>
-			<li>
-				<a href="#">MOVE</a>
-				<ul>
-					<li><a href="#">TIME IN/OUT</a></li>
-					<li><a href="#">DAY IN/OUT</a></li>
-				</ul>
-			</li>
+			<li><a href="#">SWAP</a></li>
+			<li><a href="#">SPLIT</a></li>
 			<li>
 				<a href="#"> EDIT &nbsp;&nbsp;&nbsp;</a>
 				<ul>
@@ -846,7 +841,7 @@
 			x.send(JSON.stringify([id, department, position, supervisor]));
 		}
 
-		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','move','edit'];
+		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','edit'];
 
 		document.body.oncontextmenu = e => {
 			e.preventDefault();
@@ -899,7 +894,7 @@
 				
 				li.contains('hide') && li.remove('hide');
 
-				if ( times === 0 && ['edit','move'].includes(ss) ) {
+				if ( times === 0 && ['edit','split','swap'].includes(ss) ) {
 					li.add('hide');
 				}
 
@@ -907,7 +902,7 @@
 					li.add('hide');
 				}
 
-				if ( times === 1 && (arr[0] || arr[1] || arr[2] || arr[3]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
+				if ( times === 1 && (arr[0] || arr[1] || arr[2] || arr[3]) && ['absent','dayoff','holiday','specialnonworkingday','split'].includes(ss) ) {
 					li.add('hide');
 				}
 
@@ -919,23 +914,27 @@
 					li.add('hide');
 				}
 
-				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'move' ) {
+				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ['split','swap'].includes(ss) ) {
 					li.add('hide');
 				}
 
-				if ( times === 2 && (arr[0] && arr[3] || arr[1] && arr[2]) && ['absent','dayoff','holiday','specialnonworkingday','dayinout'].includes(ss) ) {
+				if ( times === 2 && (arr[0] && arr[3] || arr[1] && arr[2]) && ['absent','dayoff','holiday','specialnonworkingday','split'].includes(ss) ) {
 					li.add('hide');
 				}
 
-				if ( times === 3 && ['fillas','leave','move'].includes(ss) ) {
+				if ( times === 2 && arr[1] && arr[2] && ss === 'fillas') {
 					li.add('hide');
 				}
 
-				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'timeinout' ) {
+				if ( times === 3 && ['fillas','leave'].includes(ss) ) {
 					li.add('hide');
 				}
 
-				if ( times === 4 && ['fillas','leave','move'].includes(ss) ) {
+				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'swap' ) {
+					li.add('hide');
+				}
+
+				if ( times === 4 && ['fillas','leave','split','swap'].includes(ss) ) {
 					li.add('hide');
 				}
 			})
@@ -1003,11 +1002,11 @@
 					fillas('vacation leave');
 				}
 
-				if ( btn === 'timeinout' ) {
+				if ( btn === 'swap' ) {
 					shift_tio();
 				}
 
-				if ( btn === 'dayinout' ) {
+				if ( btn === 'split' ) {
 					shift_dio();
 				}
 
@@ -1116,22 +1115,30 @@
 			if ( c === 1 ) {
 				if ( cell[1].textContent ) {
 					cell[2].textContent = cell[1].textContent;
+					cell[9].textContent = cell[1].textContent;
 					cell[1].textContent = ''; t = 1;
+					cell[8].textContent = '';
 				}
 
 				if ( cell[2].textContent && !t ) {
 					cell[1].textContent = cell[2].textContent;
+					cell[8].textContent = cell[2].textContent;
+					cell[9].textContent = '';
 					cell[2].textContent = '';
 				}
 
 				if ( cell[3].textContent ) {
 					cell[4].textContent = cell[3].textContent;
 					cell[3].textContent = ''; t = 1;
+					cell[11].textContent = cell[3].textContent;
+					cell[10].textContent = '';
 				}
 
 				if ( cell[4].textContent && !t ) {
 					cell[3].textContent = cell[4].textContent;
 					cell[4].textContent = '';
+					cell[10].textContent = cell[4].textContent;
+					cell[11].textContent = '';
 				}
 			}
 			
@@ -1158,7 +1165,71 @@
 		}
 
 		function shift_dio() {
-			console.log('shifting d io');
+			var ctxcopy = ctxtarg.cloneNode(true), cell = [];
+
+			for ( var i = 1; i < 5; i++ ) {
+				cell.push(ctxtarg.cells[i].textContent);
+			}
+
+			if ( cell[0] && cell[1] && cell[2] ) {
+				ctxtarg.cells[1].textContent = '';
+				ctxcopy.cells[1].textContent = cell[0];
+				ctxcopy.cells[2].textContent = '';
+				ctxcopy.cells[3].textContent = '';
+				ctxcopy.cells[4].textContent = '';
+				/* dup */
+				ctxtarg.cells[1+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = cell[0];
+				ctxcopy.cells[2+7].textContent = '';
+				ctxcopy.cells[3+7].textContent = '';
+				ctxcopy.cells[4+7].textContent = '';
+			}
+
+			if ( cell[0] && cell[1] && cell[3] ) {
+				ctxtarg.cells[2].textContent = '';
+				ctxcopy.cells[1].textContent = '';
+				ctxcopy.cells[2].textContent = cell[1];
+				ctxcopy.cells[3].textContent = '';
+				ctxcopy.cells[4].textContent = '';
+				/* dup */
+				ctxtarg.cells[2+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = '';
+				ctxcopy.cells[2+7].textContent = cell[1];
+				ctxcopy.cells[3+7].textContent = '';
+				ctxcopy.cells[4+7].textContent = '';
+			}
+
+			if ( cell[0] && cell[2] && cell[3] ) {
+				ctxtarg.cells[3].textContent = '';
+				ctxcopy.cells[1].textContent = '';
+				ctxcopy.cells[2].textContent = '';
+				ctxcopy.cells[3].textContent = cell[2];
+				ctxcopy.cells[4].textContent = '';
+				/* dup */
+				ctxtarg.cells[3+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = '';
+				ctxcopy.cells[2+7].textContent = '';
+				ctxcopy.cells[3+7].textContent = cell[2];
+				ctxcopy.cells[4+7].textContent = '';
+			}
+
+			if ( cell[1] && cell[2] && cell[3] ) {
+				ctxtarg.cells[4].textContent = '';
+				ctxcopy.cells[1].textContent = '';
+				ctxcopy.cells[2].textContent = '';
+				ctxcopy.cells[3].textContent = '';
+				ctxcopy.cells[4].textContent = cell[3];
+				/* dup */
+				ctxtarg.cells[4+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = '';
+				ctxcopy.cells[2+7].textContent = '';
+				ctxcopy.cells[3+7].textContent = '';
+				ctxcopy.cells[4+7].textContent = cell[3];
+			}
+
+			ctxtarg.insertAdjacentElement('afterend',ctxcopy);
+			ctxcopy.animate({opacity: [0,1]},{duration:1000});
+			ctxcopy.removeAttribute('bgcolor');
 		}
 
 		const clockbox = document.querySelector('.clockbox');
