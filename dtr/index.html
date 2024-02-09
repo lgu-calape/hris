@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="icon" type="image/png" href="/assets/calape.svg">
   <title>Daily Time Records</title>
   <style>
@@ -35,24 +37,35 @@
 			font-size: 0.91em;
 			padding: 0 5px;
 		}
+
+		.ball-pulse {
+			padding: 0 1em;
+		}
+
+		.ball-pulse > div {
+			background-color: #ccc;
+			width: 10px;
+			height: 10px;
+		}
+
+		.hide {
+			display: none;
+		}
   </style>
 </head>
 
 <body>
   <main class="container" id="mainx">
-    <article>
+    <article class="animate__animated animate__slideInDown">
       <input type="text" id="employee_id" placeholder="employee id" autofocus>
-			<div style="display:none;">
-      <button id="btn0">VIEW DTR</button>
-      <button id="btn4" style="background-color:red;border-color:red;display:none;">NEW DTR SELECTION</button>
-      <button id="btn3" class="outline">MONITOR</button>
-      <hr>
-      <button id="btn1" class="secondary outline">REGISTER</button>
-      <button id="btn2" class="secondary outline">REG.CODE</button>
+			<div class="ball-pulse hide wait">
+				<div></div>
+				<div></div>
+				<div></div>
 			</div>
     </article>
 		<hr>
-		<footer>
+		<footer class="animate__animated animate__slideInUp">
 	    <a href="monitor.html">MONITOR</a>
    		<a href="register.html">REGISTER</a>
   	  <a href="upload.html">UPLOAD</a>
@@ -61,9 +74,11 @@
     <p class="version">rev.1705572093</p>
   </main>
   <script src="helper.js"></script>
+	<script src="https://rawgit.com/aino/throbber.js/master/throbber.js"></script>
   <script>
     const YM = new Date(), EID = document.getElementById('employee_id');
-	  let sendOnce = false;
+
+	  let sendOnce = false, wait = document.querySelector('.wait');
 
     function verify(ID) {
 			if ( sendOnce ) {
@@ -77,6 +92,8 @@
 
 			EID.ariaBusy = true; sendOnce = true;
 
+			wait.classList.contains('hide') && wait.classList.remove('hide');
+
       let x = new XMLHttpRequest();
 
       x.addEventListener('readystatechange', () => {
@@ -87,6 +104,9 @@
 						EID.value = '';
 						EID.ariaBusy = false;
 	          EID.ariaInvalid = true;
+	
+						!wait.classList.contains('hide') && wait.classList.add('hide');
+
 						return;
 					}
 
