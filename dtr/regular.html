@@ -266,8 +266,8 @@
 					<li><a href="#">VACATION</a></li>
 				</ul>
 			</li>
-			<li><a href="#">SWAP</a></li>
 			<li><a href="#">SPLIT</a></li>
+			<li><a href="#">SHIFT</a></li>
 			<li>
 				<a href="#"> EDIT &nbsp;&nbsp;&nbsp;</a>
 				<ul>
@@ -895,7 +895,7 @@
 				
 				li.contains('hide') && li.remove('hide');
 
-				if ( times === 0 && ['edit','split','swap'].includes(ss) ) {
+				if ( times === 0 && ['edit','split','shift'].includes(ss) ) {
 					li.add('hide');
 				}
 
@@ -915,7 +915,7 @@
 					li.add('hide');
 				}
 
-				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ['split','swap'].includes(ss) ) {
+				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ['split','shift'].includes(ss) ) {
 					li.add('hide');
 				}
 
@@ -931,11 +931,11 @@
 					li.add('hide');
 				}
 
-				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'swap' ) {
+				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'shift' ) {
 					li.add('hide');
 				}
 
-				if ( times === 4 && ['fillas','leave','split','swap'].includes(ss) ) {
+				if ( times === 4 && ['fillas','leave','split','shift'].includes(ss) ) {
 					li.add('hide');
 				}
 			})
@@ -1003,7 +1003,7 @@
 					fillas('vacation leave');
 				}
 
-				if ( btn === 'swap' ) {
+				if ( btn === 'shift' ) {
 					shift_tio();
 				}
 
