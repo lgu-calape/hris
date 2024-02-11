@@ -965,10 +965,12 @@
 
 				if ( btn === 'holiday' ) {
 					fillas('holiday');
+					localStorage.setItem(ctxtarg.dataset.ts, 7);
 				}
 
 				if ( btn === 'specialnonworkingday' ) {
 					fillas('special non-working day');
+					localStorage.setItem(ctxtarg.dataset.ts, 8);
 				}
 
 				if ( btn === 'travelob') {
@@ -1296,6 +1298,38 @@
 
 		clockbox.querySelector('div>button').onclick =()=> clockbox.classList.add('hide');
 		document.onselectstart = () => { return false; }
+
+		var clk = 0;
+
+		document.addEventListener('click', e => {
+			if ( e.target.nodeName !== 'TD' ) {
+				return false;
+			}
+
+			var tr = e.target.parentNode,
+					ts = tr.dataset.ts;
+
+			localStorage.removeItem(ts);
+
+			var arr = ['absent','day off','holiday','special non-working day','travel o.b.','field'];
+			var txt = e.target.textContent.toLowerCase();
+
+			if ( arr.includes(txt) ) {
+				tr.cells[1].textContent = tr.cells[5].textContent = arr[clk++];
+			}
+
+			if ( e.target.textContent === arr[2] ) {
+				localStorage.setItem(ts, 7);
+			}
+
+			if ( e.target.textContent === arr[3] ) {
+				localStorage.setItem(ts, 8);
+			}
+
+			if ( clk >= arr.length ) {
+				clk = 0;
+			}
+		});
   </script>
 </body>
 </html>
