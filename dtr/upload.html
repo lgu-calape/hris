@@ -4,9 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="clock.png">
   <title>Attendance Log Uploader</title>
   <style>
@@ -34,11 +31,16 @@
       color: #fff;
       display: block;
     }
+
+		input[type="password"] {
+			display: none;
+		}
   </style>
 </head>
 <body>
 <main>
   <article style="padding-bottom:0;">
+		<input type="password" id="pass" placeholder="password">
     <label for="file">Upload ######_attlog.dat
       <input accept=".dat,.txt" type="file" id="file">
     </label>
@@ -50,25 +52,40 @@
 
 <script>
 const fi = document.getElementById('file'),
+			pw = document.getElementById('pass'),
       st = document.querySelector('.stat');
 
-fi.addEventListener('change', (e) => {
-	const p = prompt("Enter password: ");
+fi.addEventListener('change', upload);
 
-	if ( !p ) {
-		fi.value = '';
+pw.addEventListener('keyup', e => {
+	if ( e.keyCode != 13 ) {
 		return;
 	}
 
-	if ( p.length < 4 || p.length > 32) {
-		fi.value = '';
+	upload();
+});
+
+function pwdshow() {
+	pw.style.display = 'block';
+	pw.animate({opacity: [0,1]}, 300);
+	pw.focus(); pw.value = '';
+}
+
+function pwdhide() {
+	pw.style.display = 'none';
+}
+
+function upload() {
+
+	if ( pw.value.length < 4 || pw.value.length > 32) {
+		pwdshow();
 		return;
 	}
 
   const f = new FormData();
 
   f.append("file", fi.files[0])
-	f.append("pass", p);
+	f.append("pass", pw.value);
 
   const x = new XMLHttpRequest();
 
@@ -88,6 +105,7 @@ fi.addEventListener('change', (e) => {
   x.upload.addEventListener('loadstart', e => {
     st.textContent = "Uploading file...";
     st.classList.add('info');
+		pwdhide();
   });
 
   x.upload.addEventListener('progress', e => {
@@ -101,11 +119,10 @@ fi.addEventListener('change', (e) => {
   x.addEventListener('readystatechange', e=> {
 
    if ( x.readyState === 4 ) {
-		 fi.value = '';
-
      if (x.status === 401 ) {
        st.textContent = "Invalid password.";
-       st.setAttribute('class','stat error');  
+       st.setAttribute('class','stat error');
+			 pwdshow();
        return;
      }
 
@@ -147,10 +164,6 @@ fi.addEventListener('change', (e) => {
 
   x.open("POST", "https://dtr.calape.ph/upload/u.php");
   x.send(f);
-});
-
-function progressbar() {
-  const p = document.createElement('progress');
 }
 </script>
 </body>
