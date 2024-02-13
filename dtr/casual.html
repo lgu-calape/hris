@@ -1,98 +1,106 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" type="image/png" href="clock.png">
-  <title>🕰</title>
+	<meta charset="utf-8">
+	<link rel="icon" type="image/png" href="clock.png">
+	<title>...</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <style type="text/css">
-    body {
-      margin: 0;
-      padding: 0;
-      font-size: 12px;
-      font-family: arial, san-serif;
-      background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
-    }
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 12px;
+			font-family: arial, san-serif;
+			background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
+		}
 
-    table {
-      border-collapse: collapse;
-      margin: auto;
-      width: 326mm;
-      border: 0;
-      border-color: #000;
-      user-select: none;
-    }
+		table {
+			border-collapse: collapse;
+			margin: auto;
+			width: 326mm;
+			border: 0;
+			border-color: #000;
+			user-select: none;
+		}
 
-    td,
-    th {
-      padding: 5px;
-      text-align: center;
-      text-transform: uppercase;      
-    }
+		td,
+		th {
+			padding: 5px;
+			text-align: center;
+			text-transform: uppercase;			
+		}
 
-    #timesheet td {
-      text-overflow: ellipsis;
-      white-space: nowrap;
+		#timesheet td {
+			text-overflow: ellipsis;
+			white-space: nowrap;
 			min-width: 56px;
-      max-width: 200px;
-      overflow: hidden;
-    }
+			max-width: 200px;
+			overflow: hidden;
+		}
 
-    .wide {
-      width: 330px;
-    }
+		.wide {
+			width: 330px;
+		}
 
-    .alertt {
-      font-size: 2em;
-    }
+		.alertt {
+			font-size: 2em;
+		}
 
-    .fullname {
-      text-transform: uppercase !important;
-      font-weight: bold;
-    }
+		.cosigner {
+			width: 300px;
+			text-align: center;
+		}
 
-    .signed td {
-      padding: 5px;
-      text-transform: none;
-      line-height: 1.8;
-    }
+		.cosigner > div {
+			font-size: 12px;
+			line-height: 15px;
+			margin: 0;
+			padding: 0;
+			text-transform: uppercase;
+		}
 
-    .spacer {
-      border: 0px;
-      width: 50px;
-    }
+		.fullname, .supervisor {
+			font-weight: bold;
+			text-decoration: underline;
+		}
 
-    .signed .fullname {
-      padding-bottom: 5px;
-    }
+		.fnpos, svpos {
+			font-size: 12px;
+			text-transform: uppercase !important;
+		}
 
-    .signed .confirme {
-      font-size: 11px;
-    }
+		.signed td {
+			padding: 5px;
+			text-transform: none;
+			line-height: 1.8;
+		}
 
-    .label1 {
-      font-size: 20px;
-    }
+		.spacer {
+			border: 0px;
+			width: 50px;
+		}
 
-    .work_date_range {
-      font-weight: normal;
-      font-size: 12px;
-    }
+		.signed .confirme {
+			font-size: 11px;
+		}
 
-    .supervisor {
-      text-decoration: overline;
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-align: center;
-    }
+		.label1 {
+			font-size: 20px;
+		}
 
-    .swal-content__input {
-      text-align: center;
-    }
+		.work_date_range {
+			font-weight: normal;
+			font-size: 12px;
+		}
 
-    .swal-footer {
-      text-align: center;
-    }
+		.swal-content__input {
+			text-align: center;
+		}
+
+		.swal-footer {
+			text-align: center;
+		}
 
 		#inputwrap {
 			position: fixed;
@@ -131,38 +139,38 @@
 			width: 300px !important;
 		}
 
-    #table_content {
-      margin-top: 60px;
-      margin-bottom: 30px;
-      display: none;
-      background: rgba(255, 255, 255, 0.95);
-    }
+		#table_content {
+			margin-top: 60px;
+			margin-bottom: 30px;
+			display: none;
+			background: rgba(255, 255, 255, 0.95);
+		}
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 5px;
-      background: rgba(8,8,8,0.5);
-      color: #fff;
-      text-align: center;
-    }
+		footer {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 5px;
+			background: rgba(8,8,8,0.5);
+			color: #fff;
+			text-align: center;
+		}
 
-    @media print {
-      #inputwrap,
-      footer {
-        display: none;
-      }
+		@media print {
+			#inputwrap,
+			footer {
+				display: none;
+			}
 
-      #table_content {
-        margin: 0;
-      }
-    }
-    
-    .recordhead {
-      font-size: 12px;
-    }
+			#table_content {
+				margin: 0;
+			}
+		}
+		
+		.recordhead {
+			font-size: 12px;
+		}
 		.tblctx {
 			margin-top: -15px;
 		}
@@ -248,7 +256,7 @@
 			border: 1px solid #555;
 			border-radius: 4px;
 		}
-  </style>
+	</style>
 </head>
 
 <body>
@@ -289,102 +297,100 @@
 			</li>
 		</ul>
 	</nav>
-  <main id="table_content">    
-    <table border="0" class="recordhead">
-      <tr>
-        <th class="label1" colspan="2">daily time record</th>
-        <td class="spacer">&nbsp;</td>
-        <th class="label1" colspan="2">daily time record</th>
-      </tr>
-      <tr>
-        <td colspan="2" class="work_date_range"></td>
-        <td class="spacer">&nbsp;</td>
-        <td colspan="2" class="work_date_range"></td>
-      </tr>
-      <tr><td colspan="5"><br></td></tr>
-      <tr>
-        <th style="text-align: left;">Name : <span class="fullname">____________________</span></th>
-        <th style="text-align: right;">ID # : <span class="idnum">______</span></th>
-        <td class="spacer">&nbsp;</td>
-        <th style="text-align: left;">Name : <span class="fullname">____________________</span></th>
-        <th style="text-align: right;">ID # : <span class="idnum">______</span></th>
-      </tr>
-      <tr>
-        <th style="text-align: left;" class="department">Department : ____________________</th>
-        <th style="text-align: right;" class="work">Function : ____________________</th>
-        <td class="spacer">&nbsp;</td>
-        <th style="text-align: left;" class="department">Department : ____________________</th>
-        <th style="text-align: right;" class="work">Function : ____________________</th>
-      </tr>
-    </table>
-    <br>
-    <table border="1">
-      <thead>
-        <tr>
-          <th rowspan="2">date</th>
-          <th colspan="2">am</th>
-          <th colspan="2">pm</th>
-          <th rowspan="2" class="wide">accomplishment / remarks</th>
-          <td class="spacer">&nbsp;</td>
-          <th rowspan="2">date</th>
-          <th colspan="2">am</th>
-          <th colspan="2">pm</th>
-          <th rowspan="2" class="wide">accomplishment / remarks</th>
-        </tr>
-        <tr>
-          <th width="85">in</th>
-          <th width="85">out</th>
-          <th width="85">in</th>
-          <th width="85">out</th>          
-          <td class="spacer">&nbsp;</td>
-          <th width="85">in</th>
-          <th width="85">out</th>
-          <th width="85">in</th>
-          <th width="85">out</th>          
-        </tr>
-      </thead>
-      <tbody id="timesheet">
-        <!--timesheet generation-->
-      </tbody>      
-    </table>
-    <br>
-    <table class="signed">     
-      <tr>
-        <td colspan="2" class="confirme">
-          I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
-          of which was made<br>daily at the time of arrival and departure from office.
-        </td>
-        <td>&nbsp;</td>
-        <td colspan="2" class="confirme">
-          I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
-          of which was made<br>daily at the time of arrival and departure from office.
-        </td>
-      </tr>
-      <tr><td colspan="5"><br></td></tr>
-      <tr>
-        <td style=" line-height: 0; text-align: center;">
-          <div>
-            <p class="fullname" style="text-decoration: underline; font-size: 12px; "><!--fullname--></p>
-            <p style="font-size: 12px; font-weight: normal;">EMPLOYEE</p>
-          </div>
-        </td>
-        <td class="supervisor" onclick="supervisor_();">
-          supervisor
-        </td>
-        <td>&nbsp;</td>
-        <td style="letter-spacing: 0px; line-height: 0; text-align: center;">
-          <div>
-            <p class="fullname" style="text-decoration: underline; font-size: 12px;"><!--fullname--></p>
-            <p style="font-size: 12px; font-weight: normal;">EMPLOYEE</p>
-          </div>
-        </td>
-        <td class="supervisor" onclick="supervisor_();">
-          supervisorbrk
-        </td>
-      </tr>
-    </table>
-  </main>
-  <!-- ./ end main -->
+	<main id="table_content">		 
+		<table border="0" class="recordhead">
+			<tr>
+				<th class="label1" colspan="2">daily time record</th>
+				<td class="spacer">&nbsp;</td>
+				<th class="label1" colspan="2">daily time record</th>
+			</tr>
+			<tr>
+				<td colspan="2" class="work_date_range"></td>
+				<td class="spacer">&nbsp;</td>
+				<td colspan="2" class="work_date_range"></td>
+			</tr>
+			<tr><td colspan="5"><br></td></tr>
+			<tr>
+				<th style="text-align: left;">Name : <span class="fullname">...</span></th>
+				<th style="text-align: right;">ID # : <span class="idnum">...</span></th>
+				<td class="spacer">&nbsp;</td>
+				<th style="text-align: left;">Name : <span class="fullname">...</span></th>
+				<th style="text-align: right;">ID # : <span class="idnum">...</span></th>
+			</tr>
+			<tr>
+				<th style="text-align: left;" class="department">...</th>
+				<th style="text-align: right;" class="work">...</th>
+				<td class="spacer">&nbsp;</td>
+				<th style="text-align: left;" class="department">...</th>
+				<th style="text-align: right;" class="work">...</th>
+			</tr>
+		</table>
+		<br>
+		<table border="1">
+			<thead>
+				<tr>
+					<th rowspan="2">date</th>
+					<th colspan="2">am</th>
+					<th colspan="2">pm</th>
+					<th rowspan="2" class="wide">accomplishment / remarks</th>
+					<td class="spacer">&nbsp;</td>
+					<th rowspan="2">date</th>
+					<th colspan="2">am</th>
+					<th colspan="2">pm</th>
+					<th rowspan="2" class="wide">accomplishment / remarks</th>
+				</tr>
+				<tr>
+					<th width="85">in</th>
+					<th width="85">out</th>
+					<th width="85">in</th>
+					<th width="85">out</th>					 
+					<td class="spacer">&nbsp;</td>
+					<th width="85">in</th>
+					<th width="85">out</th>
+					<th width="85">in</th>
+					<th width="85">out</th>					 
+				</tr>
+			</thead>
+			<tbody id="timesheet">
+				<!--timesheet generation-->
+			</tbody>			
+		</table>
+		<br>
+		<table class="signed">		 
+			<tr>
+				<td colspan="2" class="confirme">
+					I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
+					of which was made<br>daily at the time of arrival and departure from office.
+				</td>
+				<td class="spacer">&nbsp;</td>
+				<td colspan="2" class="confirme">
+					I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
+					of which was made<br>daily at the time of arrival and departure from office.
+				</td>
+			</tr>
+			<tr><td colspan="5"><br></td></tr>
+			<tr>
+				<td class="cosigner">
+					<div class="fullname"><!--fullname--></div>
+					<div class="fnpos">EMPLOYEE</div>
+				</td>
+				<td class="cosigner">
+					<div class="supervisor"><!--fullname--></div>
+					<div class="svpos">SUPERVISOR</div>
+				</td>
+				<td class="spacer">&nbsp;</td>
+				<td class="cosigner">
+					<div class="fullname"><!--fullname--></div>
+					<div class="fnpos">EMPLOYEE</div>
+				</td>
+				<td class="cosigner">
+					<div class="supervisor"><!--fullname--></div>
+					<div class="svpos">SUPERVISOR</div>
+				</td>
+			</tr>
+		</table>
+	</main>
+	<!-- ./ end main -->
 	<div id="inputwrap">
 		<button onclick="print();">PRINT</button>
 		<input type="text" id="employid">
@@ -392,9 +398,9 @@
 		<button onclick="location.assign(location.href.replace('casual.html','regular.html'));" style="float:right;margin-right:0.8em;">SWITCH TO REGULAR LAYOUT</button>
 	</div>
 
-  <footer>
-    <small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
-  </footer>
+	<footer>
+		<small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
+	</footer>
 
 	<div class="clockbox hide">
 		<div>
@@ -403,14 +409,14 @@
 		</div>
 	</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="helper.js?_=1668848567288"></script>
-  <script src="time_io.js?_=1668848567293"></script>
-  <script src="undertime_io.js?_=1668848567287"></script>
-  <script>
-		var sha256, estatus = 'casual';
+	<script src="helper.js?_=1668848567288"></script>
+	<script src="time_io.js?_=1668848567293"></script>
+	<script src="undertime_io.js?_=1668848567287"></script>
+	<script>
+		var sha256, estatus = 'casual', department, position, supervisor;
 
 		if ( !get_param('ID') ) {
 			location.assign('/');
@@ -465,348 +471,344 @@
 		
 		document.getElementById('employid').value = get_param('ID');
 
-    let employee_id = get_param("ID"),
-      FROM_DATE = get_param("FROM"),
-      TO_DATE = get_param("TO"),
-      MM = get_param("MM"), YY = get_param("YY");
+		let employee_id = get_param("ID"),
+			FROM_DATE = get_param("FROM"),
+			TO_DATE = get_param("TO"),
+			MM = get_param("MM"), YY = get_param("YY");
 
-    let from_this_date = new Date(FROM_DATE);
-    let to_this_date = new Date(TO_DATE);
+		let from_this_date = new Date(FROM_DATE);
+		let to_this_date = new Date(TO_DATE);
 
 
 		let table_content = document.getElementById("table_content"),
 				timesheet = document.getElementById("timesheet");
 
-    if ((MM > 0 && MM < 13) && (YY > 2021 && YY < 2100)) {
-      from_this_date = new Date(YY, MM - 1, 1);
-      to_this_date = new Date(YY, MM, 0);
-    }
-
-    const WORKING_HOURS = [8, 12, 13, 17];
-
-    const ftd = from_this_date, ttd = to_this_date;
-
-    const fmt_from_date = [ftd.getFullYear(), String(ftd.getMonth() + 1).padStart(2, 0), String(ftd.getDate()).padStart(2, 0)].join("-");
-    const fmt_to_date = [ttd.getFullYear(), String(ttd.getMonth() + 1).padStart(2, 0), String(ttd.getDate()).padStart(2, 0)].join("-");
-
-    let optsIdx = 0, optsField = ['absent','holiday','special non-working day','travel ob','sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
-
-    let nwdlist = ['absent','day off', 'holiday','special non-working day','travel ob','leave'];
-    let levlist = ['sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
-
-    function dtr() {
-      let x = new XMLHttpRequest();
-
-      x.addEventListener('readystatechange', () => {
-        if (x.readyState === 1) {
-          // ...
-        }
-
-        if (x.readyState === 4) {
-          if (x.status === 200) {
-            let d = JSON.parse(x.responseText);
-
-            var records = [];
-
-            d.forEach((o) => {
-              records[o.petsa] = time_io(o.oras, WORKING_HOURS);
-            });
-
-            loop_through_date(from_this_date, to_this_date, records);
-
-            table_content.style.display = 'block';
-          }
-
-          if (x.status === 403) {
-            location.assign('index.html');
-          }
-        }
-
-      });
-
-      let p = new URL("https://dtr.calape.ph/api/timerecord2.php");
-      p.searchParams.set("ID", employee_id);
-      p.searchParams.set("FROM", fmt_from_date);
-      p.searchParams.set("TO", fmt_to_date);
-
-      x.open('GET', p);
-      x.send();
-    }
-
-    function employee_basic_info() {
-      let x = new XMLHttpRequest();
-
-      x.addEventListener('readystatechange', () => {
-        if (x.readyState === 4) {
-          if (x.status === 200) {
-            let d = JSON.parse(x.responseText), employee_name = d.firstname + ' ' + d.lastname;
-    	       document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
-  	         document.title = employee_name;
-
-						fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>{
-							if ( r.status === 200 ) {
-								return r.json()
-							}
-						}).then(d=>{
-							if ( !d ) {
-								return;
-							}
-
-							if ( d.department ) {
-								document.querySelectorAll('.department').forEach(e=> {
-									e.textContent = `department : ${d.department}`
-								});
-							}
-
-							if ( d.position ) {
-								document.querySelectorAll('.work').forEach(e=> {
-									e.textContent = `function : ${d.position}`
-								});
-							}
-
-							if ( d.supervisor ) {
-								set_supervisor(d.supervisor);
-							}
-
-							sha256 = CryptoJS.SHA256([employee_id,estatus,d.department,d.position,d.supervisor].toString()).toString();
-
-							localStorage.setItem('department', d.department);
-							localStorage.setItem('work', d.position);
-							localStorage.setItem('supervisor', d.supervisor);
-						});
-					}
-
-          if (x.status === 403) {
-            location.assign('index.html');
-          }
-        }
-
-      });
-
-      x.open('GET', 'https://dtr.calape.ph/api/employee_basic_info.php?ID=' + employee_id);
-      x.send();
-    }
-
-    function loop_through_date(a, b, c) {
-      for (a; a <= b; a.setDate(a.getDate() + 1)) {
-        let indexFmt = [a.getFullYear(), String(a.getMonth() + 1).padStart(2,0), String(a.getDate()).padStart(2, 0)].join('-');
-
-        let default_records = { 'date': indexFmt, time: Object.assign({}, [null, null, null, null]) };
-
-        if (c[indexFmt]) {
-          default_records = { 'date': indexFmt, 'time': c[indexFmt] }
-        }
-
-        timeshit(default_records);
-      }
-    }
-
-    function timeshit(d) {
-      let tr = timesheet.insertRow(-1),
-        c00 = tr.insertCell(0),
-        c01 = tr.insertCell(1),
-        c02 = tr.insertCell(2),
-        c03 = tr.insertCell(3),
-        c04 = tr.insertCell(4),
-        c05 = tr.insertCell(5),
-        brk = tr.insertCell(6),
-        c07 = tr.insertCell(7),
-        c08 = tr.insertCell(8),
-        c09 = tr.insertCell(9),
-        c10 = tr.insertCell(10),
-        c11 = tr.insertCell(11),
-        c12 = tr.insertCell(12);
-
-      let absent = false, araw = String(new Date(d.date).getDate()).padStart(2, 0), oras = d.time;
-     
-      if (!oras[0] && !oras[1] && !oras[2] && !oras[3]) {
-        absent = true;
-      }
-
-      tr.dataset.ts = d.date;
-
-      c00.innerText = c07.innerText = d.date;
-      c01.innerText = c08.innerText = toLocalTime(oras[0]);
-      c02.innerText = c09.innerText = toLocalTime(oras[1]);
-      c03.innerText = c10.innerText = toLocalTime(oras[2]);
-      c04.innerText = c11.innerText = toLocalTime(oras[3]);
-      //c05.innerText = c12.innerText = absent ? null : undertime_io(Object.values(oras), WORKING_HOURS);
-
-      brk.innerText = null;
-      brk.className = 'spacer';
-
-      let it_go = new Date(d.date).getDay(), is_happyday = localStorage.getItem(d.date);
-
-      if (is_happyday) {
-        it_go = is_happyday;
-      }
-
-      if (absent) {
-        if (it_go == 0) {
-          c01.innerText = c08.innerText = 'SUNDAY';
-          c01.colSpan = c08.colSpan = 4;
-          c02.remove(); c03.remove(); c04.remove();
-          c10.remove(); c11.remove(); c12.remove();
-        }
-
-        if (it_go == 6) {
-          c01.innerText = c08.innerText = 'SATURDAY';
-          c01.colSpan = c08.colSpan = 4;
-          c02.remove(); c03.remove(); c04.remove();
-          c10.remove(); c11.remove(); c12.remove();
-        }
-
-        if (it_go == 7) {
-          c01.innerText = c08.innerText = 'HOLIDAY';
-          c01.colSpan = c08.colSpan = 4;
-          c02.remove(); c03.remove(); c04.remove();
-          c10.remove(); c11.remove(); c12.remove();
-        }
-
-        if (it_go == 8) {
-          c01.innerText = c08.innerText = 'SPECIAL NON-WORKING DAY';
-          c01.colSpan = c08.colSpan = 4;
-          c02.remove(); c03.remove(); c04.remove();
-          c12.remove(); c10.remove(); c11.remove();
-        }
-
-      }
+		if ((MM > 0 && MM < 13) && (YY > 2021 && YY < 2100)) {
+			from_this_date = new Date(YY, MM - 1, 1);
+			to_this_date = new Date(YY, MM, 0);
 		}
 
-    function get_working_hours() {
-      return WORKING_HOURS.map(d => toLocalTime(new Date().setHours(d, 0, 0, 0))).join('-').replace(/ /g, '');
-    }
+		const WORKING_HOURS = [8, 12, 13, 17];
 
-    function init() {
-      document.querySelectorAll(".work_date_range").forEach(o => {
-        o.innerText = `for the period of ${toLocalDateFmt(from_this_date)} - ${toLocalDateFmt(to_this_date)}`;
-      });      
+		const ftd = from_this_date, ttd = to_this_date;
 
-      document.querySelectorAll('.idnum').forEach(e=> {
-        e.textContent = employee_id;
-      })
+		const fmt_from_date = [ftd.getFullYear(), String(ftd.getMonth() + 1).padStart(2, 0), String(ftd.getDate()).padStart(2, 0)].join("-");
+		const fmt_to_date = [ttd.getFullYear(), String(ttd.getMonth() + 1).padStart(2, 0), String(ttd.getDate()).padStart(2, 0)].join("-");
 
-      employee_basic_info(); dtr(); 
+		let optsIdx = 0, optsField = ['absent','holiday','special non-working day','travel ob','sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
 
-      if (localStorage.getItem('supervisor')) {
-        set_supervisor(localStorage.getItem('supervisor'));
-      }
-      else {
-        set_supervisor('click to input name');
-      }
+		let nwdlist = ['absent','day off', 'holiday','special non-working day','travel ob','leave'];
+		let levlist = ['sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
 
-      if (localStorage.getItem('department')) {
-        document.querySelectorAll('.department').forEach(e => {
-          e.textContent = 'department : ' + localStorage.getItem('department');
-        })
-      }
+		function dtr() {
+			let x = new XMLHttpRequest();
 
-      if (localStorage.getItem('work')) {
-        document.querySelectorAll('.work').forEach(e => {
-          e.textContent = 'function : ' + localStorage.getItem('work');
-        })
-      }
-    }
+			x.addEventListener('readystatechange', () => {
+				if (x.readyState === 1) {
+					// ...
+				}
 
-    function set_supervisor(s) {
-      if (!s) {
-        return;
-      }
+				if (x.readyState === 4) {
+					if (x.status === 200) {
+						let d = JSON.parse(x.responseText);
 
-      let [s1, s2] = s.split('/');
+						var records = [];
 
-      if (!s1) supervisor_();
+						d.forEach((o) => {
+							records[o.petsa] = time_io(o.oras, WORKING_HOURS);
+						});
 
-      if (!s2) s2 = 'Supervisor';
+						loop_through_date(from_this_date, to_this_date, records);
 
-      document.querySelectorAll('.supervisor').forEach(o => {
-        let e1 = document.createElement('p');
-        e1.innerText = s1;
-        e1.style.textDecoration = 'underline';
-				e1.style.paddingBottom = '5px';
+						table_content.style.display = 'block';
+					}
 
-        let e2 = document.createElement('p');
-        e2.innerText = s2;
-        e2.style.fontSize = '12px';
-        e2.style.fontWeight = 'normal';
+					if (x.status === 403) {
+						location.assign('index.html');
+					}
+				}
 
-        let e3 = document.createElement('div');
-        e3.append(e1); e3.append(e2);
+			});
 
-        o.innerHTML = ''; o.append(e3);
-        o.style.textDecoration = 'none';
-        o.style.textTransform = 'uppercase';
-        o.style.fontSize = '12px';
-        o.style.fontWeight = 'bold';
-        o.style.letterSpacing = 0;
-        o.style.lineHeight = 0;
-      });
+			let p = new URL("https://dtr.calape.ph/api/timerecord2.php");
+			p.searchParams.set("ID", employee_id);
+			p.searchParams.set("FROM", fmt_from_date);
+			p.searchParams.set("TO", fmt_to_date);
 
-      localStorage.setItem('supervisor',s);
-    }
+			x.open('GET', p);
+			x.send();
+		}
 
-    function supervisor_() {
-      swal({
-        title: "DEPARTMENT HEAD",
-        content: {
-          element: "input",
-          attributes: {
-            placeholder: "NAME / POSITION",
-            type: "text",
-          },
-        },
-      }).then(v => set_supervisor(v));
-    }
+		function employee_basic_info() {
+			let x = new XMLHttpRequest();
+
+			x.addEventListener('readystatechange', () => {
+				if (x.readyState === 4) {
+					if (x.status === 200) {
+						let d = JSON.parse(x.responseText), employee_name = d.firstname + ' ' + d.lastname;
+						document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
+					 	document.title = employee_name;
+
+						empState();
+					}
+
+					if (x.status === 403) {
+						location.assign('index.html');
+					}
+				}
+
+			});
+
+			x.open('GET', 'https://dtr.calape.ph/api/employee_basic_info.php?ID=' + employee_id);
+			x.send();
+		}
+
+		function empState() {
+			fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>{
+				if ( r.status === 200 ) {
+					return r.json()
+				}
+			}).then(d=>{
+				if ( !d ) {
+					return;
+				}
+
+				if ( d.department ) {
+					department = d.department;
+				}
+
+				if ( d.position ) {
+					position = d .position;
+				}
+
+				if ( d.supervisor ) {
+					supervisor = d.supervisor;
+				}
+
+				sha256 = CryptoJS.SHA256([employee_id,estatus,department,position,supervisor].toString()).toString();
+			}).finally(labelUpdate);
+		}
+
+
+		function labelUpdate() {
+			document.querySelectorAll('.idnum').forEach(e=> {
+				e.textContent = employee_id;
+			});
+
+			document.querySelectorAll('.work').forEach(e=> {
+				e.textContent = 'FUNCTION : ' + (position||'_________________');
+			});
+
+
+			document.querySelectorAll('.department').forEach(e=> {
+				e.textContent = 'DEPARTMENT : ' + (department||'________________');
+			});
+
+			var s = supervisor ? supervisor.split('/') : ['________________','supervisor'];
+
+			document.querySelectorAll('.supervisor').forEach(e=> {
+				e.textContent = s[0];
+			});
+
+			document.querySelectorAll('.svpos').forEach(e=> {
+				if ( s.length === 2 ) {
+					e.textContent = s[1];
+				}
+			});
+		}
+
+		function loop_through_date(a, b, c) {
+			for (a; a <= b; a.setDate(a.getDate() + 1)) {
+				let indexFmt = [a.getFullYear(), String(a.getMonth() + 1).padStart(2,0), String(a.getDate()).padStart(2, 0)].join('-');
+
+				let default_records = { 'date': indexFmt, time: Object.assign({}, [null, null, null, null]) };
+
+				if (c[indexFmt]) {
+					default_records = { 'date': indexFmt, 'time': c[indexFmt] }
+				}
+
+				timeshit(default_records);
+			}
+		}
+
+		function timeshit(d) {
+			let tr = timesheet.insertRow(-1),
+				c00 = tr.insertCell(0),
+				c01 = tr.insertCell(1),
+				c02 = tr.insertCell(2),
+				c03 = tr.insertCell(3),
+				c04 = tr.insertCell(4),
+				c05 = tr.insertCell(5),
+				brk = tr.insertCell(6),
+				c07 = tr.insertCell(7),
+				c08 = tr.insertCell(8),
+				c09 = tr.insertCell(9),
+				c10 = tr.insertCell(10),
+				c11 = tr.insertCell(11),
+				c12 = tr.insertCell(12);
+
+			let absent = false, araw = String(new Date(d.date).getDate()).padStart(2, 0), oras = d.time;
+		 
+			if (!oras[0] && !oras[1] && !oras[2] && !oras[3]) {
+				absent = true;
+			}
+
+			tr.dataset.ts = d.date;
+
+			c00.innerText = c07.innerText = d.date;
+			c01.innerText = c08.innerText = toLocalTime(oras[0]);
+			c02.innerText = c09.innerText = toLocalTime(oras[1]);
+			c03.innerText = c10.innerText = toLocalTime(oras[2]);
+			c04.innerText = c11.innerText = toLocalTime(oras[3]);
+			//c05.innerText = c12.innerText = absent ? null : undertime_io(Object.values(oras), WORKING_HOURS);
+
+			brk.innerText = null;
+			brk.className = 'spacer';
+
+			let it_go = new Date(d.date).getDay(), is_happyday = localStorage.getItem(d.date);
+
+			if (is_happyday) {
+				it_go = is_happyday;
+			}
+
+			if (absent) {
+				if (it_go == 0) {
+					c01.innerText = c08.innerText = 'SUNDAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c10.remove(); c11.remove(); c12.remove();
+				}
+
+				if (it_go == 6) {
+					c01.innerText = c08.innerText = 'SATURDAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c10.remove(); c11.remove(); c12.remove();
+				}
+
+				if (it_go == 7) {
+					c01.innerText = c08.innerText = 'HOLIDAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c10.remove(); c11.remove(); c12.remove();
+				}
+
+				if (it_go == 8) {
+					c01.innerText = c08.innerText = 'SPECIAL NON-WORKING DAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c12.remove(); c10.remove(); c11.remove();
+				}
+
+			}
+		}
+
+		function get_working_hours() {
+			return WORKING_HOURS.map(d => toLocalTime(new Date().setHours(d, 0, 0, 0))).join('-').replace(/ /g, '');
+		}
+
+		function init() {
+			document.querySelectorAll(".work_date_range").forEach(o => {
+				o.innerText = `for the period of ${toLocalDateFmt(from_this_date)} - ${toLocalDateFmt(to_this_date)}`;
+			});			 
+
+			employee_basic_info(); dtr();
+		}
+
+		function set_supervisor(s) {
+			if (!s) {
+				return;
+			}
+
+			supervisor = s;
+
+			labelUpdate();
+		}
 
 		var inputwrap = document.getElementById('inputwrap');
 
-    document.addEventListener('DOMContentLoaded', () => init());
-    window.addEventListener('beforeprint', (e) => {
-	 		inputwrap.style.display = 'none';
-			var a = localStorage.getItem('department'),
-					b = localStorage.getItem('work'),
-					c = localStorage.getItem('supervisor');
+		document.addEventListener('DOMContentLoaded', () => init());
 
-			if ( a && b && c ) {
-				var hash = CryptoJS.SHA256([employee_id,estatus,a,b,c].toString()).toString();
-
-				console.log(sha256,hash)
-
-				if ( hash !== sha256 ) {
-					urecord(employee_id,a,b,c); sha256 = hash;
-				}
-			}
+		window.addEventListener('beforeprint', () => {
+			inputwrap.style.display = 'none';
 		});
 
-    window.addEventListener('afterprint', (e) => { inputwrap.style.display = 'block'; });
+		window.addEventListener('afterprint', () => {
+			inputwrap.style.display = 'block';
 
-    document.querySelector('.department').addEventListener('click', ()=> {
-      var ss= prompt('DEPARTMENT :')
+			var hash = CryptoJS.SHA256([employee_id,estatus,department,position,supervisor].toString()).toString();
 
-      if (!ss) {
-        return;
-      }
+			urecord(hash, sha256);
+		});
 
-      document.querySelectorAll('.department').forEach(e => {
-        e.textContent = 'DEPARTMENT : ' + ss;
-      })
+		document.querySelectorAll('.supervisor, .department, .work').forEach(e=>{
+			e.addEventListener('click', e => {
+				var btn = e.target.className;
 
-      localStorage.setItem('department', ss);
-    })
+				console.log(btn)
 
-    document.querySelector('.work').addEventListener('click', ()=> {
-      var ss = prompt('FUNCTION :')
+				switch (btn) {
+					case 'department':
+						askDepartment(); break;
+					case 'work':
+						askFunction(); break;
+					default:
+						askSupervisor();
+				}
+			});
+		})
 
-      if (!ss) {
-        return;
-      }
-      
-      document.querySelectorAll('.work').forEach(e => {
-        e.textContent = 'FUNCTION : ' + ss;
-      })
+		function askSupervisor() {
+			swal({
+				title: 'DEPARTMENT HEAD',
+				content: {
+					element: "input",
+					attributes: {
+						placeholder: "name / position",
+						type: "text",
+					},
+				},
+			}).then(v => {
+				if ( !v ) return;
 
-      localStorage.setItem('work', ss);
-    })
+				supervisor = v;
+				labelUpdate();
+			});
+		}
+
+		function askDepartment() {
+			swal({
+				title: 'DEPARTMENT',
+				content: {
+					element: "input",
+					attributes: {
+						type: "text",
+					},
+				},
+			}).then(v => {
+				if ( !v ) return;
+
+				department = v;
+				labelUpdate();
+			});
+		}
+
+		function askFunction() {
+			swal({
+				title: 'FUNCTION',
+				content: {
+					element: "input",
+					attributes: {
+						type: "text",
+					},
+				},
+			}).then(v => {
+				if ( !v ) return;
+
+				position = v;
+				labelUpdate();
+			});
+		}
 
 		function qdate(n) {
 			let d = new Date(+n);
@@ -820,7 +822,13 @@
 			}
 		}
 
-		function urecord(id, department, position, supervisor) {
+		function urecord(a,b) {
+			console.log(a!==b);
+
+			if ( a === b ) return;
+
+			sha256 = a;
+
 			let x = new XMLHttpRequest();
 
 			x.onload = () => {
@@ -830,7 +838,7 @@
 			}
 
 			x.open('PUT', 'https://dtr.calape.ph/api/record.php');
-			x.send(JSON.stringify([id, estatus, department, position, supervisor]));
+			x.send(JSON.stringify([employee_id, estatus, department, position, supervisor]));
 			console.log('updating record');
 		}
 
@@ -1330,6 +1338,6 @@
 				clk = 0;
 			}
 		});
-  </script>
+	</script>
 </body>
 </html>
