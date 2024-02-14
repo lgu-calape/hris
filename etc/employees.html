@@ -36,6 +36,7 @@ body {
 	float: right;
 }
 
+[tabulator-field="firstname"],[tabulator-field="lastname"],
 [tabulator-field="department"],[tabulator-field="status"] {
 	text-transform: uppercase;
 }
@@ -67,6 +68,24 @@ img {
 		transform: translateX(0);
 	}
 }
+
+@media (max-width: 900px) {
+	img {
+		display: none;
+	}
+}
+
+button {
+	border: 1px solid #888;
+	font-size: 16px;
+	padding: 7px 4px;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+button:hover {
+	background: #ddd;
+}
 </style>
 </head>
 <body>
@@ -80,14 +99,16 @@ img {
 			<option>Department</option>
 			<option>ID</option>
 		</select>
+		<button id="print">print</button>
 	</div>
 </div>
 <div id="masterlist"></div>
 <script>
 var table = new Tabulator("#masterlist", {
-    layout:"fitColumns",
 		ajaxURL: "https://dtr.calape.ph/api/employees.php",
+		printAsHtml: true,
     placeholder:"No Data Set",
+    layout:"fitColumns",
     columns:[
 				{title:"ID", field:"id", sorter:"number", width:80},
         {title:"First Name", field:"firstname", sorter:"string"},
@@ -98,7 +119,8 @@ var table = new Tabulator("#masterlist", {
 });
 
 const query = document.querySelector('#filter input'),
-			filter = document.querySelector('#filter select');
+			filter = document.querySelector('#filter select'),
+			pprint = document.querySelector('#print');
 
 function lookup() {
 	var f = filter.value.replace(/\W/g,'').toLowerCase(),
@@ -111,6 +133,9 @@ function lookup() {
 
 query.addEventListener('keyup', lookup);
 filter.addEventListener('change', lookup);
+pprint.addEventListener('click', () => {
+	table.print()
+});
 </script>
 </body>
 </html>
