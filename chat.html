@@ -142,7 +142,7 @@ let uid = czech[Math.floor(Math.random() * 256)];
 
 const	msg = document.getElementById("msg"),
 			log = document.getElementById("log");
-			wss = new WebSocket('wss://ntfy.sh/jmctg9a5nrbds0x98lwcki36h9ny87x3/ws?since=24h');
+			wss = new WebSocket('wss://ntfy.sh/t4lk40h/ws?since=12h');
 
 if ( !localStorage.getItem('uid') ) {
 	localStorage.setItem('uid', uid);
@@ -165,14 +165,14 @@ msg.addEventListener('keyup', (e) => {
 	var l = document.createElement('div');
 
 	if ( txt.length > 1024 ) {
-		l.innerHTML = '* message too long.';
+		l.textContent = '* message too long.';
 		l.style.color = 'red';
 		appendLog(l);
 		return;
 	}
 
 	if ( txt.match(new RegExp(/^\/code$/)) ) {
-		l.innerHTML = atob('KiBjb2RlOiAxMzM3');
+		l.textContent = atob('KiBjb2RlOiAxMzM3');
 		l.style.color = 'red';
 		appendLog(l);
 		return;
@@ -184,7 +184,7 @@ msg.addEventListener('keyup', (e) => {
   }
 
 	if ( txt.match(new RegExp(/^\/screen$/)) ) {
-		l.innerHTML = `* screen width info ${innerWidth}px`;
+		l.textContent = `* screen width info ${innerWidth}px`;
 		l.style.color = 'red';
 		appendLog(l);
 		return;		
@@ -192,7 +192,7 @@ msg.addEventListener('keyup', (e) => {
 
 	if ( txt.substr(0,5).match(new RegExp(/^\/nick$/)) ) {
 		if ( txt.length < 7 ) {
-			l.innerHTML = '* enter your nickname';
+			l.textContent = '* enter your nickname';
 			l.style.color = 'red';
 			appendLog(l);
 			return;
@@ -226,7 +226,7 @@ msg.addEventListener('keyup', (e) => {
 	x.open('post','https://ntfy.sh');
 
 	x.send(JSON.stringify({
-		'topic':'jmctg9a5nrbds0x98lwcki36h9ny87x3',
+		'topic':'t4lk40h',
 		'message': hash || txt,
 		'title': uid
 	}));
@@ -252,7 +252,7 @@ wss.onmessage = (e) => {
 		let [hash,nick] = msg.split('.');
 
 		if ( hash.length === 64 && hash ===	Crypto.SHA256(`${nym}.${nick}`) ) {
-			div.innerHTML = `<span class="nym">${nym}</span> is now <span class="nym">${nick}</span>`;
+			div.textContent = `<${nym}> is now ${nick}`;
 			appendLog(div);
 
 			if ( nick == uid ) {
@@ -262,7 +262,7 @@ wss.onmessage = (e) => {
 		}
 	}
 
-  div.innerHTML = `<span class="nym">${nym}:</span> <span class="msg">${msg}</span>`;
+  div.textContent = `<${nym}> ${msg}`;
 
   appendLog(div);
 }
@@ -277,7 +277,7 @@ wss.onopen = (e) => {
 
 wss.onerror = (e) => {
 	var d = document.createElement('div');
-	d.innerHTML = `* server has encountered an error. reload page.`;
+	d.textContent = `* server has encountered an error. reload page.`;
 	d.style.color = 'red';
 	appendLog(d);
 }

@@ -98,6 +98,7 @@
 
 		.swal-content__input {
 			text-align: center;
+			text-transform: uppercase;
 		}
 
 		.swal-footer {
@@ -258,6 +259,10 @@
 			border: 1px solid #555;
 			border-radius: 4px;
 		}
+
+		.help {
+			cursor: pointer;
+		}
 	</style>
 </head>
 
@@ -401,7 +406,7 @@
 	</div>
 
 	<footer>
-		<small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
+		<small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1 | <span class="help">tech support</span></small>
 	</footer>
 
 	<div class="clockbox hide">
@@ -1340,6 +1345,8 @@
 				clk = 0;
 			}
 		});
+
+		document.querySelector('.help').addEventListener('click', ()=> location.assign('/chat.html'));
 	</script>
 </body>
 </html>
