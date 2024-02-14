@@ -4,155 +4,113 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="https://calape.ph/assets/calape.svg">
-<title>✎</title>
-<style type="text/css">
-body{
-	margin:0;
-	padding:0;
-	font-family:arial,san-serif;
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/css/tabulator.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/js/tabulator.min.js"></script>
+<title>...</title>
+<style>
+body {
+	font-family: arial;
+	margin: 0;
+	padding: 0;
 }
 
-table{
-	margin:auto;
-	border:1px solid #eee;
-	border-collapse:collapse;
-	font-size:1.6em;
-	width:100%;
+#filter {
+	padding: 10px;
+	height: 38px;
 }
 
-tr:hover{
-	cursor:pointer;
-	color:#444;
-}
-td {
-	white-space: nowrap;
-	padding: 5px 10px;
+#filter select {
+	font-size: 16px;
+	padding: 7px 10px;
+	border: 1px solid #888;
 }
 
-th {
-	text-align: left;
-	padding: 5px 10px;
+#filter input {
+	border: 1px solid #888;
+	font-size: 16px;
+	line-height: 30px;
+	padding: 2px 10px;
 }
 
-tr:hover{
-	background:yellow;
+.right {
+	float: right;
 }
 
-tr > td:nth-child(4) {
+[tabulator-field="department"],[tabulator-field="status"] {
 	text-transform: uppercase;
-	font-size: 0.7em;
 }
 
-@media only screen and (max-width: 768px) {
-  #tbl1 {
-		font-size:0.75em; white-space:nowrap;
-	}
+img {
+	animation: ani 6s infinite;
+	height: 50px;
+	margin-top: -5px;
 }
 
-@media print {
-  #tbl1 {
-		font-size: 12px;
-		border: 1px solid #888;
+@keyframes ani {
+	0% {
+		transform: translateX(0);
 	}
 
-  td {
-		padding: 5px;
+	20% {
+		transform: rotateX(180deg);
+	}
+	
+	50% {
+		transform: translateX(500px);
 	}
 
-  th {
-		padding: 5px;
+	80% {
+		transform: rotateY(180deg);
+	}
+
+	100% {
+		transform: translateX(0);
 	}
 }
-</style>    
+</style>
 </head>
 <body>
-  <main style="max-width:1024px;margin:auto;">
-    <table border="1" id="tbl1">
-      <thead>
-        <tr><th onclick="sort_by_id();" title="sort by id">ID</th><th onclick="sort_by_fname();" title="sort by name">First Name</th><th onclick="sort_by_lname();" title="sort by name">Last Name</th><th>Department</th></tr>
-      </thead>
-      <tbody id="employeestbl">
-      </tbody>
-    </table>
-  </main>
-  <script src="/dtr/helper.js"></script>
-  <script>
-  var sort = get_param('sort') || 'name';
+<div id="filter">
+	<img src="https://calape.ph/assets/calape.svg">
+	<div class="right">
+		<input type="text" placeholder="Look for ...">
+		<select>
+			<option>First Name</option>
+			<option>Last Name</option>
+			<option>Department</option>
+			<option>ID</option>
+		</select>
+	</div>
+</div>
+<div id="masterlist"></div>
+<script>
+var table = new Tabulator("#masterlist", {
+    layout:"fitColumns",
+		ajaxURL: "https://dtr.calape.ph/api/employees.php",
+    placeholder:"No Data Set",
+    columns:[
+				{title:"ID", field:"id", sorter:"number", width:80},
+        {title:"First Name", field:"firstname", sorter:"string"},
+        {title:"Last Name", field:"lastname", sorter:"string"},
+        {title:"Department", field:"department", sorter:"string"},
+        {title:"Status", field:"status", sorter:"string"},
+    ],
+});
 
-	async function assignment(n) {
-		let x = await fetch(`https://dtr.calape.ph/api/assignments.php?id=${n}`);
+const query = document.querySelector('#filter input'),
+			filter = document.querySelector('#filter select');
 
-		if ( x.status !== 200 ) {
-			return '';
-		}
+function lookup() {
+	var f = filter.value.replace(/\W/g,'').toLowerCase(),
+			q = query.value;
 
-		x = await x.json();
+	!q && table.clearFilter();
 
-		return x.department;
-	}
+	table.setFilter(f,'like',q);
+}
 
-  function employees() {
-    let x = new XMLHttpRequest();
-
-    x.addEventListener('readystatechange',()=>{
-      if ( x.readyState === 4 ) {
-        if ( x.status === 200 ) {
-          let o = JSON.parse(x.responseText);
-
-          o.forEach(i=>displayTable(i));
-
-          tbl1.style.display = 'table';
-        }
-
-        if ( x.status === 403 ) {
-          alert_('forbidden');
-          btn1.disabled = false;
-        }
-      }
-
-    });
-
-    x.open('GET','https://dtr.calape.ph/api/get_employees.php?limit=1000&sort='+sort);
-    x.send();
-  }
-
-  function dtr(o,p) {
-		if ( p.toLowerCase() != 'regular' ) {
-	    window.open('/dtr/view.html?ID='+o.id,'_blank');
-			return;
-		}
-
-    window.open('/dtr/view.html?r=1&ID='+o.id,'_blank');
-  }
-
-  async function displayTable(o) {
-    let tr = employeestbl.insertRow(-1),
-        c0 = tr.insertCell(0),
-        c1 = tr.insertCell(1),
-        c2 = tr.insertCell(2),
-        c3 = tr.insertCell(3);
-
-    c0.innerText = o.id;
-    c2.innerText = o.lastname;
-    c1.innerText = o.firstname;
-		c3.innerText = await assignment(o.id);
-
-    tr.addEventListener('click',()=>dtr(o,c3.innerText));
-  }
-
-  function sort_by_id() {
-    location.search = '?sort=id';
-  }
-
-  function sort_by_fname() {
-    location.search = '?sort=fname';
-  }
-
-  function sort_by_lname() {
-    location.search = '?sort=lname';
-  }
-
-  document.addEventListener('DOMContentLoaded',()=>employees());
-  </script>
+query.addEventListener('keyup', lookup);
+filter.addEventListener('change', lookup);
+</script>
 </body>
 </html>
