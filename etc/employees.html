@@ -20,16 +20,50 @@ body {
 }
 
 #filter select {
-	font-size: 16px;
-	padding: 7px 10px;
+	background: #fff;
 	border: 1px solid #888;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 30px;
+	margin: 0;
+	padding: 2px 10px;
+	outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#filter select:focus {
+	border: 1px solid #444;
+}
+
+#filter button {
+	background: #eee;
+	border: 1px solid #888;
+	border-radius: 4px;
+	font-size: 16px;
+	padding: 7px 4px;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+#filter button:hover {
+	background: #ddd;
+	border: 1px solid #444;
 }
 
 #filter input {
 	border: 1px solid #888;
+	border-radius: 4px;
 	font-size: 16px;
 	line-height: 30px;
 	padding: 2px 10px;
+	box-sizing: border-box;
+	transition: 0.5s;
+	outline: none;
+}
+
+#filter input:focus {
+	border: 1px solid #444;
 }
 
 .right {
@@ -69,22 +103,16 @@ img {
 	}
 }
 
-@media (max-width: 900px) {
-	img {
+@media (max-width: 500px) {
+	#filter {
 		display: none;
 	}
 }
 
-button {
-	border: 1px solid #888;
-	font-size: 16px;
-	padding: 7px 4px;
-	text-transform: uppercase;
-	cursor: pointer;
-}
-
-button:hover {
-	background: #ddd;
+@media (max-width: 900px) {
+	img {
+		display: none;
+	}
 }
 </style>
 </head>
@@ -94,12 +122,12 @@ button:hover {
 	<div class="right">
 		<input type="text" placeholder="Look for ...">
 		<select>
+			<option>Department</option>
 			<option>First Name</option>
 			<option>Last Name</option>
-			<option>Department</option>
 			<option>ID</option>
 		</select>
-		<button id="print">print</button>
+		<button id="pprint">print</button>
 	</div>
 </div>
 <div id="masterlist"></div>
@@ -109,24 +137,36 @@ var table = new Tabulator("#masterlist", {
 		printAsHtml: true,
     placeholder:"No Data Set",
     layout:"fitColumns",
+		paginationCounter:"rows",
+		paginationSize: 50,
+		pagination: "local",
+		initialSort: [
+			{ column: "firstname", dir: "asc" },
+		],
     columns:[
-				{title:"ID", field:"id", sorter:"number", width:80},
-        {title:"First Name", field:"firstname", sorter:"string"},
-        {title:"Last Name", field:"lastname", sorter:"string"},
-        {title:"Department", field:"department", sorter:"string"},
-        {title:"Status", field:"status", sorter:"string"},
+				{title:"ID", field:"id", sorter:"number", width:50},
+        {title:"First Name", field:"firstname", sorter:"string", minWidth:110},
+        {title:"Last Name", field:"lastname", sorter:"string", minWidth:110},
+        {title:"Department", field:"department", sorter:"string", responsive:2, minWidth:80},
+        {title:"Status", field:"status", sorter:"string", responsive:3},
     ],
+		responsiveLayout:"hide"
 });
 
 const query = document.querySelector('#filter input'),
 			filter = document.querySelector('#filter select'),
-			pprint = document.querySelector('#print');
+			pprint = document.querySelector('#pprint');
 
 function lookup() {
 	var f = filter.value.replace(/\W/g,'').toLowerCase(),
 			q = query.value;
 
-	!q && table.clearFilter();
+	
+	if ( q.length < 2 ) {
+		console.log(q.length);
+		table.clearFilter();
+		return;
+	}
 
 	table.setFilter(f,'like',q);
 }
@@ -135,6 +175,17 @@ query.addEventListener('keyup', lookup);
 filter.addEventListener('change', lookup);
 pprint.addEventListener('click', () => {
 	table.print()
+});
+
+table.on('rowClick', (e,row) => {
+	var r = row.getData();
+	
+	if ( r.status === 'casual' ) {
+		window.open(`/dtr/view.html?ID=${r.id}`, 'target=_blank');
+	}
+	else {
+		window.open(`/dtr/view.html?ID=${r.id}&r=1`, 'target=_blank');
+	}
 });
 </script>
 </body>
