@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="https://calape.ph/assets/calape.svg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/css/tabulator.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/js/tabulator.min.js"></script>
 <title>...</title>
 <style>
 body {
@@ -127,14 +126,15 @@ img {
 			<option>Last Name</option>
 			<option>ID</option>
 		</select>
-		<button id="pprint">print</button>
+		<button id="download">download</button>
 	</div>
 </div>
 <div id="masterlist"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/js/tabulator.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 var table = new Tabulator("#masterlist", {
 		ajaxURL: "https://dtr.calape.ph/api/employees.php",
-		printAsHtml: true,
     placeholder:"No Data Set",
     layout:"fitColumns",
 		paginationCounter:"rows",
@@ -154,8 +154,7 @@ var table = new Tabulator("#masterlist", {
 });
 
 const query = document.querySelector('#filter input'),
-			filter = document.querySelector('#filter select'),
-			pprint = document.querySelector('#pprint');
+			filter = document.querySelector('#filter select');
 
 function lookup() {
 	var f = filter.value.replace(/\W/g,'').toLowerCase(),
@@ -173,8 +172,9 @@ function lookup() {
 
 query.addEventListener('keyup', lookup);
 filter.addEventListener('change', lookup);
-pprint.addEventListener('click', () => {
-	table.print()
+
+document.getElementById('download').addEventListener('click', ()=> {
+	table.download('xlsx',`hr_${Date.now()}.xlsx`);
 });
 
 table.on('rowClick', (e,row) => {
