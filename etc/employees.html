@@ -145,12 +145,25 @@ var table = new Tabulator("#masterlist", {
 		],
     columns:[
 				{title:"ID", field:"id", sorter:"number", width:50},
-        {title:"First Name", field:"firstname", sorter:"string", minWidth:110},
-        {title:"Last Name", field:"lastname", sorter:"string", minWidth:110},
-        {title:"Department", field:"department", sorter:"string", responsive:2, minWidth:80},
-        {title:"Status", field:"status", sorter:"string", responsive:3},
+        {title:"FIRST NAME", field:"firstname", sorter:"string", minWidth:110},
+        {title:"LAST NAME", field:"lastname", sorter:"string", minWidth:110},
+        {title:"DEPARTMENT", field:"department", sorter:"string", responsive:2, minWidth:80},
+        {title:"STATUS", field:"status", sorter:"string", download:false, responsive:3},
     ],
-		responsiveLayout:"hide"
+		responsiveLayout:"hide",
+		ajaxResponse: function(url,params,response) {
+			var data = response.map(d=> {
+				return {
+					id: d.id,
+					firstname: d.firstname.toUpperCase(),
+					lastname: d.lastname.toUpperCase(),
+					status: d.status ? d.status.toUpperCase() : '',
+					department: d.department ? d.department.toUpperCase() : '',
+				}
+			});
+
+			return data;
+		}
 });
 
 const query = document.querySelector('#filter input'),
@@ -180,7 +193,7 @@ document.getElementById('download').addEventListener('click', ()=> {
 table.on('rowClick', (e,row) => {
 	var r = row.getData();
 	
-	if ( r.status === 'casual' ) {
+	if ( r.status === 'CASUAL' ) {
 		window.open(`/dtr/view.html?ID=${r.id}`, 'target=_blank');
 	}
 	else {

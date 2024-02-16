@@ -91,6 +91,12 @@ function upload() {
 
   st.setAttribute('class','stat');
 
+	if ( fi.files[0].size < 41 ) {
+		st.textContent = "Invalid log file.";
+		st.classList.add('error');
+		return;
+	}
+
   if ( fi.files[0].size > 1e6 ) {
     st.textContent = "File size too large.";
     st.classList.add('error');
