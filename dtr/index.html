@@ -110,18 +110,18 @@
 					}
 
 					if ( window.innerWidth < 1040 ) {
-						location.assign(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+						redirect(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
 						return;
 					}
 
 					var r = JSON.parse(x.responseText);
 
-					if ( r.status.toLowerCase() === 'casual' ) {
-						location.assign(`casual.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+					if ( r.status === 'casual' ) {
+						redirect(`casual.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
 						return;
 					}
 
-					location.assign(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+					redirect(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
         }
       });
 
@@ -130,7 +130,7 @@
     }
 
     function redirect(l) {
-      location.assign(l);
+      window.location.replace(l);
     }
 
     EID.addEventListener('keyup', (e) => {
