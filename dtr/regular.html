@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<link rel="icon" type="image/png" href="clock.png">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-	<title>⏰</title>
+	<title>...</title>
 	<style type="text/css">
 		body {
 			margin: 0;
@@ -437,7 +437,7 @@
 	<script src="time_io.js?_=1668848567293"></script>
 	<script src="undertime_io.js?_=1668848567287"></script>
 	<script>
-		var sha256, estatus='regular', department, position, supervisor;
+		var sha256, estatus, department, position, supervisor;
 
 		if ( get_param('ID') && get_param('FROM') ) {
 			var dd = new Date(get_param('FROM'));
@@ -575,10 +575,11 @@
 				if (x.readyState === 4) {
 					if (x.status === 200) {
 						let d = JSON.parse(x.responseText), employee_name = d.firstname + ' ' + d.lastname;
+
 						document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
 						document.title = employee_name;
 
-						empState();
+						empState(); estatus = d.status;
 					}
 
 					if (x.status === 403) {
@@ -588,7 +589,7 @@
 
 			});
 
-			x.open('GET', 'https://dtr.calape.ph/api/employee_basic_info.php?ID=' + employee_id);
+			x.open('GET', 'https://dtr.calape.ph/api/info.php?ID=' + employee_id);
 			x.send();
 		}
 
@@ -790,7 +791,7 @@
 		});
 
 		window.addEventListener('afterprint', (e) => {
-			inputwrap.style.display = 'block';
+			inputwrap.style.display = 'block'; estatus = 'regular';
 
 			var hash = CryptoJS.SHA256([employee_id,estatus,department,position,supervisor].toString()).toString();
 

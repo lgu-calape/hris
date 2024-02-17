@@ -110,15 +110,22 @@
 					}
 
 					if ( window.innerWidth < 1040 ) {
-						location.replace(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+						location.assign(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
 						return;
 					}
 
-					location.replace(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+					var r = JSON.parse(x.responseText);
+
+					if ( r.status.toLowerCase() === 'casual' ) {
+						location.assign(`casual.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
+						return;
+					}
+
+					location.assign(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
         }
       });
 
-      x.open('GET', 'https://dtr.calape.ph/api/employee_basic_info.php?q=check&ID=' + ID);
+      x.open('GET', 'https://dtr.calape.ph/api/info.php?q=check&ID=' + ID);
       x.send();
     }
 
