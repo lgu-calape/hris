@@ -174,9 +174,19 @@ function lookup() {
 	var f = filter.value.replace(/\W/g,'').toLowerCase(),
 			q = query.value;
 
-	
+	if ( q.length > 24 ) {
+		return;
+	}
+
+	if ( f === 'id' && !+q ) {
+		return;
+	}
+
+	if ( f !== 'id' && !!+q ) {
+		return;
+	}
+
 	if ( q.length < 2 ) {
-		console.log(q.length);
 		table.clearFilter();
 		return;
 	}
