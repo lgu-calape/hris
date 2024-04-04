@@ -262,6 +262,7 @@
 					<li><a href="#">HOLIDAY</a></li>
 					<li><a href="#">SPECIAL NON-WORKING DAY</a></li>
 					<li><a href="#">TRAVEL O.B.</a></li>					
+					<li><a href="#">SEMINAR</a></li>
 				</ul>
 			</li>
 			<li>
@@ -973,6 +974,10 @@
 					fillas('field');
 				}
 
+				if ( btn === 'seminar' ) {
+					fillas('seminar');
+				}
+
 				if ( btn === 'holiday' ) {
 					fillas('holiday');
 					localStorage.setItem(ctxtarg.dataset.ts, 7);
@@ -1321,10 +1326,24 @@
 
 			localStorage.removeItem(ts);
 
-			var arr = ['absent','day off','holiday','special non-working day','travel o.b.','field'];
+			var arr = ['absent','day off','holiday','special non-working day','travel o.b.','seminar','field'];
 			var txt = e.target.textContent.toLowerCase();
 
+			if ( clk >= arr.length ) {
+				clk = 0;
+			}
+
 			if ( arr.includes(txt) ) {
+				if ( tr.cells.length === 9 ) {
+					tr.cells[2].textContent = tr.cells[7].textContent = arr[clk++];
+					return;
+				}
+
+				if ( tr.cells.length === 11 ) {
+					tr.cells[2].textContent = tr.cells[8].textContent = arr[clk++];
+					return;
+				}
+
 				tr.cells[1].textContent = tr.cells[5].textContent = arr[clk++];
 			}
 
@@ -1334,10 +1353,6 @@
 
 			if ( e.target.textContent === arr[3] ) {
 				localStorage.setItem(ts, 8);
-			}
-
-			if ( clk >= arr.length ) {
-				clk = 0;
 			}
 		});
 	</script>

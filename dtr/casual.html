@@ -278,6 +278,7 @@
 					<li><a href="#">HOLIDAY</a></li>
 					<li><a href="#">SPECIAL NON-WORKING DAY</a></li>
 					<li><a href="#">TRAVEL O.B.</a></li>					
+					<li><a href="#">SEMINAR</a></li>
 				</ul>
 			</li>
 			<li>
@@ -502,9 +503,9 @@
 		const fmt_from_date = [ftd.getFullYear(), String(ftd.getMonth() + 1).padStart(2, 0), String(ftd.getDate()).padStart(2, 0)].join("-");
 		const fmt_to_date = [ttd.getFullYear(), String(ttd.getMonth() + 1).padStart(2, 0), String(ttd.getDate()).padStart(2, 0)].join("-");
 
-		let optsIdx = 0, optsField = ['absent','holiday','special non-working day','travel ob','sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
+		let optsIdx = 0, optsField = ['absent','holiday','seminar','special non-working day','travel ob','sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
 
-		let nwdlist = ['absent','day off', 'holiday','special non-working day','travel ob','leave'];
+		let nwdlist = ['absent','day off', 'holiday','seminar','special non-working day','travel ob','leave'];
 		let levlist = ['sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
 
 		function dtr() {
@@ -984,6 +985,10 @@
 					localStorage.setItem(ctxtarg.dataset.ts, 7);
 				}
 
+				if ( btn === 'seminar' ) {
+					fillas('seminar');
+				}
+
 				if ( btn === 'specialnonworkingday' ) {
 					fillas('special non-working day');
 					localStorage.setItem(ctxtarg.dataset.ts, 8);
@@ -1327,10 +1332,24 @@
 
 			localStorage.removeItem(ts);
 
-			var arr = ['absent','day off','holiday','special non-working day','travel o.b.','field'];
+			var arr = ['absent','day off','holiday','special non-working day','travel o.b.','seminar','field'];
 			var txt = e.target.textContent.toLowerCase();
 
+			if ( clk >= arr.length ) {
+				clk = 0;
+			}
+
 			if ( arr.includes(txt) ) {
+				if ( tr.cells.length === 9 ) {
+					tr.cells[2].textContent = tr.cells[7].textContent = arr[clk++];
+					return;
+				}
+
+				if ( tr.cells.length === 11 ) {
+					tr.cells[2].textContent = tr.cells[8].textContent = arr[clk++];
+					return;
+				}
+
 				tr.cells[1].textContent = tr.cells[5].textContent = arr[clk++];
 			}
 
@@ -1340,10 +1359,6 @@
 
 			if ( e.target.textContent === arr[3] ) {
 				localStorage.setItem(ts, 8);
-			}
-
-			if ( clk >= arr.length ) {
-				clk = 0;
 			}
 		});
 
