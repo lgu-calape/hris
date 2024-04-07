@@ -1314,7 +1314,7 @@
 		clockbox.querySelector('div>button').onclick =()=> clockbox.classList.add('hide');
 		document.onselectstart = () => {return false;}
 
-		var clk = 0;
+		var clk = fclk = 0;
 
 		document.addEventListener('click', e => {
 			if ( e.target.nodeName !== 'TD' ) {
@@ -1333,6 +1333,10 @@
 				clk = 0;
 			}
 
+			if( !fclk ) {
+				clk = fclk = 1;
+			}
+
 			if ( arr.includes(txt) ) {
 				if ( tr.cells.length === 9 ) {
 					tr.cells[2].textContent = tr.cells[7].textContent = arr[clk++];
@@ -1340,6 +1344,16 @@
 				}
 
 				if ( tr.cells.length === 11 ) {
+					if ( e.target.textContent == tr.cells[1].textContent ) {
+						tr.cells[1].textContent = tr.cells[7].textContent = arr[clk++];
+						return;
+					}
+
+					if ( e.target.textContent == tr.cells[3].textContent ) {
+						tr.cells[3].textContent = tr.cells[9].textContent = arr[clk++];
+						return;
+					}
+
 					tr.cells[2].textContent = tr.cells[8].textContent = arr[clk++];
 					return;
 				}
