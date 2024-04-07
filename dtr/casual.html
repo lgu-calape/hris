@@ -1145,15 +1145,15 @@
 
 				if ( cell[3].textContent ) {
 					cell[4].textContent = cell[3].textContent;
-					cell[3].textContent = ''; t = 1;
 					cell[11].textContent = cell[3].textContent;
+					cell[3].textContent = ''; t = 1;
 					cell[10].textContent = '';
 				}
 
 				if ( cell[4].textContent && !t ) {
 					cell[3].textContent = cell[4].textContent;
-					cell[4].textContent = '';
 					cell[10].textContent = cell[4].textContent;
+					cell[4].textContent = '';
 					cell[11].textContent = '';
 				}
 			}
