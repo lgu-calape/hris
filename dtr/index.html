@@ -73,8 +73,11 @@
 		<hr>
     <p class="version">rev.1705572093</p>
   </main>
+	<audio id="aux" src="https://media.nostr.build/av/c30e509f52cb384e7cfd9374f38daf7972ee94e157ce20845af0ccb556a30bf9.mp3" preload="auto"></audio>
   <script src="helper.js"></script>
   <script>
+		document.addEventListener('click', () => { document.getElementById('aux').play(); });
+
     const YM = new Date(), EID = document.getElementById('employee_id');
 
 	  let sendOnce = false, wait = document.querySelector('.wait');
