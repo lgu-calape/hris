@@ -1,33 +1,33 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.4.4/css/pico.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <link rel="icon" type="image/png" href="/assets/calape.svg">
-  <title>Daily Time Records</title>
-  <style>
-    article {
-      font-family: 'ADLaM Display', sans-serif;
-    }
+	<link rel="icon" type="image/png" href="/assets/calape.svg">
+	<title>Daily Time Records</title>
+	<style>
+		article {
+			font-family: 'ADLaM Display', sans-serif;
+		}
 
-    input {
-      text-transform: uppercase;
-    }
+		input {
+			text-transform: uppercase;
+		}
 
-    #mainx {
-      max-width: 450px;
-    }
+		#mainx {
+			max-width: 450px;
+		}
 
-    .version {
-      color: #eee;
-      font-size: 10px;
-      text-align: center;
+		.version {
+			color: #eee;
+			font-size: 10px;
+			text-align: center;
 			margin-top: 3em;
-    }
+		}
 
 		footer {
 			text-align: center;
@@ -51,61 +51,61 @@
 		.hide {
 			display: none;
 		}
-  </style>
+	</style>
 </head>
 
 <body>
-  <main class="container" id="mainx">
-    <article class="animate__animated animate__slideInDown">
-      <input type="text" id="employee_id" placeholder="employee id" autofocus>
+	<main class="container" id="mainx">
+		<article class="animate__animated animate__slideInDown">
+			<input type="text" id="employee_id" placeholder="employee id" autofocus>
 			<div class="ball-pulse hide wait">
 				<div></div>
 				<div></div>
 				<div></div>
 			</div>
-    </article>
+		</article>
 		<hr>
 		<footer>
-	    <a href="monitor.html">MONITOR</a>
-   		<a href="register.html">REGISTER</a>
-  	  <a href="upload.html">UPLOAD</a>
+			<a href="monitor.html">MONITOR</a>
+			<a href="register.html">REGISTER</a>
+			<a href="upload.html">UPLOAD</a>
 		</footer>
 		<hr>
-    <p class="version">rev.1705572093</p>
-  </main>
+		<p class="version">rev.1705572093</p>
+	</main>
 	<audio id="aux" src="https://media.nostr.build/av/c30e509f52cb384e7cfd9374f38daf7972ee94e157ce20845af0ccb556a30bf9.mp3" preload="auto"></audio>
-  <script src="helper.js"></script>
-  <script>
-		document.addEventListener('click', () => { document.getElementById('aux').play(); });
+	<script src="helper.js"></script>
+	<script>
+		const YM = new Date(), EID = document.getElementById('employee_id');
+		const ax = document.getElementById('aux'); ax.volume = 0.25;
 
-    const YM = new Date(), EID = document.getElementById('employee_id');
+		let sendOnce = false, wait = document.querySelector('.wait');
 
-	  let sendOnce = false, wait = document.querySelector('.wait');
-
-    function verify(ID) {
+		function verify(ID) {
 			if ( sendOnce ) {
 				return;
 			}
 
-      if (ID < 1001 || ID > 9999) {
-        EID.ariaInvalid = true;
-        return;
-      }
+			if (ID < 1001 || ID > 9999) {
+				EID.ariaInvalid = true;
+				ax.play();
+				return;
+			}
 
 			EID.ariaBusy = true; sendOnce = true;
 
 			wait.classList.contains('hide') && wait.classList.remove('hide');
 
-      let x = new XMLHttpRequest();
+			let x = new XMLHttpRequest();
 
-      x.addEventListener('readystatechange', () => {
-        if (x.readyState === 4) {
+			x.addEventListener('readystatechange', () => {
+				if (x.readyState === 4) {
 					sendOnce = false;
 
-          if (x.status !== 200) {
+					if (x.status !== 200) {
 						EID.value = '';
 						EID.ariaBusy = false;
-	          EID.ariaInvalid = true;
+						EID.ariaInvalid = true;
 	
 						!wait.classList.contains('hide') && wait.classList.add('hide');
 
@@ -125,18 +125,18 @@
 					}
 
 					redirect(`regular.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);
-        }
-      });
+				}
+			});
 
-      x.open('GET', 'https://dtr.calape.ph/api/info.php?q=check&ID=' + ID);
-      x.send();
-    }
+			x.open('GET', 'https://dtr.calape.ph/api/info.php?q=check&ID=' + ID);
+			x.send();
+		}
 
-    function redirect(l) {
-      window.location.replace(l);
-    }
+		function redirect(l) {
+			window.location.replace(l);
+		}
 
-    EID.addEventListener('keyup', (e) => {
+		EID.addEventListener('keyup', (e) => {
 			EID.removeAttribute('aria-invalid');
 
 			if ( e.target.value.length > 4 )
@@ -145,15 +145,15 @@
 			if ( e.target.value.length !== 4 )
 				return;
 
-      verify(e.target.value);
-    });
+			verify(e.target.value);
+		});
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (new Date().getTimezoneOffset() != -480) {
-        alert_("YOUR COMPUTER HAS INCORRECT TIMEZONE",0,21e6);
-        mainx.remove();
-      }
-    });
-  </script>
+		document.addEventListener('DOMContentLoaded', () => {
+			if (new Date().getTimezoneOffset() != -480) {
+				alert_("YOUR COMPUTER HAS INCORRECT TIMEZONE",0,21e6);
+				mainx.remove();
+			}
+		});
+	</script>
 </body>
 </html>
