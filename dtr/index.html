@@ -88,7 +88,11 @@
 
 			if (ID < 1001 || ID > 9999) {
 				EID.ariaInvalid = true;
-				ax.play();
+
+				if ( ax.paused ) {
+					ax.play();
+				}
+
 				return;
 			}
 
