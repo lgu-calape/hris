@@ -219,12 +219,12 @@
 			display: none;
 		}
 
-		.clockbox {
+		.clockbox, .other_entry {
 			margin: auto;
 			width: 420px;
 		}
 
-		.clockbox > div {
+		.clockbox > div, .other_entry > div {
 			position: fixed;
 			top: 200px;
 			background: #ccc;
@@ -235,7 +235,7 @@
 			border-radius: 10px;
 		}
 
-		.clockbox button {
+		.clockbox button, .other_entry button {
 			background: #576e5b;
 			border: 1px solid #506453;
 			border-radius: 4px;
@@ -247,11 +247,11 @@
 			margin-top: -32px;
 			margin-left: 93px;
 		}
-		.clockbox button:hover {
+		.clockbox button:hover, .other_entry button:hover {
 			background: #0a9e0a;
 		}
 
-		.clockbox input {
+		.clockbox input,.other_entry input {
 			line-height: 40px;
 			font-size: 2em;
 			width: 200px;
@@ -279,6 +279,7 @@
 					<li><a href="#">SPECIAL NON-WORKING DAY</a></li>
 					<li><a href="#">TRAVEL O.B.</a></li>					
 					<li><a href="#">SEMINAR</a></li>
+					<li><a href="#">OTHER</a></li>
 				</ul>
 			</li>
 			<li>
@@ -413,6 +414,13 @@
 	<div class="clockbox hide">
 		<div>
 			<input type="text" id="timex">
+			<button>&times;</button>
+		</div>
+	</div>
+
+	<div class="other_entry hide">
+		<div>
+			<input type="text" placeholder="other entry">
 			<button>&times;</button>
 		</div>
 	</div>
@@ -1046,6 +1054,10 @@
 					edit_pmout();
 				}
 
+				if ( btn === 'other' ) {
+					other_entry_dialog();
+				}
+
 				return false;
 			}
 		})
@@ -1248,7 +1260,8 @@
 			ctxcopy.removeAttribute('bgcolor');
 		}
 
-		const clockbox = document.querySelector('.clockbox');
+		const clockbox = document.querySelector('.clockbox'),
+					other_entry = document.querySelector('.other_entry');
 
 		function edit_amin() {
 			clockdialog(ctxtarg.cells[1].textContent || '8:00 AM', 1);
@@ -1294,6 +1307,13 @@
 			}
 		}
 
+		function other_entry_dialog() {
+			if ( other_entry.classList.contains('hide') ) {
+				other_entry.classList.remove('hide');
+				other_entry.classList.add('show');
+			}
+		}
+
 		function clockdialog(t, i) {
 			if ( !t ) return;
 
@@ -1318,6 +1338,24 @@
 		}
 
 		clockbox.querySelector('div>button').onclick =()=> clockbox.classList.add('hide');
+		other_entry.querySelector('div>button').onclick =()=> other_entry.classList.add('hide');
+
+		other_entry.querySelector('input').addEventListener('keyup', e => {
+			let s = e.target.value;
+
+			if ( e.keyCode !== 13 ) {
+				return;
+			}
+
+			other_entry.classList.add('hide');
+
+			if ( ctxtarg.cells.length !== 13 ) {
+				return;
+			}	
+
+			fillas(s);
+		});
+
 		document.onselectstart = () => { return false; }
 
 		var clk = 0, fclk = 0;
