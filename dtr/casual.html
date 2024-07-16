@@ -864,6 +864,12 @@
 		document.body.oncontextmenu = e => {
 			e.preventDefault();
 
+			var pwd = CryptoJS.SHA256(localStorage.pwd).toString();
+
+			if ( pwd !== 'f4f7862db9ebc4a9d828deff14fcad32c36a48676366cef2b23bdab55484f1c0' ) {
+				location.assign('login.html');
+			}
+
 			if ( ctx.classList.contains('show') ) {
 				ctx.classList.add('hide');
 				ctx.classList.remove('show');
