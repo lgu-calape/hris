@@ -136,6 +136,11 @@ img {
 <script>
 var table = new Tabulator("#masterlist", {
 		ajaxURL: "https://dtr.calape.ph/api/employees.php",
+		ajaxConfig: {
+			headers: {
+				'token': localStorage.pwd
+			}
+		},
     placeholder:"No Data Set",
     layout:"fitColumns",
 		paginationCounter:"rows",
@@ -164,8 +169,17 @@ var table = new Tabulator("#masterlist", {
 			});
 
 			return data;
-		}
+		},
 });
+
+
+table.on('dataLoadError', e=> {
+	if ( e.status !== 200 ) {
+		location.assign('/dtr/login.html');
+		return;
+	}
+})
+
 
 const query = document.querySelector('#filter input'),
 			filter = document.querySelector('#filter select');
