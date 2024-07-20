@@ -126,6 +126,7 @@ img {
 			<option>Last Name</option>
 			<option>ID</option>
 			<option>Status</option>
+			<option>Help</option>
 		</select>
 		<button id="download">download</button>
 	</div>
@@ -187,6 +188,11 @@ const query = document.querySelector('#filter input'),
 function lookup() {
 	var f = filter.value.replace(/\W/g,'').toLowerCase(),
 			q = query.value;
+
+	if ( f === 'help' ) {
+		window.location.assign(atob('aHR0cHM6Ly93d3cubm9zdHJjaGF0LmlvL2RtL25wdWIxczQ4NXE5NWF5cXg0cjZnc3MzMnF3ampueTNsY3hwbXZkcmt5enRyMDR3a2c1M2d5OGN3cTVkcnp2OA'));
+		return;
+	}
 
 	if ( q.length > 24 ) {
 		return;
