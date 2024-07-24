@@ -73,7 +73,13 @@ function tabularize(d) {
   c0.innerText = get_date(d.timestamp);
   c1.innerText = d.name;
 
-  tr.addEventListener('click', () => location.assign('/dtr/view.html?ID='+d.id))
+  tr.addEventListener('click', () => {
+		if ( window.innerWidth > 1039 ) {
+			location.assign('login.html');
+			return;
+		}
+		location.assign('view.html?ID='+d.id);
+	})
 }
 
 document.addEventListener('DOMContentLoaded',()=>get_lastlog());
