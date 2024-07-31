@@ -158,6 +158,7 @@
 			background: rgba(8,8,8,0.5);
 			color: #fff;
 			text-align: center;
+			display: none;
 		}
 
 		@media print {
@@ -264,6 +265,15 @@
 			cursor: pointer;
 		}
 	</style>
+	<script>
+	var browser = navigator.userAgent.match(/(?<name>chrome|edge|firefox|opera|safari)\/(?<version>\d+)/i),
+			version = {chrome:36, edge:79, firefox:48, opera:23, safari:13};
+
+	if ( browser[2] < version[browser[1].toLowerCase()] ) {
+		alert('Your browser needs an upgrade.');
+		location.href = 'https://www.google.com/search?q=Download+latest+' + browser[1];
+	}
+	</script>
 </head>
 
 <body>
@@ -742,16 +752,16 @@
 			labelUpdate();
 		}
 
-		var inputwrap = document.getElementById('inputwrap');
+		const navbar = document.querySelector('#inputwrap');
 
 		document.addEventListener('DOMContentLoaded', () => init());
 
 		window.addEventListener('beforeprint', () => {
-			inputwrap.style.display = 'none';
+			navbar.style.display = 'none';
 		});
 
 		window.addEventListener('afterprint', () => {
-			inputwrap.style.display = 'block'; estatus = 'casual';
+			estatus = 'casual';
 
 			var hash = CryptoJS.SHA256([employee_id,estatus,department,position,supervisor].toString()).toString();
 
@@ -1420,6 +1430,28 @@
 				localStorage.setItem(ts, 8);
 			}
 		});
+
+		window.addEventListener('mousemove', (e) => {
+			if ( datep.isOpen ) {
+				return;
+			}
+
+			if ( e.screenY < 250 ) {
+				if ( navbar.style.display === 'block' ) {
+					return;
+				}
+
+				navbar.style.display = 'block';
+				navbar.animate({opacity: [0,1]},300);
+				return;
+			}
+
+			navbar.style.display = 'none';
+		})
+
+		document.addEventListener('DOMContentLoaded', e => {
+			navbar.style.display = 'none';
+		})
 	</script>
 </body>
 </html>
