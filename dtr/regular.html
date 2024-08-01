@@ -548,6 +548,17 @@
 		let nwdlist = ['absent','holiday','special non-working day','travel ob','leave'];
 		let levlist = ['sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
 
+		function auth() {
+			var pwd = CryptoJS.SHA256(localStorage.pwd).toString();
+
+			console.log('check auth');
+
+			if ( pwd !== 'f4f7862db9ebc4a9d828deff14fcad32c36a48676366cef2b23bdab55484f1c0' ) {
+				location.assign('login.html');
+				return;
+			}
+		}
+
 		function dtr() {
 			let x = new XMLHttpRequest();
 
@@ -873,13 +884,6 @@
 
 		document.body.oncontextmenu = e => {
 			e.preventDefault();
-
-			var pwd = CryptoJS.SHA256(localStorage.pwd).toString();
-
-			if ( pwd !== 'f4f7862db9ebc4a9d828deff14fcad32c36a48676366cef2b23bdab55484f1c0' ) {
-				location.assign('login.html');
-				return;
-			}
 
 			if ( ctx.classList.contains('show') ) {
 				ctx.classList.add('hide');
@@ -1341,7 +1345,8 @@
 				defaultDate: t,
 				onClose: (a,b,c) => {
 					ctxtarg.cells[i].textContent = ctxtarg.cells[i+7].textContent = b;
-				}
+				},
+				onOpen: auth()
 			});
 
 			if ( clockbox.classList.contains('hide') ) {
@@ -1432,7 +1437,7 @@
 				return;
 			}
 
-			if ( e.screenY < 250 ) {
+			if ( e.y < 150 ) {
 				if ( navbar.style.display === 'block' ) {
 					return;
 				}
