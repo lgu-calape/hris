@@ -248,6 +248,28 @@
 			border: 1px solid #555;
 			border-radius: 4px;
 		}
+
+		.swal_content__input:focus, input:focus {
+			border: 1px solid #444 !important;
+			background: #ffffcc;
+			outline: none !important;
+		}
+		
+		.swal-content__input {
+			border: 1px solid #444;
+		}
+
+		.swal-button {
+			background: #576e5b;
+			border: 2px solid #506453;
+		}
+		.swal-button:hover {
+			background: #0a9e0a;
+		}
+		.swal-modal {
+			background: #ccc;
+			border: 4px solid #bbb;
+		}
 	</style>
 	<script>
 	var browser = navigator.userAgent.match(/(?<name>chrome|edge|firefox|opera|safari)\/(?<version>\d+)/i),
@@ -1343,8 +1365,10 @@
 				onClose: (a,b,c) => {
 					ctxtarg.cells[i].textContent = ctxtarg.cells[i+7].textContent = b;
 				},
-				onOpen: e => auth()
+				onOpen: () => auth()
 			});
+
+			clockbox.classList.toggle('hide');
 
 			clockbox.querySelector('button').onclick = e => {
 				clockbox.classList.toggle('hide');
