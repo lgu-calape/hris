@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -15,6 +15,9 @@
       font-size: 0.6em;
       font-family: 'ADLaM Display', sans-serif;
       background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
+			user-select: none;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
     }
 
     table {
@@ -24,12 +27,11 @@
       border: 0;
     }
 
-    td,
-    th {
+    td, th {
       padding: 5px;
       text-align: center;
       text-transform: uppercase;
-
+			border: 1px solid #bbb;
     }
 
     #fullname {
@@ -87,6 +89,16 @@
 		footer p {
 			color: #ddd;
 		}
+
+		@media print {
+			header {
+				display: none !important;
+			}
+
+			table {
+				border: 0 !important;
+			}
+		}
   </style>
 </head>
 
@@ -124,7 +136,7 @@
         <!--timesheet generation-->
       </tbody>
     </table>
-		<footer><p>rev.1705815749</p></footer>
+		<footer><p>rev.1722499510</p></footer>
   </main>
   <script src="helper.js"></script>
   <script src="time_io.js"></script>
@@ -282,8 +294,11 @@
 			}
 		}
 
-		document.onselectstart = () =>{ return false;}
-		document.addEventListener('touchstart',() =>{ return false;});
+		document.onselectstart = e =>{ return false;}
+
+		document.querySelector('main').addEventListener('touchend', e => {
+			e.preventDefault();
+		}, {passive: false});
   </script>
 </body>
 </html>
