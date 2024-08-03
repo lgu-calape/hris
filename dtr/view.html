@@ -79,7 +79,7 @@
 
     if (!ID) location.assign('/');
 
-    if ( window.innerWidth < 1040 ) {
+    if ( window.innerWidth < 800 ) {
       location.assign(`mobile.html?ID=${ID}&YY=${YM.getFullYear()}&MM=${YM.getMonth()+1}`);      
     }
 		else {
