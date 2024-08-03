@@ -143,10 +143,10 @@
 		}
 
 		#table_content {
-			margin-top: 60px;
-			margin-bottom: 30px;
-			display: none;
 			background: rgba(255, 255, 255, 0.95);
+			padding-bottom: 30px;
+			padding-top: 60px;
+			display: none;
 		}
 
 		footer {
@@ -168,6 +168,7 @@
 			}
 
 			#table_content {
+				padding: 0;
 				margin: 0;
 			}
 		}
@@ -328,6 +329,13 @@
 </head>
 
 <body>
+	<header id="inputwrap">
+		<button onclick="print();" title="print">&#x1F5A8;</button>
+		<input type="text" id="employid">
+		<input type="text" id="datepick">
+		<button onclick="location.assign(location.href.replace('casual.html','regular.html'));" style="float:right;margin-right:0.8em;" title="regular format">&#x1D321;</button>
+	</header>
+
 	<nav class="tblctx hide">
 		<ul>
 			<li>
@@ -461,12 +469,6 @@
 		</table>
 	</main>
 	<!-- ./ end main -->
-	<div id="inputwrap">
-		<button onclick="print();" title="print">&#x1F5A8;</button>
-		<input type="text" id="employid">
-		<input type="text" id="datepick">
-		<button onclick="location.assign(location.href.replace('casual.html','regular.html'));" style="float:right;margin-right:0.8em;" title="regular format">&#x1D321;</button>
-	</div>
 
 	<footer>
 		<small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
