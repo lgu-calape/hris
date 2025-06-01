@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="https://calape.ph/assets/calape.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/css/tabulator.min.css">
+<title>...</title>
+<style>
+body {
+	font-family: arial;
+	margin: 0;
+	padding: 0;
+}
+
+#filter {
+	padding: 10px;
+	height: 38px;
+}
+
+#filter select {
+	background: #fff;
+	border: 1px solid #888;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 30px;
+	margin: 0;
+	padding: 2px 10px;
+	outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#filter select:focus {
+	border: 1px solid #444;
+}
+
+#filter button {
+	background: #eee;
+	border: 1px solid #888;
+	border-radius: 4px;
+	font-size: 16px;
+	padding: 7px 4px;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+#filter button:hover {
+	background: #ddd;
+	border: 1px solid #444;
+}
+
+#filter input {
+	border: 1px solid #888;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 30px;
+	padding: 2px 10px;
+	box-sizing: border-box;
+	transition: 0.5s;
+	outline: none;
+}
+
+#filter input:focus {
+	border: 1px solid #444;
+}
+
+.right {
+	float: right;
+}
+
+[tabulator-field="firstname"],[tabulator-field="lastname"],
+[tabulator-field="department"],[tabulator-field="status"] {
+	text-transform: uppercase;
+}
+
+img {
+	animation: ani 6s infinite;
+	height: 50px;
+	margin-top: -5px;
+}
+
+@keyframes ani {
+	0% {
+		transform: translateX(0);
+	}
+
+	20% {
+		transform: rotateX(180deg);
+	}
+	
+	50% {
+		transform: translateX(500px);
+	}
+
+	80% {
+		transform: rotateY(180deg);
+	}
+
+	100% {
+		transform: translateX(0);
+	}
+}
+
+@media (max-width: 500px) {
+	#filter {
+		display: none;
+	}
+}
+
+@media (max-width: 900px) {
+	img {
+		display: none;
+	}
+}
+</style>
+</head>
+<body>
+<div id="filter">
+	<img src="https://calape.ph/assets/calape.svg">
+	<div class="right">
+		<input type="text" placeholder="Look for ...">
+		<select>
+			<option>Department</option>
+			<option>First Name</option>
+			<option>Last Name</option>
+			<option>ID</option>
+			<option>Status</option>
+			<option>Help</option>
+		</select>
+		<button id="adduser">add new</button>
+		<button id="download">download</button>
+	</div>
+</div>
+<div id="masterlist"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.0/js/tabulator.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+var table = new Tabulator("#masterlist", {
+		ajaxURL: "https://dtr.calape.ph/api/employees.php",
+		ajaxConfig: {
+			headers: {
+				'token': localStorage.pwd
+			}
+		},
+    placeholder:"No Data Set",
+    layout:"fitColumns",
+		paginationCounter:"rows",
+		paginationSize: 50,
+		pagination: "local",
+		initialSort: [
+			{ column: "firstname", dir: "asc" },
+		],
+    columns:[
+				{title:"ID", field:"id", sorter:"number", width:50},
+        {title:"FIRST NAME", field:"firstname", sorter:"string", minWidth:110},
+        {title:"LAST NAME", field:"lastname", sorter:"string", minWidth:110},
+        {title:"DEPARTMENT", field:"department", sorter:"string", responsive:2, minWidth:80},
+        {title:"STATUS", field:"status", sorter:"string", download:false, responsive:3},
+    ],
+		responsiveLayout:"hide",
+		ajaxResponse: function(url,params,response) {
+			var data = response.map(d=> {
+				return {
+					id: d.id,
+					firstname: d.firstname.toUpperCase(),
+					lastname: d.lastname.toUpperCase(),
+					status: d.status ? d.status.toUpperCase() : '',
+					department: d.department ? d.department.toUpperCase() : '',
+				}
+			});
+
+			return data;
+		},
+});
+
+
+table.on('dataLoadError', e=> {
+	if ( e.status !== 200 ) {
+		location.assign('/dtr/login.html');
+		return;
+	}
+})
+
+
+const query = document.querySelector('#filter input'),
+			filter = document.querySelector('#filter select');
+
+function lookup() {
+	var f = filter.value.replace(/\W/g,'').toLowerCase(),
+			q = query.value;
+
+	if ( f === 'help' ) {
+		window.location.assign(atob('aHR0cHM6Ly93d3cubm9zdHJjaGF0LmlvL2RtL25wdWIxczQ4NXE5NWF5cXg0cjZnc3MzMnF3ampueTNsY3hwbXZkcmt5enRyMDR3a2c1M2d5OGN3cTVkcnp2OA'));
+		return;
+	}
+
+	if ( q.length > 24 ) {
+		return;
+	}
+
+	if ( f === 'id' && !+q ) {
+		return;
+	}
+
+	if ( f !== 'id' && !!+q ) {
+		return;
+	}
+
+	if ( q.length < 2 ) {
+		table.clearFilter();
+		return;
+	}
+
+	table.setFilter(f,'like',q);
+}
+
+query.addEventListener('keyup', lookup);
+filter.addEventListener('change', lookup);
+
+document.getElementById('download').addEventListener('click', ()=> {
+	table.download('xlsx',`hr_${Date.now()}.xlsx`);
+});
+
+document.getElementById('adduser').addEventListener('click', () => {
+	window.location.href = '/dtr/adduser.html';
+});
+
+table.on('rowClick', (e,row) => {
+	var r = row.getData();
+	
+	if ( r.status === 'REGULAR' ) {
+		window.open(`/dtr/view.html?ID=${r.id}&r=1`, 'target=_blank');
+	}
+	else {
+		window.open(`/dtr/view.html?ID=${r.id}`, 'target=_blank');
+	}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1522 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<link rel="icon" type="image/png" href="clock.png">
+	<title>...</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 12px;
+			font-family: arial, san-serif;
+			background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: auto;
+			width: 326mm;
+			border: 0;
+			border-color: #000;
+			user-select: none;
+		}
+
+		td,
+		th {
+			padding: 5px;
+			text-align: center;
+			text-transform: uppercase;			
+		}
+
+		#timesheet td {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			min-width: 56px;
+			max-width: 200px;
+			overflow: hidden;
+		}
+
+		.wide {
+			width: 330px;
+		}
+
+		.alertt {
+			font-size: 2em;
+		}
+
+		.cosigner {
+			width: 300px;
+			text-align: center;
+		}
+
+		.cosigner > div {
+			font-size: 12px;
+			line-height: 15px;
+			margin: 0;
+			padding: 0;
+			text-transform: uppercase;
+		}
+
+		.fullname, .supervisor {
+			font-weight: bold;
+		}
+
+
+		.fnpos, svpos {
+			font-size: 12px;
+			text-transform: uppercase !important;
+		}
+
+		.uline {
+			text-decoration: underline;
+		}
+
+		.signed td {
+			padding: 5px;
+			text-transform: none;
+			line-height: 1.8;
+		}
+
+		.supervisor, .fullname, .department, .work {
+			cursor: pointer;
+		}
+
+		.spacer {
+			border: 0px;
+			width: 50px;
+		}
+
+		.signed .confirme {
+			font-size: 11px;
+		}
+
+		.label1 {
+			font-size: 20px;
+		}
+
+		.work_date_range {
+			font-weight: normal;
+			font-size: 12px;
+		}
+
+		.swal-content__input {
+			text-align: center;
+			text-transform: uppercase;
+		}
+
+		.swal-footer {
+			text-align: center;
+		}
+
+		#inputwrap {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: rgba(8,8,8,0.5);
+			padding: 1em 0 0.6em 1.6em;
+			min-width: 942px;
+		}
+
+		#inputwrap button {
+			border-radius: 4px;
+			padding: 5px 10px;
+			font-size: 2em;
+			border: 2px solid #506453;
+			background: #576e5b;
+			color: white;
+			cursor:pointer;
+		}
+
+		#inputwrap button:hover {
+			background: #0a9e0a;
+		}
+
+		#inputwrap input {
+			width: 80px;
+			line-height:40px;
+			font-size: 2em;
+			border: 1px solid #1e231c; 
+			border-radius: 4px;
+			padding: 0 5px;
+		}
+
+		#datepick {
+			width: 300px !important;
+		}
+
+		#table_content {
+			background: rgba(255, 255, 255, 0.95);
+			padding-bottom: 30px;
+			padding-top: 60px;
+			display: none;
+		}
+
+		footer {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 5px;
+			background: rgba(8,8,8,0.5);
+			color: #fff;
+			text-align: center;
+			display: none;
+		}
+
+		@media print {
+			#inputwrap,
+			footer {
+				display: none;
+			}
+
+			#table_content {
+				padding: 0;
+				margin: 0;
+			}
+		}
+		
+		.recordhead {
+			font-size: 12px;
+		}
+		.tblctx {
+			margin-top: -15px;
+		}
+
+		.tblctx ul {
+			background: #ddd;
+			border-radius: 6px;
+			list-style: none;
+			margin: 0;
+			padding: 5px;
+		}
+
+		.tblctx li a {
+			padding: 10px 28px;
+			border: 1px solid #cfcfcf;
+			color: #000;
+			display: block;
+			white-space: nowrap;			
+			text-wrap: nowrap;
+			text-decoration: none;
+		}
+
+		.tblctx li a:hover {
+			background: #ccc;
+		}
+
+		.tblctx li > ul {
+			display: none;
+			position: absolute;
+			margin-top: -41px;
+			margin-left: 99px;
+		}
+
+		.tblctx li:hover > ul {
+			display: block;
+		}
+
+		.show {
+			display: block;
+		}
+
+		.hide {
+			display: none;
+		}
+
+		.clockbox, .other_entry {
+			margin: auto;
+			width: 420px;
+		}
+
+		.clockbox > div, .other_entry > div {
+			position: fixed;
+			top: 200px;
+			background: #ccc;
+			width: 380px;
+			padding: 20px;
+			text-align: center;
+			border: 4px solid #bbb;
+			border-radius: 10px;
+		}
+
+		.clockbox button, .other_entry button {
+			background: #576e5b;
+			border: 1px solid #506453;
+			border-radius: 4px;
+			color: #fff;
+			cursor: pointer;
+			font-size: 1.6em;
+			padding: 0 5px;
+			position: absolute;
+			margin-top: -32px;
+			margin-left: 93px;
+		}
+		.clockbox button:hover, .other_entry button:hover {
+			background: #0a9e0a;
+		}
+
+		.clockbox input,.other_entry input {
+			line-height: 40px;
+			font-size: 2em;
+			width: 200px;
+			text-align: center;
+			border: 1px solid #555;
+			border-radius: 4px;
+		}
+
+		.help {
+			cursor: pointer;
+		}
+
+		.swal_content__input:focus, input:focus {
+			border: 1px solid #444 !important;
+			background: #ffffcc;
+			outline: none !important;
+		}
+		
+		.swal-content__input {
+			border: 1px solid #444;
+		}
+
+		.swal-button {
+			background: #576e5b;
+			border: 2px solid #506453;
+		}
+		.swal-button:hover {
+			background: #0a9e0a !important;
+		}
+		.swal-modal {
+			background: #ccc;
+			border: 4px solid #bbb;
+		}
+
+		.flatpickr-day.selected,
+		.flatpickr-day.startRange,
+		.flatpickr-day.endRange,
+		.flatpickr-day.selected.inRange,
+		.flatpickr-day.startRange.inRange,
+		.flatpickr-day.endRange.inRange,
+		.flatpickr-day.selected:focus,
+		.flatpickr-day.startRange:focus,
+		.flatpickr-day.endRange:focus,
+		.flatpickr-day.selected:hover,
+		.flatpickr-day.startRange:hover,
+		.flatpickr-day.endRange:hover,
+		.flatpickr-day.selected.prevMonthDay,
+		.flatpickr-day.startRange.prevMonthDay,
+		.flatpickr-day.endRange.prevMonthDay,
+		.flatpickr-day.selected.nextMonthDay,
+		.flatpickr-day.startRange.nextMonthDay,
+		.flatpickr-day.endRange.nextMonthDay {
+			background: #1aad1a;
+			border-color: #159c15;
+		}
+
+		.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)),
+		.flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)),
+		.flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+	    -webkit-box-shadow: -10px 0 0 #1aad1a;
+  	  box-shadow: -10px 0 0 #1aad1a;
+		}
+	</style>
+	<script>
+	var browser = navigator.userAgent.match(/(?<name>chrome|edge|firefox|opera|safari)\/(?<version>\d+)/i),
+			version = {chrome:36, edge:79, firefox:48, opera:23, safari:13};
+
+	if ( browser[2] < version[browser[1].toLowerCase()] ) {
+		alert('Your browser needs an upgrade.');
+		location.href = 'https://www.google.com/search?q=Download+latest+' + browser[1];
+	}
+	</script>
+</head>
+
+<body>
+	<header id="inputwrap">
+		<button onclick="print();" title="print">&#x1F5A8;</button>
+		<input type="text" id="employid">
+		<input type="text" id="datepick">
+		<button onclick="location.assign(location.href.replace('casual.html','regular.html'));" style="float:right;margin-right:0.8em;" title="regular format">&#x1D321;</button>
+	</header>
+
+	<nav class="tblctx hide">
+		<ul>
+			<li>
+				<a href="#">FILL AS</a>
+				<ul>
+					<li><a href="#">ABSENT</a></li>
+					<li><a href="#">DAY OFF</a></li>
+					<li><a href="#">FIELD</a></li>
+					<li><a href="#">HOLIDAY</a></li>
+					<li><a href="#">SPECIAL NON-WORKING DAY</a></li>
+					<li><a href="#">TRAVEL O.B.</a></li>					
+					<li><a href="#">SEMINAR</a></li>
+					<li><a href="#">OTHER</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">LEAVE</a>
+				<ul>
+					<li><a href="#">MATERNITY</a></li>
+					<li><a href="#">PATERNITY</a></li>
+					<li><a href="#">SICK</a></li>
+					<li><a href="#">SPECIAL PRIVILEGE</a></li>
+					<li><a href="#">VACATION</a></li>
+				</ul>
+			</li>
+			<li><a href="#">SHIFT</a></li>
+			<li><a href="#">SPLIT</a></li>
+			<li>
+				<a href="#"> EDIT &nbsp;&nbsp;&nbsp;</a>
+				<ul>
+					<li><a href="#">AM IN</a></li>
+					<li><a href="#">AM OUT</a></li>
+					<li><a href="#">PM IN</a></li>
+					<li><a href="#">PM OUT</a></li>
+					<li><a href="#">CLEAR</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+	<main id="table_content">		 
+		<table border="0" class="recordhead">
+			<tr>
+				<th class="label1" colspan="2">daily time record</th>
+				<td class="spacer">&nbsp;</td>
+				<th class="label1" colspan="2">daily time record</th>
+			</tr>
+			<tr>
+				<td colspan="2" class="work_date_range"></td>
+				<td class="spacer">&nbsp;</td>
+				<td colspan="2" class="work_date_range"></td>
+			</tr>
+			<tr><td colspan="5"><br></td></tr>
+			<tr>
+				<th style="text-align: left;">Name : <span class="fullname">...</span></th>
+				<th style="text-align: right;">ID # : <span class="idnum">...</span></th>
+				<td class="spacer">&nbsp;</td>
+				<th style="text-align: left;">Name : <span class="fullname">...</span></th>
+				<th style="text-align: right;">ID # : <span class="idnum">...</span></th>
+			</tr>
+			<tr>
+				<th style="text-align: left;" class="department">...</th>
+				<th style="text-align: right;" class="work">...</th>
+				<td class="spacer">&nbsp;</td>
+				<th style="text-align: left;" class="department">...</th>
+				<th style="text-align: right;" class="work">...</th>
+			</tr>
+		</table>
+		<br>
+		<table border="1">
+			<thead>
+				<tr>
+					<th rowspan="2">date</th>
+					<th colspan="2">am</th>
+					<th colspan="2">pm</th>
+					<th rowspan="2" class="wide">accomplishment / remarks</th>
+					<td class="spacer">&nbsp;</td>
+					<th rowspan="2">date</th>
+					<th colspan="2">am</th>
+					<th colspan="2">pm</th>
+					<th rowspan="2" class="wide">accomplishment / remarks</th>
+				</tr>
+				<tr>
+					<th width="85">in</th>
+					<th width="85">out</th>
+					<th width="85">in</th>
+					<th width="85">out</th>					 
+					<td class="spacer">&nbsp;</td>
+					<th width="85">in</th>
+					<th width="85">out</th>
+					<th width="85">in</th>
+					<th width="85">out</th>					 
+				</tr>
+			</thead>
+			<tbody id="timesheet">
+				<!--timesheet generation-->
+			</tbody>			
+		</table>
+		<br>
+		<table class="signed">		 
+			<tr>
+				<td colspan="2" class="confirme">
+					I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
+					of which was made<br>daily at the time of arrival and departure from office.
+				</td>
+				<td class="spacer">&nbsp;</td>
+				<td colspan="2" class="confirme">
+					I CERTIFY on my honor that the above is a true and correct report<br>of the hours of work performed, record
+					of which was made<br>daily at the time of arrival and departure from office.
+				</td>
+			</tr>
+			<tr><td colspan="5"><br></td></tr>
+			<tr>
+				<td class="cosigner">
+					<div class="fullname uline"><!--fullname--></div>
+					<div class="fnpos">EMPLOYEE</div>
+				</td>
+				<td class="cosigner">
+					<div class="supervisor uline"><!--fullname--></div>
+					<div class="svpos">SUPERVISOR</div>
+				</td>
+				<td class="spacer">&nbsp;</td>
+				<td class="cosigner">
+					<div class="fullname uline"><!--fullname--></div>
+					<div class="fnpos">EMPLOYEE</div>
+				</td>
+				<td class="cosigner">
+					<div class="supervisor uline"><!--fullname--></div>
+					<div class="svpos">SUPERVISOR</div>
+				</td>
+			</tr>
+		</table>
+	</main>
+	<!-- ./ end main -->
+
+	<footer>
+		<small>minimum browser version requirements: chrome 20; edge 12; firefox 57; opera 11; safari 14.1</small>
+	</footer>
+
+	<div class="clockbox hide">
+		<div>
+			<input type="text" id="timex">
+			<button>&times;</button>
+		</div>
+	</div>
+
+	<div class="other_entry hide">
+		<div>
+			<input type="text" placeholder="other entry">
+			<button>&times;</button>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="helper.js?_=1668848567288"></script>
+	<script src="time_io.js?_=1668848567293"></script>
+	<script src="undertime_io.js?_=1668848567287"></script>
+	<script>
+		var sha256, estatus, department, position, supervisor;
+
+		if ( !get_param('ID') ) {
+			location.assign('/');
+		}
+
+		const datep = flatpickr("#datepick", {
+			mode: "range",
+			onChange: e => {
+				if ( e.length !== 2 )
+					return;
+
+				const nURL = new URL(location.href.split('?').shift());
+
+				nURL.searchParams.set('ID', get_param('ID'));
+				nURL.searchParams.set('FROM', qdate(e[0]));
+				nURL.searchParams.set('TO', qdate(e[1]));
+
+				location.assign(nURL);				
+			},
+		 weekNumbers: true
+		});
+
+		document.getElementById('employid').addEventListener('keyup', e=> {
+			var n = e.target.value;
+
+			if ( !+n ) {
+				return;
+			}
+
+			if ( n < 1000 || n > 9999 ) {
+				return;
+			}
+
+			if ( n === get_param('ID') ) {
+				return;
+			}
+
+			const nURL = new URL(location);
+
+			nURL.searchParams.set('ID', n);
+
+			location.assign(nURL);
+		});
+
+		if ( get_param('FROM') && get_param('TO') ) {
+			datep.setDate([get_param('FROM'), get_param('TO')]);
+		}
+
+		if ( get_param('MM') && get_param('YY') ) {
+			datep.setDate([new Date(get_param('YY'),get_param('MM')-1,1),new Date(get_param('YY'),get_param('MM'),0)]);
+		}
+		
+		document.getElementById('employid').value = get_param('ID');
+
+		let employee_id = get_param("ID"),
+			FROM_DATE = get_param("FROM"),
+			TO_DATE = get_param("TO"),
+			MM = get_param("MM"), YY = get_param("YY");
+
+		let from_this_date = new Date(FROM_DATE);
+		let to_this_date = new Date(TO_DATE);
+
+
+		let table_content = document.getElementById("table_content"),
+				timesheet = document.getElementById("timesheet");
+
+		if ((MM > 0 && MM < 13) && (YY > 2021 && YY < 2100)) {
+			from_this_date = new Date(YY, MM - 1, 1);
+			to_this_date = new Date(YY, MM, 0);
+		}
+
+		const WORKING_HOURS = [8, 12, 13, 17];
+
+		const ftd = from_this_date, ttd = to_this_date;
+
+		const fmt_from_date = [ftd.getFullYear(), String(ftd.getMonth() + 1).padStart(2, 0), String(ftd.getDate()).padStart(2, 0)].join("-");
+		const fmt_to_date = [ttd.getFullYear(), String(ttd.getMonth() + 1).padStart(2, 0), String(ttd.getDate()).padStart(2, 0)].join("-");
+
+		let optsIdx = 0, optsField = ['absent','holiday','seminar','special non-working day','travel ob','sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
+
+		let nwdlist = ['absent','day off', 'holiday','seminar','special non-working day','travel ob','leave'];
+		let levlist = ['sick leave','vacation leave','special privilege leave','maternity leave','paternity leave'];
+
+		function auth() {
+			var pwd = CryptoJS.SHA256(localStorage.pwd).toString();
+
+			console.log('check auth');
+
+			if ( pwd !== 'f4f7862db9ebc4a9d828deff14fcad32c36a48676366cef2b23bdab55484f1c0' ) {
+				location.assign('login.html');
+				return;
+			}
+		}
+
+		function dtr() {
+			let x = new XMLHttpRequest();
+
+			x.addEventListener('readystatechange', () => {
+				if (x.readyState === 1) {
+					// ...
+				}
+
+				if (x.readyState === 4) {
+					if (x.status === 200) {
+						let d = JSON.parse(x.responseText);
+
+						var records = [];
+
+						d.forEach((o) => {
+							records[o.petsa] = time_io(o.oras, WORKING_HOURS);
+						});
+
+						loop_through_date(from_this_date, to_this_date, records);
+
+						table_content.style.display = 'block';
+					}
+
+					if (x.status === 403) {
+						location.assign('index.html');
+					}
+				}
+
+			});
+
+			let p = new URL("https://dtr.calape.ph/api/timerecord2.php");
+			p.searchParams.set("ID", employee_id);
+			p.searchParams.set("FROM", fmt_from_date);
+			p.searchParams.set("TO", fmt_to_date);
+
+			x.open('GET', p);
+			x.send();
+		}
+
+		function employee_basic_info() {
+			let x = new XMLHttpRequest();
+
+			x.addEventListener('readystatechange', () => {
+				if (x.readyState === 4) {
+					if (x.status === 200) {
+						let d = JSON.parse(x.responseText), employee_name = d.firstname + ' ' + d.lastname;
+
+						document.querySelectorAll('.fullname').forEach(o => o.innerText = employee_name);
+					 	document.title = employee_name;
+
+						empState(); estatus = d.status;
+					}
+
+					if (x.status === 403) {
+						location.assign('index.html');
+					}
+				}
+
+			});
+
+			x.open('GET', 'https://dtr.calape.ph/api/info.php?ID=' + employee_id);
+			x.send();
+		}
+
+		function empState() {
+			fetch(`https://dtr.calape.ph/api/assignments.php?id=${employee_id}`).then(r=>{
+				if ( r.status === 200 ) {
+					return r.json()
+				}
+			}).then(d=>{
+				if ( !d ) {
+					return;
+				}
+
+				if ( d.department ) {
+					department = d.department;
+				}
+
+				if ( d.position ) {
+					position = d .position;
+				}
+
+				if ( d.supervisor ) {
+					supervisor = d.supervisor;
+				}
+
+				sha256 = CryptoJS.SHA256([employee_id,estatus,department,position,supervisor].toString()).toString();
+			}).finally(labelUpdate);
+		}
+
+
+		function labelUpdate() {
+			document.querySelectorAll('.idnum').forEach(e=> {
+				e.textContent = employee_id;
+			});
+
+			document.querySelectorAll('.work').forEach(e=> {
+				e.textContent = 'FUNCTION : ' + (position||'_________________');
+			});
+
+
+			document.querySelectorAll('.department').forEach(e=> {
+				e.textContent = 'DEPARTMENT : ' + (department||'________________');
+			});
+
+			var s = supervisor ? supervisor.split('/') : ['________________','supervisor'];
+
+			document.querySelectorAll('.supervisor').forEach(e=> {
+				e.textContent = s[0];
+			});
+
+			document.querySelectorAll('.svpos').forEach(e=> {
+				if ( s.length === 2 ) {
+					e.textContent = s[1];
+				}
+			});
+		}
+
+		function loop_through_date(a, b, c) {
+			for (a; a <= b; a.setDate(a.getDate() + 1)) {
+				let indexFmt = [a.getFullYear(), String(a.getMonth() + 1).padStart(2,0), String(a.getDate()).padStart(2, 0)].join('-');
+
+				let default_records = { 'date': indexFmt, time: Object.assign({}, [null, null, null, null]) };
+
+				if (c[indexFmt]) {
+					default_records = { 'date': indexFmt, 'time': c[indexFmt] }
+				}
+
+				timeshit(default_records);
+			}
+		}
+
+		function timeshit(d) {
+			let tr = timesheet.insertRow(-1),
+				c00 = tr.insertCell(0),
+				c01 = tr.insertCell(1),
+				c02 = tr.insertCell(2),
+				c03 = tr.insertCell(3),
+				c04 = tr.insertCell(4),
+				c05 = tr.insertCell(5),
+				brk = tr.insertCell(6),
+				c07 = tr.insertCell(7),
+				c08 = tr.insertCell(8),
+				c09 = tr.insertCell(9),
+				c10 = tr.insertCell(10),
+				c11 = tr.insertCell(11),
+				c12 = tr.insertCell(12);
+
+			let absent = false, araw = String(new Date(d.date).getDate()).padStart(2, 0), oras = d.time;
+		 
+			if (!oras[0] && !oras[1] && !oras[2] && !oras[3]) {
+				absent = true;
+			}
+
+			tr.dataset.ts = d.date;
+
+			c00.innerText = c07.innerText = d.date;
+			c01.innerText = c08.innerText = toLocalTime(oras[0]);
+			c02.innerText = c09.innerText = toLocalTime(oras[1]);
+			c03.innerText = c10.innerText = toLocalTime(oras[2]);
+			c04.innerText = c11.innerText = toLocalTime(oras[3]);
+			//c05.innerText = c12.innerText = absent ? null : undertime_io(Object.values(oras), WORKING_HOURS);
+
+			brk.innerText = null;
+			brk.className = 'spacer';
+
+			let it_go = new Date(d.date).getDay(), is_happyday = localStorage.getItem(d.date);
+
+			if (is_happyday) {
+				it_go = is_happyday;
+			}
+
+			if (absent) {
+				if (it_go == 0) {
+					c01.innerText = c08.innerText = 'SUNDAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c10.remove(); c11.remove(); c12.remove();
+				}
+
+				if (it_go == 6) {
+					c01.innerText = c08.innerText = 'SATURDAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c10.remove(); c11.remove(); c12.remove();
+				}
+
+				if (it_go == 7) {
+					c01.innerText = c08.innerText = 'HOLIDAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c10.remove(); c11.remove(); c12.remove();
+				}
+
+				if (it_go == 8) {
+					c01.innerText = c08.innerText = 'SPECIAL NON-WORKING DAY';
+					c01.colSpan = c08.colSpan = 4;
+					c02.remove(); c03.remove(); c04.remove();
+					c12.remove(); c10.remove(); c11.remove();
+				}
+
+			}
+		}
+
+		function get_working_hours() {
+			return WORKING_HOURS.map(d => toLocalTime(new Date().setHours(d, 0, 0, 0))).join('-').replace(/ /g, '');
+		}
+
+		function init() {
+			document.querySelectorAll(".work_date_range").forEach(o => {
+				o.innerText = `for the period of ${toLocalDateFmt(from_this_date)} - ${toLocalDateFmt(to_this_date)}`;
+			});			 
+
+			employee_basic_info(); dtr();
+		}
+
+		function set_supervisor(s) {
+			if (!s) {
+				return;
+			}
+
+			supervisor = s;
+
+			labelUpdate();
+		}
+
+		const navbar = document.querySelector('#inputwrap');
+
+		document.addEventListener('DOMContentLoaded', () => init());
+
+		window.addEventListener('beforeprint', () => {
+			navbar.style.display = 'none';
+		});
+
+		window.addEventListener('afterprint', () => {
+			estatus = 'casual';
+
+			var hash = CryptoJS.SHA256([employee_id,estatus,department,position,supervisor].toString()).toString();
+
+			urecord(hash, sha256);
+		});
+
+		document.querySelectorAll('.supervisor, .department, .work').forEach(e=>{
+			e.addEventListener('click', e => {
+				var btn = e.target.className;
+
+				console.log(btn)
+
+				switch (btn) {
+					case 'department':
+						askDepartment(); break;
+					case 'work':
+						askFunction(); break;
+					default:
+						askSupervisor();
+				}
+			});
+		})
+
+		function askSupervisor() {
+			swal({
+				title: 'DEPARTMENT HEAD',
+				content: {
+					element: "input",
+					attributes: {
+						placeholder: "name / position",
+						type: "text",
+					},
+				},
+			}).then(v => {
+				if ( !v ) return;
+
+				supervisor = v;
+				labelUpdate();
+			});
+		}
+
+		function askDepartment() {
+			swal({
+				title: 'DEPARTMENT',
+				content: {
+					element: "input",
+					attributes: {
+						type: "text",
+					},
+				},
+			}).then(v => {
+				if ( !v ) return;
+
+				department = v;
+				labelUpdate();
+			});
+		}
+
+		function askFunction() {
+			swal({
+				title: 'FUNCTION',
+				content: {
+					element: "input",
+					attributes: {
+						type: "text",
+					},
+				},
+			}).then(v => {
+				if ( !v ) return;
+
+				position = v;
+				labelUpdate();
+			});
+		}
+
+		function qdate(n) {
+			let d = new Date(+n);
+
+			return [d.getFullYear(), String(d.getMonth() + 1).padStart(2,0), String(d.getDate()).padStart(2, 0)].join('-');
+		}
+
+		window.onresize = (e) => {
+			if ( window.innerWidth < 780 && !get_param('v') ) {
+				window.location.assign(`view.html?ID=${get_param('ID')}`);
+			}
+		}
+
+		function urecord(a,b) {
+			console.log(a!==b);
+
+			if ( a === b ) return;
+
+			sha256 = a;
+
+			let x = new XMLHttpRequest();
+
+			x.onload = () => {
+				if (x.status === 200 ) {
+					console.log(x.response);
+				}
+			}
+
+			x.open('PUT', 'https://dtr.calape.ph/api/record.php');
+			x.send(JSON.stringify([employee_id, estatus, department, position, supervisor]));
+			console.log('updating record');
+		}
+
+		var ctx = document.querySelector('.tblctx'), ctxtarg, ctxmenu = ['fillas','leave','edit'];
+
+		document.body.oncontextmenu = e => {
+			e.preventDefault();
+
+			if ( ctx.classList.contains('show') ) {
+				ctx.classList.add('hide');
+				ctx.classList.remove('show');
+				ctxtarg.removeAttribute('bgcolor');
+			}
+
+			if ( e.target.nodeName !== 'TD' ) {
+				return;
+			}
+
+			if ( e.target.parentNode.childElementCount !== 13 ) {
+				return;
+			}
+
+			if ( [0,5,6,7,12].includes(e.target.cellIndex) ) {
+				return;
+			}
+
+			var times = 0;
+
+			Array.from(e.target.parentNode.cells).forEach((e,i) => {
+				if ( i < 1 || i > 4 ) {
+					return;
+				}
+
+				if ( !e.textContent ) {
+					return;
+				}
+
+				times++;
+			})
+
+			ctxtarg && ctxtarg.hasAttribute('bgcolor') && ctxtarg.removeAttribute('bgcolor');
+
+			ctxtarg = e.target.parentNode;
+
+			var arr = [];
+
+			for (var i = 1; i < 5; i++) {
+				arr.push(!!ctxtarg.cells[i].textContent);
+			}
+
+			ctx.querySelectorAll('nav>ul>li a').forEach((e,i) => {
+				var li = e.parentNode.classList,
+						ss = e.textContent.replace(/\W/g,'').toLowerCase();
+				
+				li.contains('hide') && li.remove('hide');
+
+				if ( times === 0 && ['edit','split','shift'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 1 && ss === 'leave' ) {
+					li.add('hide');
+				}
+
+				if ( times === 1 && (arr[0] || arr[1] || arr[2] || arr[3]) && ['absent','dayoff','holiday','specialnonworkingday','split'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 1 && (arr[1] || arr[2] || arr[3]) && ss === 'fillas' ) {
+					li.add('hide');
+				}
+
+				if ( times === 2 && ss === 'leave') {
+					li.add('hide');
+				}
+
+				if ( times === 2 && (arr[0] && arr[1] || arr[2] && arr[3]) && ['split','shift'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 2 && (arr[0] && arr[3] || arr[1] && arr[2]) && ['absent','dayoff','holiday','specialnonworkingday','split'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 2 && arr[1] && arr[2] && ss === 'fillas') {
+					li.add('hide');
+				}
+
+				if ( times === 3 && ['fillas','leave'].includes(ss) ) {
+					li.add('hide');
+				}
+
+				if ( times === 3 && (arr[0] && arr[1] || arr[2] && arr[3]) && ss === 'shift' ) {
+					li.add('hide');
+				}
+
+				if ( times === 4 && ['fillas','leave','split','shift'].includes(ss) ) {
+					li.add('hide');
+				}
+			})
+
+			ctxtarg.bgColor = '#eee';
+
+			ctx.style.top = `${e.pageY}px`;
+			ctx.style.left = `${e.pageX}px`;
+			ctx.style.position = 'absolute';
+
+			ctx.classList.remove('hide');
+			ctx.classList.add('show');
+		}
+
+		ctx.querySelectorAll('a').forEach( e => {
+			e.onclick = e => {
+				var btn = e.target.textContent;
+						btn = btn.replace(/\W/g,'').toLowerCase();
+
+				if ( ctxmenu.includes(btn) ) {
+					return false;
+				}
+
+				if ( btn === 'absent' ) {
+					fillas('absent')
+				}
+
+				if ( btn === 'dayoff' ) {
+					fillas('day off');
+				}
+
+				if ( btn === 'field' ) {
+					fillas('field');
+				}
+
+				if ( btn === 'holiday' ) {
+					fillas('holiday');
+					localStorage.setItem(ctxtarg.dataset.ts, 7);
+				}
+
+				if ( btn === 'seminar' ) {
+					fillas('seminar');
+				}
+
+				if ( btn === 'specialnonworkingday' ) {
+					fillas('special non-working day');
+					localStorage.setItem(ctxtarg.dataset.ts, 8);
+				}
+
+				if ( btn === 'travelob') {
+					fillas('travel o.b.');
+				}
+
+				if ( btn === 'paternity' ) {
+					fillas('paternity leave');
+				}
+
+				if ( btn === 'maternity' ) {
+					fillas('maternity leave');
+				}
+
+				if ( btn === 'sick' ) {
+					fillas('sick leave');
+				}
+
+				if ( btn === 'specialprivilege' ) {
+					fillas('special privilege leave');
+				}
+
+				if ( btn === 'vacation' ) {
+					fillas('vacation leave');
+				}
+
+				if ( btn === 'shift' ) {
+					shift_tio();
+				}
+
+				if ( btn === 'split' ) {
+					shift_dio();
+				}
+
+				if ( btn === 'clear' ) {
+					edit_clear();
+				}
+
+				if ( btn === 'amin' ) {
+					edit_amin();
+				}
+
+				if ( btn === 'amout' ) {
+					edit_amout();
+				}
+
+				if ( btn === 'pmin' ) {
+					edit_pmin();
+				}
+
+				if ( btn === 'pmout' ) {
+					edit_pmout();
+				}
+
+				if ( btn === 'other' ) {
+					other_entry_dialog();
+				}
+
+				return false;
+			}
+		})
+
+		function fillas(s) {
+			var arr = [];
+
+			for (var i = 1 ; i < 5; i++) {
+				arr.push(!!ctxtarg.cells[i].textContent);
+			}
+
+			var arrlen = arr.filter(Boolean).length;
+
+			if ( arrlen === 1 && arr[0] ) {
+				ctxtarg.cells[2].textContent = s;
+				ctxtarg.cells[9].textContent = s;
+				ctxtarg.cells[2].colSpan = 3;
+				ctxtarg.cells[9].colSpan = 3;
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(3);
+				ctxtarg.deleteCell(3);
+			}
+
+			if ( arrlen === 2 && arr[0] && arr[1] ) {
+				ctxtarg.deleteCell(10);
+				ctxtarg.deleteCell(3);
+				ctxtarg.cells[9].colSpan = 2;
+				ctxtarg.cells[9].textContent = s;
+				ctxtarg.cells[3].colSpan = 2;
+				ctxtarg.cells[3].textContent = s;
+			}
+
+			if ( arrlen === 2 && arr[2] && arr[3] ) {
+				ctxtarg.deleteCell(8);
+				ctxtarg.deleteCell(2);
+				ctxtarg.cells[7].colSpan = 2;
+				ctxtarg.cells[1].colSpan = 2;
+				ctxtarg.cells[7].textContent = s;
+				ctxtarg.cells[1].textContent = s;
+			}
+
+			if ( arrlen === 2 && arr[0] && arr[3] ) {
+				ctxtarg.deleteCell(9);
+				ctxtarg.deleteCell(3);
+				ctxtarg.cells[2].colSpan = 2;
+				ctxtarg.cells[8].colSpan = 2;
+				ctxtarg.cells[2].textContent = s;
+				ctxtarg.cells[8].textContent = s;
+			}
+
+			if ( arrlen ) {
+				return;
+			}
+
+			for (var i = 4; i > 1; i--) {
+				ctxtarg.deleteCell(2);
+				ctxtarg.deleteCell(7);
+			}
+
+			ctxtarg.cells.item(1).innerText = s;
+			ctxtarg.cells.item(5).innerText = s;
+			ctxtarg.cells.item(1).colSpan = 4;
+			ctxtarg.cells.item(5).colSpan = 4;
+
+		}
+
+		function fillasb(s) {
+			for (var i = 2; i < 4; i++) {
+				console.log(i);
+			}
+		}
+
+		function shift_tio() {
+			var cell = ctxtarg.cells, c = 0, t;
+
+			for (var i=1;i<5;i++) {
+				if ( cell[i].textContent) {
+					c++;
+				}
+			}
+
+			if ( c === 1 ) {
+				if ( cell[1].textContent ) {
+					cell[2].textContent = cell[1].textContent;
+					cell[9].textContent = cell[1].textContent;
+					cell[1].textContent = ''; t = 1;
+					cell[8].textContent = '';
+				}
+
+				if ( cell[2].textContent && !t ) {
+					cell[1].textContent = cell[2].textContent;
+					cell[8].textContent = cell[2].textContent;
+					cell[9].textContent = '';
+					cell[2].textContent = '';
+				}
+
+				if ( cell[3].textContent ) {
+					cell[4].textContent = cell[3].textContent;
+					cell[11].textContent = cell[3].textContent;
+					cell[3].textContent = ''; t = 1;
+					cell[10].textContent = '';
+				}
+
+				if ( cell[4].textContent && !t ) {
+					cell[3].textContent = cell[4].textContent;
+					cell[10].textContent = cell[4].textContent;
+					cell[4].textContent = '';
+					cell[11].textContent = '';
+				}
+			}
+			
+			if ( c === 2 ) {
+				if ( cell[1].textContent && cell[4].textContent ) {
+					cell[2].textContent = cell[1].textContent;
+					cell[3].textContent = cell[4].textContent;
+					cell[9].textContent = cell[1].textContent;
+					cell[10].textContent = cell[4].textContent;
+					cell[1].textContent = cell[4].textContent = '';
+					cell[8].textContent = cell[11].textContent = '';
+					t = 1;
+				}
+
+				if ( cell[2].textContent && cell[3].textContent && !t) {
+					cell[1].textContent = cell[2].textContent;
+					cell[4].textContent = cell[3].textContent;
+					cell[8].textContent = cell[2].textContent;
+					cell[11].textContent = cell[3].textContent;
+					cell[2].textContent = cell[3].textContent = '';
+					cell[9].textContent = cell[10].textContent = '';
+				}
+			}
+		}
+
+		function shift_dio() {
+			var ctxcopy = ctxtarg.cloneNode(true), cell = [];
+
+			for ( var i = 1; i < 5; i++ ) {
+				cell.push(ctxtarg.cells[i].textContent);
+			}
+
+			if ( cell[0] && cell[1] && cell[2] ) {
+				ctxtarg.cells[1].textContent = '';
+				ctxcopy.cells[1].textContent = cell[0];
+				ctxcopy.cells[2].textContent = '';
+				ctxcopy.cells[3].textContent = '';
+				ctxcopy.cells[4].textContent = '';
+				/* dup */
+				ctxtarg.cells[1+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = cell[0];
+				ctxcopy.cells[2+7].textContent = '';
+				ctxcopy.cells[3+7].textContent = '';
+				ctxcopy.cells[4+7].textContent = '';
+			}
+
+			if ( cell[0] && cell[1] && cell[3] ) {
+				ctxtarg.cells[2].textContent = '';
+				ctxcopy.cells[1].textContent = '';
+				ctxcopy.cells[2].textContent = cell[1];
+				ctxcopy.cells[3].textContent = '';
+				ctxcopy.cells[4].textContent = '';
+				/* dup */
+				ctxtarg.cells[2+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = '';
+				ctxcopy.cells[2+7].textContent = cell[1];
+				ctxcopy.cells[3+7].textContent = '';
+				ctxcopy.cells[4+7].textContent = '';
+			}
+
+			if ( cell[0] && cell[2] && cell[3] ) {
+				ctxtarg.cells[3].textContent = '';
+				ctxcopy.cells[1].textContent = '';
+				ctxcopy.cells[2].textContent = '';
+				ctxcopy.cells[3].textContent = cell[2];
+				ctxcopy.cells[4].textContent = '';
+				/* dup */
+				ctxtarg.cells[3+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = '';
+				ctxcopy.cells[2+7].textContent = '';
+				ctxcopy.cells[3+7].textContent = cell[2];
+				ctxcopy.cells[4+7].textContent = '';
+			}
+
+			if ( cell[1] && cell[2] && cell[3] ) {
+				ctxtarg.cells[4].textContent = '';
+				ctxcopy.cells[1].textContent = '';
+				ctxcopy.cells[2].textContent = '';
+				ctxcopy.cells[3].textContent = '';
+				ctxcopy.cells[4].textContent = cell[3];
+				/* dup */
+				ctxtarg.cells[4+7].textContent = '';
+				ctxcopy.cells[1+7].textContent = '';
+				ctxcopy.cells[2+7].textContent = '';
+				ctxcopy.cells[3+7].textContent = '';
+				ctxcopy.cells[4+7].textContent = cell[3];
+			}
+
+			ctxtarg.insertAdjacentElement('afterend',ctxcopy);
+			ctxcopy.animate({opacity: [0,1]},{duration:1000});
+			ctxcopy.removeAttribute('bgcolor');
+		}
+
+		const clockbox = document.querySelector('.clockbox'),
+					other_entry = document.querySelector('.other_entry');
+
+		function edit_amin() {
+			clockdialog(ctxtarg.cells[1].textContent || '8:00 AM', 1);
+		}
+
+		function edit_amout() {
+			clockdialog(ctxtarg.cells[2].textContent || '12:00 PM', 2);
+		}
+
+		function edit_pmin() {
+			clockdialog(ctxtarg.cells[3].textContent || '1:00 PM', 3);
+		}
+
+		function edit_pmout() {
+			clockdialog(ctxtarg.cells[4].textContent || '5:00 PM', 4);
+		}
+
+		function edit_clear() {
+			var cell = ctxtarg.cells;
+
+			for ( var i=1;i<6;i++ ) {
+				cell[i].textContent = '';
+				cell[i+7].textContent = '';
+			}
+		}
+
+		document.body.onclick = e => {
+			if ( e.target.classList.contains('tblctx') ) {
+				return;
+			}
+
+			var btn = e.target.textContent;
+					btn = btn.replace(/\W/g,'').toLowerCase();
+
+			if ( ctxmenu.includes(btn) ) {
+				return;
+			}
+
+			if ( ctx.classList.contains('show') ) {
+				ctx.classList.add('hide');
+				ctx.classList.remove('show');
+				ctxtarg.removeAttribute('bgcolor');
+			}
+		}
+
+		function other_entry_dialog() {
+			other_entry.classList.toggle('hide');
+			other_entry.querySelector('input').focus();
+		}
+
+		function clockdialog(t, i) {
+			if ( !t ) return;
+
+			if ( i < 1 && i > 4 ) {
+				return;
+			}
+
+			var timep = flatpickr("#timex", {
+				enableTime: true,
+				noCalendar: true,
+				dateFormat: "h:i K",
+				defaultDate: t,
+				onClose: (a,b,c) => {
+					ctxtarg.cells[i].textContent = ctxtarg.cells[i+7].textContent = b;
+				},
+				onOpen: e => auth()
+			});
+
+			clockbox.classList.toggle('hide');
+
+			clockbox.querySelector('button').onclick = e => {
+				clockbox.classList.toggle('hide');
+			}
+		}
+
+		other_entry.querySelector('button').onclick = e => other_entry_dialog();
+
+		other_entry.querySelector('input').addEventListener('keyup', e => {
+			let s = e.target.value;
+
+			if ( e.keyCode !== 13 ) {
+				return;
+			}
+
+			other_entry.classList.toggle('hide');
+
+			if ( ctxtarg.cells.length !== 13 ) {
+				return;
+			}	
+
+			fillas(s); e.target.value = '';
+		});
+
+		document.onselectstart = () => { return false; }
+
+		var clk = 0, fclk = 0;
+
+		document.addEventListener('click', e => {
+			if ( e.target.classList.contains('fullname') ) {
+				window.location.href = 'rename.html?ID=' + get_param('ID');
+			}
+
+			if ( e.target.nodeName !== 'TD' ) {
+				return false;
+			}
+
+			var tr = e.target.parentNode,
+					ts = tr.dataset.ts;
+
+			localStorage.removeItem(ts);
+
+			var arr = ['absent','day off','holiday','special non-working day','travel o.b.','seminar','field'];
+			var txt = e.target.textContent.toLowerCase();
+
+			if ( clk >= arr.length ) {
+				clk = 0;
+			}
+
+			if( !fclk ) {
+				clk = fclk = 1;
+			}
+
+			if ( arr.includes(txt) ) {
+				if ( tr.cells.length === 9 ) {
+					tr.cells[2].textContent = tr.cells[7].textContent = arr[clk++];
+					return;
+				}
+
+				if ( tr.cells.length === 11 ) {
+					if ( e.target.textContent == tr.cells[1].textContent ) {
+						tr.cells[1].textContent = tr.cells[7].textContent = arr[clk++];
+						return;
+					}
+
+					if ( e.target.textContent == tr.cells[3].textContent ) {
+						tr.cells[3].textContent = tr.cells[9].textContent = arr[clk++];
+						return;
+					}
+
+					tr.cells[2].textContent = tr.cells[8].textContent = arr[clk++];
+					return;
+				}
+
+				tr.cells[1].textContent = tr.cells[5].textContent = arr[clk++];
+			}
+
+			if ( e.target.textContent === arr[2] ) {
+				localStorage.setItem(ts, 7);
+			}
+
+			if ( e.target.textContent === arr[3] ) {
+				localStorage.setItem(ts, 8);
+			}
+		});
+
+		window.addEventListener('mousemove', (e) => {
+			if ( datep.isOpen ) {
+				return;
+			}
+
+			if ( e.y < 150 ) {
+				if ( navbar.style.display === 'block' ) {
+					return;
+				}
+
+				navbar.style.display = 'block';
+				navbar.animate({opacity: [0,1]},300);
+				return;
+			}
+
+			navbar.style.display = 'none';
+		})
+
+		document.addEventListener('DOMContentLoaded', e => {
+			navbar.style.display = 'none';
+		})
+	</script>
+</body>
+</html>

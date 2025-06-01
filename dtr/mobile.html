@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="https://fonts.cdnfonts.com/css/adlam-display" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="icon" type="image/png" href="clock.png">
+  <title>⏳</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 0.6em;
+      font-family: 'ADLaM Display', sans-serif;
+      background: center / 30% no-repeat fixed url('https://calape.ph/assets/calape.svg');
+			user-select: none;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: auto;
+      width: 100%;
+      border: 0;
+    }
+
+    td, th {
+      padding: 5px;
+      text-align: center;
+      text-transform: uppercase;
+			border: 1px solid #bbb;
+    }
+
+    #fullname {
+      font-size: 1.8em;
+      padding: 15px 0;
+    }
+
+    #formonth {
+      font-size: 1.3em;
+    }
+
+    #table_content {
+      display: none;
+      min-width: 320px;
+      max-width: 768px;
+      margin: 48px auto;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      display: none;
+			min-width: 320px;
+      background: #04842e;
+    }
+
+    header a {
+			color: #fff;
+      cursor: pointer;
+			display: block;
+			float: left;
+      font-size: 3em;
+      padding: 10px;
+			text-decoration: none;
+      text-transform: uppercase;
+    }
+
+		header a:hover {
+      background: #066626;
+		}
+
+		header div {
+			float: right;
+		}
+
+		footer {
+			text-align: center;
+		}
+
+		footer p {
+			color: #ddd;
+		}
+
+		@media print {
+			header {
+				display: none !important;
+			}
+
+			table {
+				border: 0 !important;
+			}
+		}
+  </style>
+</head>
+
+<body>
+  <header id="header_nav" class="animate__animated animate__slideInDown">
+    <a href="index.html"><span class="fa-sharp fa-solid fa-home"></span></a>
+		<div>
+			<a href="#" id="prevbtn"><span class="fa-solid fa-square-caret-left"></span></a>
+	    <a href="#" id="nextbtn"><span class="fa-solid fa-square-caret-right"></span></a>
+		</div>
+  </header>
+
+  <main id="table_content">
+    <table border="1" id="tstable">
+      <thead id="tshead">
+        <tr>
+          <th colspan="5" id="fullname">&nbsp;</th>
+        </tr>
+        <tr>
+          <th colspan="5" id="formonth">&nbsp;</th>
+        </tr>
+        <tr>
+          <th rowspan="2" width="45">date</th>
+          <th colspan="2">am</th>
+          <th colspan="2">pm</th>
+        </tr>
+        <tr>
+          <th width="85">in</th>
+          <th width="85">out</th>
+          <th width="85">in</th>
+          <th width="85">out</th>
+        </tr>
+      </thead>
+      <tbody id="timesheet" class="animate__animated animated__">
+        <!--timesheet generation-->
+      </tbody>
+    </table>
+		<footer><p>rev.1722499510</p></footer>
+  </main>
+  <script src="helper.js"></script>
+  <script src="time_io.js"></script>
+  <script>
+		const API_URL = 'https://dtr.calape.ph/api/';
+
+    let employee_id = get_param('ID'),
+      this_month = get_param('MM'),
+      this_year = get_param('YY');
+
+    if (!(this_month > 0 && this_month < 13) || !(this_year > 2021 && this_year < 2102))
+      location.assign('/');
+
+    const WORKING_HOURS = [8, 12, 13, 17];
+
+    const from_this_date = new Date(this_year, this_month - 1, 1);
+    const to_this_date = new Date(this_year, this_month, 0);
+
+    function dtr() {
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 1) {
+          // ...
+        }
+
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+            let d = JSON.parse(x.responseText);
+
+            var records = [];
+
+            d.forEach((o) => {
+              records[o.petsa] = time_io(o.oras, WORKING_HOURS);
+            });
+
+            loop_through_date(from_this_date, to_this_date, records);
+
+            header_nav.style.display = 'block';
+            table_content.style.display = 'block';
+          }
+
+          if (x.status === 403) {
+            location.assign('/');
+          }
+        }
+
+      });
+
+      let p = new URL(API_URL + 'timerecord.php');
+      p.searchParams.set('ID', employee_id);
+      p.searchParams.set('MM', this_month);
+      p.searchParams.set('YY', this_year);
+			p.searchParams.set('ref','mobile');
+
+      x.open('GET', p);
+      x.send();
+    }
+
+    function employee_basic_info() {
+      let x = new XMLHttpRequest();
+
+      x.addEventListener('readystatechange', () => {
+        if (x.readyState === 4) {
+          if (x.status === 200) {
+            let d = JSON.parse(x.responseText);
+            document.title = fullname.innerHTML = d.firstname + ' ' + d.lastname;
+          }
+
+          if (x.status === 403) {
+            location.assign('/');
+          }
+        }
+
+      });
+
+      x.open('GET', API_URL + 'employee_basic_info.php?ID=' + employee_id);
+      x.send();
+    }
+
+    function loop_through_date(a, b, c) {
+      for (a; a <= b; a.setDate(a.getDate() + 1)) {
+        let indexFmt = [a.getFullYear(), String(a.getMonth() + 1).padStart(2, 0), String(a.getDate()).padStart(2, 0)].join('-');
+
+        let default_records = { 'date': indexFmt, time: Object.assign({}, [null, null, null, null]) };
+
+        if (c[indexFmt]) {
+          default_records = { 'date': indexFmt, 'time': c[indexFmt] }
+        }
+
+        timeshit(default_records);
+      }
+    }
+
+    function timeshit(d) {
+      let tr = timesheet.insertRow(-1),
+        c00 = tr.insertCell(0),
+        c01 = tr.insertCell(1),
+        c02 = tr.insertCell(2),
+        c03 = tr.insertCell(3),
+        c04 = tr.insertCell(4);
+
+      let absent = false, oras = d.time;
+
+      if (!oras[0] && !oras[1] && !oras[2] && !oras[3]) {
+        absent = true;
+      }
+
+      c00.innerText = String(new Date(d.date).getDate()).padStart(2, 0);
+      c01.innerText = toLocalTime(oras[0]);
+      c02.innerText = toLocalTime(oras[1]);
+      c03.innerText = toLocalTime(oras[2]);
+      c04.innerText = toLocalTime(oras[3]);
+
+      let it_go = new Date(d.date).getDay();
+
+      if (absent) {
+        if (it_go === 0) {
+          c01.innerText = 'SUNDAY';
+          c01.colSpan = 4;
+          c01.style.fontWeight = 'bold';
+          c02.remove(); c03.remove(); c04.remove();
+        }
+
+        if (it_go === 6) {
+          c01.innerText = 'SATURDAY';
+          c01.colSpan = 4;
+          c01.style.fontWeight = 'bold';
+          c02.remove(); c03.remove(); c04.remove();
+        }
+      }
+    }
+
+    function init() {
+      employee_basic_info(); dtr(); formonth.innerText = `${get_month(this_month - 1)} ${this_year}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => init());
+
+    prevbtn.addEventListener('click', () => {
+      let d = new Date(this_year, this_month - 1);
+			d.setMonth(d.getMonth()-1);
+      window.location.search = new URLSearchParams({ ID: employee_id, YY: d.getFullYear(), MM: d.getMonth() + 1 });
+    });
+
+    nextbtn.addEventListener('click', () => {
+      let d = new Date(this_year, this_month - 1);
+			d.setMonth(d.getMonth()+1);
+      window.location.search = new URLSearchParams({ ID: employee_id, YY: d.getFullYear(), MM: d.getMonth() + 1});
+    });
+
+		window.onresize = (e) => {
+			if ( window.innerWidth > 1039 ) {
+				window.location.assign(`view.html?ID=${get_param('ID')}`);
+			}
+		}
+
+		document.onselectstart = e =>{ return false;}
+
+		document.querySelector('main').addEventListener('touchend', e => {
+			e.preventDefault();
+		}, {passive: false});
+  </script>
+</body>
+</html>
